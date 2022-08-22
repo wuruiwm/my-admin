@@ -3,9 +3,6 @@ FROM docker.nikm.cn/wuruiwm/node:16 AS builder
 # 设置镜像
 RUN npm config set registry https://registry.npm.taobao.org
 
-#下载依赖
-RUN npm install
-
 # 设置工作目录为/build 并且拷贝项目代码
 WORKDIR /build
 COPY ./web .
