@@ -7,7 +7,7 @@ ENV GOPROXY https://goproxy.cn,direct
 
 # 设置工作目录为/build 并且拷贝项目代码
 WORKDIR /build
-COPY . .
+COPY ./server .
 RUN ls /build
 
 # 下载依赖包 并编译
