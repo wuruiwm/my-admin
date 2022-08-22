@@ -14,7 +14,6 @@ Vue.use(ElementUI)
 //全局list mixin 方便后台列表调用
 Vue.mixin(listMixin)
 
-console.log(process.env)
 export default new Vue({
     el: "#app",//容器id
     render: h => h(App),
