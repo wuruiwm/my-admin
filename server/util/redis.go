@@ -1,0 +1,35 @@
+package util
+
+import (
+	"app/global"
+	"context"
+	"encoding/json"
+	"errors"
+	"time"
+)
+
+//SetCache 设置缓存
+func SetCache(key string, data interface{}, expire int64) error {
+	jsonString, err := json.Marshal(data)
+	if err != nil {
+		return errors.New("序列化为json字符串失败 error:" + err.Error())
+	}
+	err = global.Redis.Set(context.Background(), key, jsonString, time.Duration(expire)*time.Second).Err()
+	if err != nil {
+		return errors.New("设置缓存失败 error:" + err.Error())
+	}
+	return nil
+}
+
+//GetCache 获取缓存
+func GetCache(key string, data interface{}) error {
+	jsonString, err := global.Redis.Get(context.Background(), key).Result()
+	if err != nil {
+		return errors.New("获取缓存失败 error:" + err.Error())
+	}
+	err = json.Unmarshal([]byte(jsonString), data)
+	if err != nil {
+		return errors.New("json字符串反序列化失败 error:" + err.Error())
+	}
+	return nil
+}
