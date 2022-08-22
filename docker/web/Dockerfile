@@ -1,6 +1,7 @@
 FROM docker.nikm.cn/wuruiwm/node:16 AS builder
-# 导入宿主机的环境变量VUE_APP_PROD_API_URL
+# 从构建参数里拿到宿主机的环境变量
 ARG VUE_APP_PROD_API_URL
+ENV VUE_APP_PROD_API_URL $VUE_APP_PROD_API_URL
 
 # 设置镜像
 RUN npm config set registry https://registry.npm.taobao.org
