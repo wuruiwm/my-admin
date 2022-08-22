@@ -19,7 +19,7 @@ server-docker-push:
 web-docker-build:
   stage: web-docker-build
   script:
-    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web -f docker/web/Dockerfile .
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web -f docker/web/Dockerfile .
 
 web-docker-push:
   stage: web-docker-push
