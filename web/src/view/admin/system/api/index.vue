@@ -152,16 +152,16 @@ export default {
       },
       rules: {
         path: [
-          {required: true, message: '请输入路径', trigger: 'blur'}
+          {required: true, message: "请输入路径", trigger: "blur"}
         ],
         method: [
-          {required: true, message: '请选择请求方式', trigger: 'blur'}
+          {required: true, message: "请选择请求方式", trigger: "blur"}
         ],
         group: [
-          {required: true, message: '请输入分组', trigger: 'blur'}
+          {required: true, message: "请输入分组", trigger: "blur"}
         ],
         name: [
-          {required: true, message: '请输入名称', trigger: 'blur'}
+          {required: true, message: "请输入名称", trigger: "blur"}
         ],
       },
       form: {

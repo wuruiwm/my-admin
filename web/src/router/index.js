@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue"
+import Router from "vue-router"
 import {adminDefaultRouterName, adminRouterInit, isAdminRouterInit} from "@/core/adminMenu";
 
 Vue.use(Router)
@@ -18,35 +18,35 @@ Router.prototype.replace = function push(location, onResolve, onReject) {
 
 const baseRouters = [
     {
-        path: '/',
+        path: "/",
         redirect: {
-            name: 'adminLogin'
+            name: "adminLogin"
         }
     },
     {
-        path: '/admin/login',
-        name: 'adminLogin',
+        path: "/admin/login",
+        name: "adminLogin",
         meta: {
             title: "后台登录"
         },
-        component: () => import('@/view/admin/login/index')
+        component: () => import("@/view/admin/login/index")
     },
     {
         name: "admin",
         path: "/admin",
-        component: () => import('@/view/admin/index.vue'),
+        component: () => import("@/view/admin/index.vue"),
         meta: {
-            title: '后台管理'
+            title: "后台管理"
         },
         children: [],
     },
     {
-        path: '*',
-        name: '404',
+        path: "*",
+        name: "404",
         meta: {
             title: "404"
         },
-        component: () => import('@/view/404/index')
+        component: () => import("@/view/404/index")
     },
 ]
 

@@ -26,7 +26,7 @@ export default {
             }
             let listRes = await service({
                 url: this.list.url,
-                method: 'get',
+                method: "get",
                 params: {page: this.list.page, page_size: this.list.page_size, ...this.list.param}
             })
             if (listRes.code === 0) {

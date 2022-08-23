@@ -1,6 +1,6 @@
-'use strict'
+"use strict"
 
-const path = require('path')
+const path = require("path")
 
 function resolve(dir) {
     return path.join(__dirname, dir)
@@ -8,11 +8,11 @@ function resolve(dir) {
 
 // https://cli.vuejs.org/zh/config/ 配置文档
 module.exports = {
-    publicPath: '/',
+    publicPath: "/",
     //编译生成的文件存放路径
-    outputDir: 'dist',
+    outputDir: "dist",
     //编译生成的静态文件存放路径 在outputDir配置下
-    assetsDir: 'static',
+    assetsDir: "static",
     //关闭eslint代码检查
     lintOnSave: false,
     //去除map文件 减少编译后的文件大小
@@ -30,7 +30,7 @@ module.exports = {
         //反代配置 https://github.com/chimurai/http-proxy-middleware
         //vue代理默认先从自己本地找文件 如果找不到才反代
         proxy: {
-            '/': { //匹配的路径前缀
+            "/": { //匹配的路径前缀
                 target: `${process.env.VUE_APP_DEVELOP_API_URL}`,//反代地址
                 ws: true, //ws支持
             }
@@ -40,7 +40,7 @@ module.exports = {
         // @路径走src文件夹
         resolve: {
             alias: {
-                '@': resolve('src')
+                "@": resolve("src")
             }
         }
     }

@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import App from '@/App.vue'
-import router from '@/router/index'
-import listMixin from '@/core/listMixin'
+import Vue from "vue"
+import ElementUI from "element-ui"
+import "element-ui/lib/theme-chalk/index.css"
+import App from "@/App.vue"
+import router from "@/router/index"
+import listMixin from "@/core/listMixin"
 
 //关闭vue生成环境提示
 Vue.config.productionTip = false

@@ -4,7 +4,7 @@
       <el-container :class="[isSider?'openside':'hideside',isMobile ? 'mobile': '']">
         <el-row :class="[isShadowBg?'shadowBg':'']" @click.native="changeShadow()"/>
         <el-aside class="main-cont main-left">
-          <div :style="{background: '#191a23'}" class="tilte">
+          <div style="background: #191a23" class="tilte">
             <img src="@/assets/logo.png" alt class="logoimg">
             <h2 v-if="isSider" :style="{color:'#fff'}" class="tit-text" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">
               后台管理系统</h2>
@@ -13,12 +13,12 @@
             <el-scrollbar style="height:calc(100vh - 64px)">
               <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
                 <el-menu
-                    :active-text-color="'#1890ff'"
-                    :background-color="'#191a23'"
+                    active-text-color="#1890ff"
+                    background-color="#191a23"
                     :collapse="isCollapse"
                     :collapse-transition="true"
                     :default-active="active"
-                    :text-color="'#fff'"
+                    text-color="#fff"
                     class="el-menu-vertical"
                     unique-opened
                     @select="selectMenuItem"

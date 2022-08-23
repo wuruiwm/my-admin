@@ -60,37 +60,37 @@ import router from "@/router";
 export default {
   data() {
     return {
-      lock: 'lock',
+      lock: "lock",
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: "",
+        password: "",
       },
       rules: {
         username: [
-          {required: true, message: '请填写用户名', trigger: 'blur'},
+          {required: true, message: "请填写用户名", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value.length < 3) {
-                return callback(new Error('用户名不能少于三位'))
+                return callback(new Error("用户名不能少于三位"))
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }],
         password: [
-          {required: true, message: '请填写密码', trigger: 'blur'},
+          {required: true, message: "请填写密码", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value.length < 6) {
-                return callback(new Error('密码不能少于六位'))
+                return callback(new Error("密码不能少于六位"))
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }]
       },
-      logVerify: '',
-      picPath: ''
+      logVerify: "",
+      picPath: ""
     }
   },
   methods: {
@@ -98,15 +98,15 @@ export default {
       await this.$refs.loginForm.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请正确填写登录信息',
+            type: "error",
+            message: "请正确填写登录信息",
             showClose: true
           })
           return false
         }
         let loginRes = await service({
-          url: '/admin/user/login',
-          method: 'post',
+          url: "/admin/user/login",
+          method: "post",
           data: this.loginForm
         })
         if (loginRes.code !== 0) {
@@ -116,30 +116,30 @@ export default {
         let isSuccess = await adminRouterInit()
         if (isSuccess) {
           Message({
-            type: 'success',
-            message: '登录成功',
+            type: "success",
+            message: "登录成功",
             showClose: true
           })
           router.push({name: adminDefaultRouterName})
         } else {
           Message({
-            type: 'success',
-            message: '登录成功 路由初始化失败',
+            type: "success",
+            message: "登录成功 路由初始化失败",
             showClose: true
           })
         }
       })
     },
     changeLock() {
-      this.lock = this.lock === 'lock' ? 'unlock' : 'lock'
+      this.lock = this.lock === "lock" ? "unlock" : "lock"
     },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/style/base.scss';
-@import '@/style/mobile.scss';
+@import "@/style/base.scss";
+@import "@/style/mobile.scss";
 #admin {
   background: #eee;
   height: 100vh;

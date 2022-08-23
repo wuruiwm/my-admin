@@ -1,16 +1,16 @@
-import service from '@/core/request'
+import service from "@/core/request"
 import router from "@/router";
 
 
 export let adminMenu = []
-export let adminDefaultRouterName = ''
+export let adminDefaultRouterName = ""
 export let isAdminRouterInit = false
 
 function itemToMenu(item) {
     return {
         name: item.name,
         path: item.path,
-        component: () => import('@/' + item.component),
+        component: () => import("@/" + item.component),
         meta: {
             title: item.title,
             icon: item.icon,
@@ -32,8 +32,8 @@ export const adminRouterInit = async () => {
     }
     //请求后台路由接口
     let menuRes = await service({
-        url: '/admin/user/menu',
-        method: 'get'
+        url: "/admin/user/menu",
+        method: "get"
     })
     if (menuRes.code !== 0) {
         return false
@@ -57,7 +57,7 @@ export const adminRouterInit = async () => {
     //将子路由数组放到父级的children
     for (let k in adminMenu) {
         if (menuTmp[adminMenu[k].id]) {
-            adminMenu[k]['children'] = menuTmp[adminMenu[k].id]
+            adminMenu[k]["children"] = menuTmp[adminMenu[k].id]
         }
     }
     //将后端返回的结构转换为路由需要的结构
@@ -72,10 +72,10 @@ export const adminRouterInit = async () => {
     })
     router.addRoute("admin",{
         name: "admin404",
-        path: '/admin*',
-        component: () => import('@/view/admin/404/index.vue'),
+        path: "/admin*",
+        component: () => import("@/view/404/index"),
         meta: {
-            title: '404'
+            title: "404"
         },
     })
     isAdminRouterInit = true

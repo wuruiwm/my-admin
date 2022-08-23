@@ -1,7 +1,7 @@
-import axios from 'axios' // 引入axios
-import {Message} from 'element-ui'
+import axios from "axios"
+import {Message} from "element-ui"
 import router from "@/router";
-import vue from '@/main'
+import vue from "@/main"
 
 const service = axios.create({
     baseURL: process.env.NODE_ENV === "development" ? "/" : process.env.VUE_APP_PROD_API_URL,
@@ -26,10 +26,10 @@ service.interceptors.request.use(
         const token = localStorage.getItem("token")
         config.data = JSON.stringify(config.data)
         config.headers = {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         }
         if (token) {
-            config.headers['X-Admin-Token'] = token
+            config.headers["X-Admin-Token"] = token
         }
         return config
     },error => {
@@ -48,15 +48,15 @@ service.interceptors.response.use(
         if (response.data.code) {
             if(response.data.code === -1){
                 Message({
-                    type: 'error',
+                    type: "error",
                     message: response.data.msg,
                     showClose: true
                 })
                 localStorage.setItem("token", "")
-                router.push({name: 'login', replace: true})
+                router.push({name: "login", replace: true})
             }else if(response.data.code === 1){
                 Message({
-                    type: 'error',
+                    type: "error",
                     message: response.data.msg,
                     showClose: true
                 })
@@ -72,7 +72,7 @@ service.interceptors.response.use(
             data:null
         }
         Message({
-            type: 'error',
+            type: "error",
             message: data.msg,
             showClose: true
         })

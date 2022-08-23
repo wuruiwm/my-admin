@@ -6,7 +6,7 @@
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
-@import '@/style/basics.scss';
+@import "@/style/basics.scss";
 
 html {
   line-height: 1.15;
@@ -978,18 +978,9 @@ li {
     position: relative;
   }
 
-  // .el-button.el-button--text.el-button--small::after {
-  //     content: '';
-  //     position: absolute;
-  //     width: 1px;
-  //     height: 50%;
-  //     top: 5px;
-  //     margin-left: 15px;
-  //     background-color: #e8e8e8;
-  // }
   .cell {
     button:last-child::after {
-      content: '' !important;
+      content: "" !important;
       position: absolute !important;
       width: 0px !important;
     }
