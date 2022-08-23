@@ -8,26 +8,26 @@ stages:
 server-docker-build:
   stage: server-docker-build
   script:
-    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server -f docker/server/Dockerfile .
+    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server -f docker/server/Dockerfile .
 
 server-docker-push:
   stage: server-docker-push
   script:
     - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server
+    - docker push $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server
 
 web-docker-build:
   stage: web-docker-build
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web -f docker/web/Dockerfile .
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web -f docker/web/Dockerfile .
 
 web-docker-push:
   stage: web-docker-push
   script:
     - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web
+    - docker push $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web
 
 deploy:
   stage: deploy
   script:
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment gin-vue-admin"
