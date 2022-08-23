@@ -16,6 +16,7 @@
 
 <script>
 import service from "@/core/request";
+import cookie from "vue-cookie"
 
 export default {
   data(){
@@ -52,6 +53,9 @@ export default {
             }
           })
           console.log(loginRes)
+          if(loginRes.hasOwnProperty("jweToken") && loginRes.jweToken){
+            cookie.set("jweToken",loginRes.jweToken,30)
+          }
         }
       }
     }
