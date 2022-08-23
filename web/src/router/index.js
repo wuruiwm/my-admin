@@ -53,6 +53,7 @@ const baseRouters = [
 // 需要通过后台数据来生成的组件
 const createRouter = () => new Router({
     mode: process.env.NODE_ENV === "development" ? "hash" : "history",
+    base:"/",
     routes: baseRouters
 })
 
