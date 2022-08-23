@@ -50,6 +50,19 @@ type AdminUserInfoUpdate struct {
 	NewPassword string `json:"new_password"`
 }
 
+func (param *AdminUserLogin) Check() error {
+	if param.Username == "" {
+		return errors.New("请填写用户名")
+	}
+	if utf8.RuneCountInString(param.Username) < 3 {
+		return errors.New("用户名不能少于三位")
+	}
+	if param.Password != "" && utf8.RuneCountInString(param.Password) < 6 {
+		return errors.New("密码不能少于六位")
+	}
+	return nil
+}
+
 func (param *AdminUserCreate) Check() error {
 	if param.Username == "" {
 		return errors.New("请填写用户名")
