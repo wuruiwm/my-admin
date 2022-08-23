@@ -19,4 +19,4 @@ FROM docker.nikm.cn/wuruiwm/nginx:1.23
 COPY --from=builder /build/dist /www/web
 
 # 拷贝nginx配置文件
-COPY ./docker/web/nginx/config /etc/nginx/conf.d
+COPY ./deploy/web/nginx/config /etc/nginx/conf.d

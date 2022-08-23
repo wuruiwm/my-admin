@@ -8,7 +8,7 @@ stages:
 server-docker-build:
   stage: server-docker-build
   script:
-    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server -f docker/server/Dockerfile .
+    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server -f deploy/server/Dockerfile .
 
 server-docker-push:
   stage: server-docker-push
@@ -19,7 +19,7 @@ server-docker-push:
 web-docker-build:
   stage: web-docker-build
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web -f docker/web/Dockerfile .
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web -f deploy/web/Dockerfile .
 
 web-docker-push:
   stage: web-docker-push
