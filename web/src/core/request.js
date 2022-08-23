@@ -25,9 +25,7 @@ service.interceptors.request.use(
         showLoading()
         const token = localStorage.getItem("token")
         config.data = JSON.stringify(config.data)
-        config.headers = {
-            "Content-Type": "application/json",
-        }
+        config.headers["Content-Type"] = "application/json"
         if (token) {
             config.headers["X-Admin-Token"] = token
         }
