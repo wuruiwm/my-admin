@@ -40,33 +40,33 @@ export const adminRouterInit = async () => {
     }
     //key为父级路由id  value为该路由id下的所有子路由构成的数组
     let menuTmp = {}
-    for (let k in menuRes.data) {
-        menuRes.data[k].children = []
-        if (menuRes.data[k].parent_id === "") {
-            adminMenu.push(menuRes.data[k])
-        } else {
-            if (!menuTmp[menuRes.data[k].parent_id]) {
-                menuTmp[menuRes.data[k].parent_id] = []
+    menuRes.data.forEach((v)=>{
+        v.children = []
+        if(v.parent_id === ""){
+            adminMenu.push(v)
+        }else{
+            if (!menuTmp[v.parent_id]) {
+                menuTmp[v.parent_id] = []
             }
-            menuTmp[menuRes.data[k].parent_id].push(menuRes.data[k])
+            menuTmp[v.parent_id].push(v)
         }
         if (adminDefaultRouterName === "") {
-            adminDefaultRouterName = menuRes.data[k].name
+            adminDefaultRouterName = v.name
         }
-    }
+    })
     //将子路由数组放到父级的children
-    for (let k in adminMenu) {
-        if (menuTmp[adminMenu[k].id]) {
-            adminMenu[k]["children"] = menuTmp[adminMenu[k].id]
+    adminMenu.forEach((v)=>{
+        if (menuTmp[v.id]) {
+            v.children = menuTmp[v.id]
         }
-    }
+    })
     //将后端返回的结构转换为路由需要的结构
-    for (let k1 in adminMenu) {
-        for (let k2 in adminMenu[k1].children) {
-            adminMenu[k1].children[k2] = itemToMenu(adminMenu[k1].children[k2])
-        }
-        adminMenu[k1] = itemToMenu(adminMenu[k1])
-    }
+    adminMenu.forEach((v1,k1)=>{
+        v1.children.forEach((v2,k2)=>{
+            v1.children[k2] = itemToMenu(v2)
+        })
+        adminMenu[k1] = itemToMenu(v1)
+    })
     adminMenu.forEach(route => {
         router.addRoute("admin",route)
     })
