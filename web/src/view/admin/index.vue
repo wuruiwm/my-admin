@@ -251,7 +251,7 @@ export default {
     },
     loginOut() {
       localStorage.setItem("token", "")
-      router.push({name: "login"})
+      router.push({name: "adminLogin"})
     },
     selectMenuItem(index) {
       if (index === this.$route.name) {

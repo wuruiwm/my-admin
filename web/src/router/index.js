@@ -20,12 +20,12 @@ const baseRouters = [
     {
         path: '/',
         redirect: {
-            name: 'login'
+            name: 'adminLogin'
         }
     },
     {
         path: '/admin/login',
-        name: 'login',
+        name: 'adminLogin',
         meta: {
             title: "后台登录"
         },
@@ -58,7 +58,7 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-const whiteList = ["login"]
+const whiteList = ["adminLogin"]
 
 router.beforeEach(async (to, from, next) => {
     let isWhite = false
@@ -69,11 +69,11 @@ router.beforeEach(async (to, from, next) => {
     }
     //路由在白名单
     if (isWhite) {
-        //路由不是login 直接放行 渲染页面
-        //如果是login 则进行后台路由初始化
+        //路由不是adminLogin 直接放行 渲染页面
+        //如果是adminLogin 则进行后台路由初始化
         //如果初始化成功 则说明已登录 直接跳转默认后台页面
         //初始化失败 则继续放行 渲染登录页面
-        if (to.name === "login") {
+        if (to.name === "adminLogin") {
             let isSuccess = await adminRouterInit()
             if (isSuccess) {
                 next({name: adminDefaultRouterName, replace: true})
@@ -84,7 +84,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
         //不在白名单的时候
         //检查是否初始化 已初始化正常渲染
-        //未初始化 去做初始化操作 成功则正常渲染 失败则跳转login页面
+        //未初始化 去做初始化操作 成功则正常渲染 失败则跳转adminLogin页面
         if (isAdminRouterInit) {
             next()
         } else {
@@ -95,7 +95,7 @@ router.beforeEach(async (to, from, next) => {
                 if (to.name === "404") {
                     next()
                 } else {
-                    next({name: "login"})
+                    next({name: "adminLogin"})
                 }
             }
         }

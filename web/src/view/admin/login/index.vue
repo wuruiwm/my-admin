@@ -58,7 +58,6 @@ import {adminDefaultRouterName, adminRouterInit} from "@/core/adminMenu";
 import router from "@/router";
 
 export default {
-  name: 'Login',
   data() {
     return {
       lock: 'lock',
