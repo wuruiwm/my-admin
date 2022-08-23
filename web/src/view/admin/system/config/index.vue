@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs v-model="group" type="card">
+    <el-tabs v-model="group">
       <el-tab-pane label="测试1" name="test1">
         <el-form label-width="80px" style="width: 50%">
           <el-form-item label="t1">
