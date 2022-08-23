@@ -41,6 +41,15 @@ const baseRouters = [
         children: [],
     },
     {
+        path: "/k8s/login",
+        name: "k8sLogin",
+        component: () => import("@/view/k8s/login/index.vue"),
+        meta: {
+            title: "k8s登录"
+        },
+        children: [],
+    },
+    {
         path: "*",
         name: "404",
         meta: {

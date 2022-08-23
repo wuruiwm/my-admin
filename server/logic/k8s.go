@@ -5,8 +5,9 @@ import (
 	"app/api/response"
 	"app/util"
 	"errors"
-	"fmt"
 	"github.com/melbahja/goph"
+	"golang.org/x/crypto/ssh"
+	"net"
 	"strconv"
 )
 
@@ -25,23 +26,21 @@ func K8sLogin(param *request.AdminUserLogin) (interface{}, error) {
 }
 
 func K8sCreateToken() (*response.K8sLogin, error) {
-	callback, err := goph.DefaultKnownHosts()
-	if err != nil {
-		return nil, err
-	}
-
 	port, err := strconv.Atoi(util.AdminConfig("k8s.port"))
 	if err != nil {
 		return nil, errors.New("端口参数不正确 error:" + err.Error())
 	}
-	client, err := goph.NewConn(&goph.Config{
-		User:     util.AdminConfig("k8s.user"),
-		Addr:     util.AdminConfig("k8s.host"),
-		Port:     uint(port),
-		Auth:     goph.Password(util.AdminConfig("k8s.password")),
-		Timeout:  goph.DefaultTimeout,
-		Callback: callback,
-	})
+	config := &goph.Config{
+		User:    util.AdminConfig("k8s.user"),
+		Addr:    util.AdminConfig("k8s.host"),
+		Port:    uint(port),
+		Auth:    goph.Password(util.AdminConfig("k8s.password")),
+		Timeout: goph.DefaultTimeout,
+		Callback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
+	}
+	client, err := goph.NewConn(config)
 	if err != nil {
 		return nil, errors.New("ssh连接失败 error:" + err.Error())
 	}
@@ -49,7 +48,6 @@ func K8sCreateToken() (*response.K8sLogin, error) {
 	if err != nil {
 		return nil, errors.New("ssh命令执行失败 error:" + err.Error())
 	}
-	fmt.Println(string(out))
 	return &response.K8sLogin{
 		Token: string(out),
 	}, nil
