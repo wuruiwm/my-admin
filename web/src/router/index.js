@@ -32,8 +32,8 @@ const baseRouters = [
         component: () => import("@/view/admin/login/index")
     },
     {
-        name: "admin",
         path: "/admin",
+        name: "admin",
         component: () => import("@/view/admin/index.vue"),
         meta: {
             title: "后台管理"
