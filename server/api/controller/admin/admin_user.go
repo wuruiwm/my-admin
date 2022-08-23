@@ -12,7 +12,10 @@ import (
 //AdminUserLogin 用户登录
 func AdminUserLogin(c *gin.Context) {
 	param := &request.AdminUserLogin{}
-	_ = c.ShouldBindJSON(&param)
+	if err := c.ShouldBindJSON(param); err != nil {
+		response.Error(c, util.ValidatorError(err))
+		return
+	}
 
 	if param.Username == "" || param.Password == "" {
 		response.Error(c, "用户名或密码不能为空")
