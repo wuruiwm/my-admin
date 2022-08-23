@@ -19,7 +19,7 @@ rabbitmq:
   port: 5672
   username: root
   password: 123456
-domain_name: http://127.0.0.1:8081
-server_port: 8081
+domain_name: http://127.0.0.1:18081
+server_port: 18081
 debug: true
 key: cc9e02fe-4ea1-9576-f60c-55dae4f85572
