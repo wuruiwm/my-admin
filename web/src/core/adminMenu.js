@@ -8,8 +8,8 @@ export let isAdminRouterInit = false
 
 function itemToMenu(item) {
     return {
-        name: item.name,
         path: item.path,
+        name: item.name,
         component: () => import("@/" + item.component),
         meta: {
             title: item.title,
@@ -71,8 +71,8 @@ export const adminRouterInit = async () => {
         router.addRoute("admin",route)
     })
     router.addRoute("admin",{
-        name: "admin404",
         path: "/admin*",
+        name: "admin404",
         component: () => import("@/view/404/index"),
         meta: {
             title: "404"
