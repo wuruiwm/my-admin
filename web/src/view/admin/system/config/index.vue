@@ -1,32 +1,6 @@
 <template>
   <div>
     <el-tabs v-model="group">
-      <el-tab-pane label="k8s配置" name="k8s">
-        <el-form label-width="80px" style="width: 50%">
-          <el-form-item label="主机">
-            <el-input v-model="k8s.host"></el-input>
-          </el-form-item>
-          <el-form-item label="端口">
-            <el-input v-model="k8s.port"></el-input>
-          </el-form-item>
-          <el-form-item label="账号">
-            <el-input v-model="k8s.user"></el-input>
-          </el-form-item>
-          <el-form-item label="密码">
-            <el-input v-model="k8s.password"></el-input>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="ssl证书配置" name="ssl">
-        <el-form label-width="80px" style="width: 50%">
-          <el-form-item label="KEY(私钥)">
-            <el-input v-model="ssl.key"></el-input>
-          </el-form-item>
-          <el-form-item label="PEM(公钥)">
-            <el-input v-model="ssl.pem"></el-input>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
       <el-tab-pane label="通知配置" name="notice">
         <el-form label-width="80px" style="width: 50%">
           <el-form-item label="类型">
@@ -62,6 +36,32 @@
           </div>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="ssl证书配置" name="ssl">
+        <el-form label-width="80px" style="width: 50%">
+          <el-form-item label="KEY(私钥)">
+            <el-input v-model="ssl.key"></el-input>
+          </el-form-item>
+          <el-form-item label="PEM(公钥)">
+            <el-input v-model="ssl.pem"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="k8s配置" name="k8s">
+        <el-form label-width="80px" style="width: 50%">
+          <el-form-item label="主机">
+            <el-input v-model="k8s.host"></el-input>
+          </el-form-item>
+          <el-form-item label="端口">
+            <el-input v-model="k8s.port"></el-input>
+          </el-form-item>
+          <el-form-item label="账号">
+            <el-input v-model="k8s.user"></el-input>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input v-model="k8s.password"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane label="脚本配置" name="script">
         <el-form label-width="150px" style="width: 50%" @submit.native.prevent>
           <el-form-item label="台服lol幸运抽奖sk">
@@ -81,17 +81,7 @@ import {Message} from "element-ui";
 export default {
   data(){
     return {
-      group:"k8s",
-      k8s:{
-        host:"",
-        port:"",
-        user:"",
-        password:"",
-      },
-      ssl:{
-        key:"",
-        pem:"",
-      },
+      group:"notice",
       notice:{
         type:"email",//可选参数 email gotify
         //email配置
@@ -103,6 +93,16 @@ export default {
         //gotify配置
         gotify_server_url:"",
         gotify_server_token:"",
+      },
+      ssl:{
+        key:"",
+        pem:"",
+      },
+      k8s:{
+        host:"",
+        port:"",
+        user:"",
+        password:"",
       },
       script:{
         tw_lol_luck_draw_sk:"",
