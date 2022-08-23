@@ -1,20 +1,71 @@
 <template>
   <div>
-    <el-tabs v-model="group" type="card">
-      <el-tab-pane label="测试1" name="test1">
+    <el-tabs v-model="group">
+      <el-tab-pane label="k8s配置" name="k8s">
         <el-form label-width="80px" style="width: 50%">
-          <el-form-item label="t1">
-            <el-input v-model="test1.t1"></el-input>
+          <el-form-item label="主机">
+            <el-input v-model="k8s.host"></el-input>
           </el-form-item>
-          <el-form-item label="t2">
-            <el-input v-model="test1.t2"></el-input>
+          <el-form-item label="端口">
+            <el-input v-model="k8s.port"></el-input>
+          </el-form-item>
+          <el-form-item label="账号">
+            <el-input v-model="k8s.user"></el-input>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input v-model="k8s.password"></el-input>
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="测试2" name="test2">
-        <el-form label-width="80px" style="width: 50%" @submit.native.prevent>
-          <el-form-item label="t1">
-            <el-input v-model="test2.t1"></el-input>
+      <el-tab-pane label="ssl证书配置" name="ssl">
+        <el-form label-width="80px" style="width: 50%">
+          <el-form-item label="KEY(私钥)">
+            <el-input v-model="ssl.key"></el-input>
+          </el-form-item>
+          <el-form-item label="PEM(公钥)">
+            <el-input v-model="ssl.pem"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="通知配置" name="notice">
+        <el-form label-width="80px" style="width: 50%">
+          <el-form-item label="类型">
+            <el-radio-group v-model="notice.type">
+              <el-radio label="email">邮件推送</el-radio>
+              <el-radio label="gotify">gotify推送</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <div v-show="notice.type === 'email'">
+            <el-form-item label="主机">
+              <el-input v-model="notice.email_server_host"></el-input>
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model="notice.email_username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model="notice.email_password"></el-input>
+            </el-form-item>
+            <el-form-item label="加密方式">
+              <el-input v-model="notice.email_encrypt"></el-input>
+            </el-form-item>
+            <el-form-item label="端口号">
+              <el-input v-model="notice.email_port"></el-input>
+            </el-form-item>
+          </div>
+          <div v-show="notice.type === 'gotify'">
+            <el-form-item label="主机">
+              <el-input v-model="notice.gotify_server_url"></el-input>
+            </el-form-item>
+            <el-form-item label="token">
+              <el-input v-model="notice.gotify_server_token"></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="脚本配置" name="script">
+        <el-form label-width="150px" style="width: 50%" @submit.native.prevent>
+          <el-form-item label="台服lol幸运抽奖sk">
+            <el-input v-model="script.tw_lol_luck_draw_sk"></el-input>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -30,13 +81,31 @@ import {Message} from "element-ui";
 export default {
   data(){
     return {
-      group:"test1",
-      test1:{
-        t1:"",
-        t2:"",
+      group:"k8s",
+      k8s:{
+        host:"",
+        port:"",
+        user:"",
+        password:"",
       },
-      test2:{
-        t1:"",
+      ssl:{
+        key:"",
+        pem:"",
+      },
+      notice:{
+        type:"email",//可选参数 email gotify
+        //email配置
+        email_server_host:"",
+        email_username:"",
+        email_password:"",
+        email_encrypt:"",
+        email_port:"",
+        //gotify配置
+        gotify_server_url:"",
+        gotify_server_token:"",
+      },
+      script:{
+        tw_lol_luck_draw_sk:"",
       },
     }
   },
