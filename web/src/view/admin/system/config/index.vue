@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="group">
       <el-tab-pane label="通知配置" name="notice">
-        <el-form label-width="80px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%">
           <el-form-item label="类型">
             <el-radio-group v-model="notice.type">
               <el-radio label="email">邮件推送</el-radio>
@@ -37,7 +37,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="ssl证书配置" name="ssl">
-        <el-form label-width="80px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%">
           <el-form-item label="KEY(私钥)">
             <el-input v-model="ssl.key"></el-input>
           </el-form-item>
@@ -47,7 +47,10 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="k8s配置" name="k8s">
-        <el-form label-width="80px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%">
+          <el-form-item label="允许登录的用户">
+            <el-input v-model="k8s.admin_user"></el-input>
+          </el-form-item>
           <el-form-item label="主机">
             <el-input v-model="k8s.host"></el-input>
           </el-form-item>
@@ -99,6 +102,7 @@ export default {
         pem:"",
       },
       k8s:{
+        admin_user:"",
         host:"",
         port:"",
         user:"",

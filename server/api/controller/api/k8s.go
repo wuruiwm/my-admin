@@ -9,8 +9,8 @@ import (
 )
 
 func K8sLogin(c *gin.Context) {
-	param := &request.K8sLogin{}
-	if err := c.ShouldBindQuery(param); err != nil {
+	param := &request.AdminUserLogin{}
+	if err := c.ShouldBindJSON(param); err != nil {
 		response.Error(c, util.ValidatorError(err))
 		return
 	}

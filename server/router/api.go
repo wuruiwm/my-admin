@@ -17,7 +17,7 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 			uploadGroup.POST("/file", api.UploadFile)
 		}
 		//k8s登录
-		r.POST("/k8s/login", api.K8sLogin)
+		apiGroup.POST("/k8s/login", api.K8sLogin)
 	}
 	return r
 }

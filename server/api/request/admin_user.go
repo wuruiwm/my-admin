@@ -13,6 +13,7 @@ type AdminUserLogin struct {
 type AdminUserRoleId struct {
 	AdminRoleId string `form:"admin_role_id" json:"admin_role_id"`
 }
+
 type AdminUserList struct {
 	PageBase
 	AdminUserRoleId
