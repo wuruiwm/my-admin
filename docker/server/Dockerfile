@@ -8,7 +8,6 @@ ENV GOPROXY https://goproxy.cn,direct
 # 设置工作目录为/build 并且拷贝项目代码
 WORKDIR /build
 COPY ./server .
-RUN ls /build
 
 # 下载依赖包 并编译
 RUN go mod tidy && go build -ldflags="-s -w" -o /app/main main.go
