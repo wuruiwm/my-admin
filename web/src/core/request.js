@@ -53,7 +53,7 @@ service.interceptors.response.use(
                     showClose: true
                 })
                 localStorage.setItem("token", "")
-                router.push({name: "login", replace: true})
+                router.push({name: "adminLogin", replace: true})
             }else if(response.data.code === 1){
                 Message({
                     type: "error",
