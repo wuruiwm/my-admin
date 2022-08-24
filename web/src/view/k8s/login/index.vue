@@ -4,11 +4,11 @@
       <div style="background: #326de6;width: 100%;color:#ffffff;font-size: 20px;height: 50px;line-height: 50px;text-indent: 22px;border-radius: 4px 4px 0 0;">
         Kubernetes Dashboard
       </div>
-      <el-form ref="form" label-width="40px" style="margin-top: 20px;" @keyup.enter.native="login">
-        <el-form-item>
+      <el-form ref="form" label-width="40px" :model="form" :rules="rules" style="margin-top: 20px;" @keyup.enter.native="login">
+        <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
@@ -31,10 +31,83 @@ export default {
         username: "",
         password: "",
       },
+      rules: {
+        username: [
+          {required: true, message: "请填写用户名", trigger: "blur"},
+          {
+            validator: (rule, value, callback) => {
+              if (value.length < 3) {
+                return callback(new Error("用户名不能少于三位"))
+              } else {
+                callback()
+              }
+            }, trigger: "blur"
+          }],
+        password: [
+          {required: true, message: "请填写密码", trigger: "blur"},
+          {
+            validator: (rule, value, callback) => {
+              if (value.length < 6) {
+                return callback(new Error("密码不能少于六位"))
+              } else {
+                callback()
+              }
+            }, trigger: "blur"
+          }]
+      },
       loading:null,
+      baseUrl:window.location.origin
     }
   },
+  created() {
+    this.checkLoginStatus()
+  },
+  mounted() {
+    this.updateIco()
+  },
   methods: {
+    async checkLoginStatus(){
+      let res = await service({
+        baseURL: this.baseUrl,
+        url: "/api/v1/csrftoken/token",
+        method: "get",
+      })
+      if(!res.hasOwnProperty("token")){
+        return
+      }
+      let refreshRes = await service({
+        baseURL: this.baseUrl,
+        url: "/api/v1/token/refresh",
+        method: "post",
+        headers:{
+          "x-csrf-token": res.token,
+          "jwetoken":cookie.get("jweToken")
+        },
+        data:{
+          "jweToken":cookie.get("jweToken"),
+        }
+      })
+      if(refreshRes.hasOwnProperty("jweToken")){
+        Message({
+          type: "success",
+          message: "已登录",
+          showClose: true
+        })
+        location.href = "/"
+      }
+    },
+    updateIco(){
+      let icoUrl = "/assets/images/kubernetes-logo.png"
+      let ico = document.querySelector('link[rel="icon"]')
+      if (ico !== null) {
+        ico.href = icoUrl
+      } else {
+        ico = document.createElement("link")
+        ico.rel = "icon"
+        ico.href = icoUrl
+        document.head.appendChild(ico)
+      }
+    },
     openLoading(){
       this.loading = this.$loading({
         lock: true,
@@ -46,54 +119,66 @@ export default {
     closeLoading(){
       this.loading.close()
     },
-    login() {
-      this.openLoading()
-      Promise.all([service({
-        url: "/api/k8s/login",
-        method: "post",
-        data: this.form
-      }), service({
-        baseURL: "/",
-        url: "/api/v1/csrftoken/login",
-        method: "get",
-      })]).then(async (result) => {
-        this.closeLoading()
-        if (result[0].code !== 0) {
-          return
-        }
-        if(!result[1].hasOwnProperty("token")){
+    async login() {
+      await this.$refs.form.validate(async (valid) => {
+        if (!valid) {
           Message({
             type: "error",
-            message: "登录失败",
+            message: "请正确填写登录信息",
             showClose: true
           })
-          return
+          return false
         }
         this.openLoading()
-        let loginRes = await service({
-          baseURL: "/",
-          url: "/api/v1/login",
+        let getToken = service({
+          url: "/api/k8s/login",
           method: "post",
-          headers: {
-            "x-csrf-token": result[1].token
-          },
-          data: {
-            token: result[0].data.token
-          }
+          data: this.form
         })
-        this.closeLoading()
-        if (loginRes.hasOwnProperty("jweToken")) {
-          cookie.set("jweToken", loginRes.jweToken, 30)
-          location.href = "/"
-        }else{
-          Message({
-            type: "error",
-            message: "登录失败",
-            showClose: true
+        let getCsrfToken = service({
+          baseURL: this.baseUrl,
+          url: "/api/v1/csrftoken/login",
+          method: "get",
+        })
+        Promise.all([getToken, getCsrfToken]).then(async (result) => {
+          this.closeLoading()
+          if (result[0].code !== 0) {
+            return
+          }
+          if(!result[1].hasOwnProperty("token")){
+            Message({
+              type: "error",
+              message: "登录失败",
+              showClose: true
+            })
+            return
+          }
+          this.openLoading()
+          let loginRes = await service({
+            baseURL: this.baseUrl,
+            url: "/api/v1/login",
+            method: "post",
+            headers: {
+              "x-csrf-token": result[1].token
+            },
+            data: {
+              token: result[0].data.token
+            }
           })
-        }
-      }).catch((error) => {
-        this.closeLoading()
+          this.closeLoading()
+          if (loginRes.hasOwnProperty("jweToken")) {
+            cookie.set("jweToken", loginRes.jweToken, 30)
+            location.href = "/"
+          }else{
+            Message({
+              type: "error",
+              message: "登录失败",
+              showClose: true
+            })
+          }
+        }).catch((error) => {
+          this.closeLoading()
+        })
       })
     }
   }
