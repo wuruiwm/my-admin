@@ -56,7 +56,7 @@ export default {
           console.log(loginRes)
           if(loginRes.hasOwnProperty("jweToken") && loginRes.jweToken){
             cookie.set("jweToken",loginRes.jweToken,30)
-            router.push({path:"/"})
+            location.href = "/"
           }
         }
       }
