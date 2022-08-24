@@ -67,6 +67,10 @@ export default {
   },
   methods: {
     async checkLoginStatus(){
+      let jweToken = cookie.get("jweToken")
+      if(!jweToken){
+        return
+      }
       let res = await service({
         baseURL: this.baseUrl,
         url: "/api/v1/csrftoken/token",
@@ -81,10 +85,10 @@ export default {
         method: "post",
         headers:{
           "x-csrf-token": res.token,
-          "jwetoken":cookie.get("jweToken")
+          "jwetoken":jweToken
         },
         data:{
-          "jweToken":cookie.get("jweToken"),
+          "jweToken":jweToken
         }
       })
       if(refreshRes.hasOwnProperty("jweToken")){

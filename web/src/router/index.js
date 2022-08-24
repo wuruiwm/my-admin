@@ -51,7 +51,7 @@ const baseRouters = [
         name: "k8sLogin",
         component: () => import("@/view/k8s/login/index.vue"),
         meta: {
-            title: "k8s登录"
+            title: "Kubernetes Dashboard"
         },
         children: [],
     },
