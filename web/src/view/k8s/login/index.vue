@@ -17,6 +17,7 @@
 <script>
 import service from "@/core/request";
 import cookie from "vue-cookie"
+import router from "@/router";
 
 export default {
   data(){
@@ -36,13 +37,13 @@ export default {
       })
       if(k8sLoginRes.code === 0){
         let csrfTokenRes = await service({
-          baseURL:"https://k8s.nikm.cn",
+          baseURL:"/",
           url: "/api/v1/csrftoken/login",
           method: "get",
         })
         if(csrfTokenRes.hasOwnProperty("token") && csrfTokenRes.token){
           let loginRes = await service({
-            baseURL:"https://k8s.nikm.cn",
+            baseURL:"/",
             url: "/api/v1/login",
             method: "post",
             headers:{
@@ -55,6 +56,7 @@ export default {
           console.log(loginRes)
           if(loginRes.hasOwnProperty("jweToken") && loginRes.jweToken){
             cookie.set("jweToken",loginRes.jweToken,30)
+            router.push({path:"/"})
           }
         }
       }
