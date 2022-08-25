@@ -1,6 +1,10 @@
 package initialize
 
-import "github.com/robfig/cron/v3"
+import (
+	"app/cron"
+	"app/util"
+	crontab "github.com/robfig/cron/v3"
+)
 
 type CronList struct {
 	spec string
@@ -8,11 +12,12 @@ type CronList struct {
 }
 
 func Cron() {
+	util.NoticeGotify("测试标题", "测试内容")
+	cron.NewTwLolLuckDraw().Run()
 	//添加定时任务 cron表达式文档 https://pkg.go.dev/github.com/robfig/cron
-	c := cron.New(cron.WithSeconds())
+	c := crontab.New(crontab.WithSeconds())
 	cronList := []*CronList{
-		//{"* * * * * *", task.SecondCron}, //秒  级 定时任务
-		//{"0 * * * * *", task.MinuteCron}, //分钟级 定时任务
+		{"0 * * * * *", cron.NewTwLolLuckDraw().Run},
 	}
 	for _, v := range cronList {
 		_, err := c.AddFunc(v.spec, v.run)
