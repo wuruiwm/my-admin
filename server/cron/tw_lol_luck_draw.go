@@ -148,5 +148,6 @@ func (t *TwLolLuckDraw) luckDraw() error {
 	if err := global.Db.Create(twLolLuckDraw).Error; err != nil {
 		return errors.New("抽奖记录存入数据库 error:" + err.Error())
 	}
+	util.Notice("台服lol幸运抽奖", twLolLuckDraw.Prize)
 	return nil
 }
