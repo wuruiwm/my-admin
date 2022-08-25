@@ -72,7 +72,7 @@
         :current-page="list.page"
         :page-size="list.page_size"
         :page-sizes="[10, 30, 50, 100]"
-        :style="{float:'right',padding:'20px'}"
+        style="float:right;padding:20px"
         :total="list.total"
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="pageChange"
@@ -136,38 +136,38 @@ export default {
       passwordDialogVisible: false,
       rules: {
         username: [
-          {required: true, message: '请填写用户名', trigger: 'blur'},
+          {required: true, message: "请填写用户名", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value.length < 3) {
-                return callback(new Error('用户名不能少于三位'))
+                return callback(new Error("用户名不能少于三位"))
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }
         ],
         nickname: [
-          {required: true, message: '请填写昵称', trigger: 'blur'},
+          {required: true, message: "请填写昵称", trigger: "blur"},
         ],
         password: [],
         admin_role_id: [
-          {required: true, message: '请选择角色', trigger: 'blur'}
+          {required: true, message: "请选择角色", trigger: "blur"}
         ],
       },
       passwordUpdateRules: {
         password: [],
       },
       createPasswordRule: [
-        {required: true, message: '请填写密码', trigger: 'blur'},
+        {required: true, message: "请填写密码", trigger: "blur"},
         {
           validator: (rule, value, callback) => {
             if (value.length < 6) {
-              return callback(new Error('密码不能少于六位'))
+              return callback(new Error("密码不能少于六位"))
             } else {
               callback()
             }
-          }, trigger: 'blur'
+          }, trigger: "blur"
         }
       ],
       form: {
@@ -195,8 +195,8 @@ export default {
     },
     async roleUpdate(row) {
       let res = await service({
-        url: '/admin/user/roleUpdate',
-        method: 'put',
+        url: "/admin/user/roleUpdate",
+        method: "put",
         data: {
           id: row.id,
           admin_role_id: row.admin_role_id,
@@ -204,7 +204,7 @@ export default {
       })
       if (res.code === 0) {
         Message({
-          type: 'success',
+          type: "success",
           message: "角色设置成功",
           showClose: true
         })
@@ -232,22 +232,22 @@ export default {
       this.form.id = row.id
     },
     del(row) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
           .then(async () => {
             let res = await service({
-              url: '/admin/user/delete',
-              method: 'delete',
+              url: "/admin/user/delete",
+              method: "delete",
               data: {
                 id: row.id
               }
             })
             if (res.code === 0) {
               Message({
-                type: 'success',
+                type: "success",
                 message: "删除成功",
                 showClose: true
               })
@@ -273,20 +273,20 @@ export default {
       await this.$refs.passwordUpdateForm.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
         }
         let res = await service({
-          url: '/admin/user/passwordUpdate',
-          method: 'put',
+          url: "/admin/user/passwordUpdate",
+          method: "put",
           data: this.form
         })
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: "修改成功",
             showClose: true
           })
@@ -299,8 +299,8 @@ export default {
       await this.$refs.form.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
@@ -309,8 +309,8 @@ export default {
         let res
         if (this.form.id === "") {
           res = await service({
-            url: '/admin/user/create',
-            method: 'post',
+            url: "/admin/user/create",
+            method: "post",
             data: this.form
           })
           successMsg = "创建成功"
@@ -324,7 +324,7 @@ export default {
         }
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: successMsg,
             showClose: true
           })

@@ -14,7 +14,7 @@
         <el-button icon="el-icon-download" size="small" @click="download('pem')">下载公钥</el-button>
       </el-form-item>
       <el-form-item>
-        <span style="color: #3d763e;">证书到期时间: {{expire_time}}</span>
+        <span style="color: #3d763e;">证书到期时间: {{ssl.expire_time}}</span>
       </el-form-item>
     </el-form>
     <prism-editor class="my-editor" :value="ssl.key" readonly :highlight="highlighter" line-numbers style="width: 48%;float: left;"></prism-editor>

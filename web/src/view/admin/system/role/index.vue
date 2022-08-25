@@ -53,7 +53,7 @@
         :current-page="list.page"
         :page-size="list.page_size"
         :page-sizes="[10, 30, 50, 100]"
-        :style="{float:'right',padding:'20px'}"
+        style="float:right;padding:20px"
         :total="list.total"
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="pageChange"

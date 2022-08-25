@@ -6,7 +6,7 @@
         <el-aside class="main-cont main-left">
           <div style="background: #191a23" class="tilte">
             <img src="@/assets/logo.png" alt class="logoimg">
-            <h2 v-if="isSider" :style="{color:'#fff'}" class="tit-text" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">
+            <h2 v-if="isSider" style="color:#fff" class="tit-text" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">
               后台管理系统</h2>
           </div>
           <div class="aside">
@@ -77,7 +77,7 @@
                     <div class="fl-right right-box">
                       <div class="search-component">
                         <div
-                            :style="{display:'inline-block',float:'right',width:'31px',textAlign:'left',fontSize:'16px',paddingTop:'2px'}"
+                            style="display:inline-block;float:right;width:31px;text-align:left;font-size:16px;padding-top:2px}"
                             class="user-box"
                         >
                           <i :class="[reloading ? 'reloading' : '']" :style="{cursor:'pointer',paddingLeft:'1px'}"

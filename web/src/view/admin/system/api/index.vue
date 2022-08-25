@@ -86,7 +86,7 @@
         :current-page="list.page"
         :page-size="list.page_size"
         :page-sizes="[10, 30, 50, 100]"
-        :style="{float:'right',padding:'20px'}"
+        style="float:right;padding:20px"
         :total="list.total"
         layout="total, sizes, prev, pager, next, jumper"
         @current-change="pageChange"
@@ -202,22 +202,22 @@ export default {
       this.form.name = row.name
     },
     del(row) {
-      this.$confirm('此操作将永久删除该api, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该api, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
           .then(async () => {
             let res = await service({
-              url: '/admin/api/delete',
-              method: 'delete',
+              url: "/admin/api/delete",
+              method: "delete",
               data: {
                 id: row.id
               }
             })
             if (res.code === 0) {
               Message({
-                type: 'success',
+                type: "success",
                 message: "删除成功",
                 showClose: true
               })
@@ -230,8 +230,8 @@ export default {
     },
     async groupList(){
       let res = await service({
-        url: '/admin/api/group',
-        method: 'get'
+        url: "/admin/api/group",
+        method: "get"
       })
       if(res.code === 0){
         this.group = res.data
@@ -249,8 +249,8 @@ export default {
       await this.$refs.form.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
@@ -259,22 +259,22 @@ export default {
         let res
         if (this.form.id === "") {
           res = await service({
-            url: '/admin/api/create',
-            method: 'post',
+            url: "/admin/api/create",
+            method: "post",
             data: this.form
           })
           successMsg = "创建成功"
         } else {
           res = await service({
-            url: '/admin/api/update',
-            method: 'put',
+            url: "/admin/api/update",
+            method: "put",
             data: this.form
           })
           successMsg = "修改成功"
         }
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: successMsg,
             showClose: true
           })
