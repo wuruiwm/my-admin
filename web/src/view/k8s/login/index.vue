@@ -6,10 +6,14 @@
       </div>
       <el-form ref="form" label-width="40px" :model="form" :rules="rules" style="margin-top: 20px;" @keyup.enter.native="login">
         <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+          <el-input v-model="form.username" placeholder="请输入用户名">
+            <i slot="prefix" class="el-input__icon el-icon-user"/>
+          </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
+          <el-input v-model="form.password" type="password" placeholder="请输入密码">
+            <i slot="prefix" class="el-input__icon el-icon-lock"/>
+          </el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="medium" @click="login" style="background: #326de6;border-color: #326de6;">登录</el-button>

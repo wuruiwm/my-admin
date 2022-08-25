@@ -61,6 +61,8 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 			configGroup.GET("/list", admin.AdminConfigList)
 			configGroup.PUT("/update", admin.AdminConfigUpdate)
 		}
+		//ssl证书
+		adminGroup.GET("/ssl", admin.Ssl)
 	}
 	return r
 }
