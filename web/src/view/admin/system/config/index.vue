@@ -19,32 +19,32 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
-    <el-button type="primary" @click="submit" style="margin-left: 80px">保存修改</el-button>
+    <el-button style="margin-left: 80px" type="primary" @click="submit">保存修改</el-button>
   </div>
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
+import service from "@/core/request"
+import {Message} from "element-ui"
 
 export default {
-  data(){
+  data() {
     return {
-      group:"test1",
-      test1:{
-        t1:"",
-        t2:"",
+      group: "test1",
+      test1: {
+        t1: "",
+        t2: "",
       },
-      test2:{
-        t1:"",
+      test2: {
+        t1: "",
       },
     }
   },
-  methods:{
-    async submit(){
+  methods: {
+    async submit() {
       let res = await service({
-        url: '/admin/config/update',
-        method: 'put',
+        url: "/admin/config/update",
+        method: "put",
         data: {
           group: this.group,
           data: this.configObjToArray(this[this.group]),
@@ -52,36 +52,36 @@ export default {
       })
       if (res.code === 0) {
         Message({
-          type: 'success',
+          type: "success",
           message: "保存成功",
           showClose: true
         })
       }
     },
-    configObjToArray(obj){
+    configObjToArray(obj) {
       let arr = []
-      for(let k in obj){
+      for (let k in obj) {
         arr.push({
-          key:k,
-          value:obj[k]
+          key: k,
+          value: obj[k]
         })
       }
       return arr
     }
   },
-  watch:{
-    group:{
-      immediate:true,
-      async handler(val){
+  watch: {
+    group: {
+      immediate: true,
+      async handler(val) {
         let res = await service({
-          url: '/admin/config/list',
-          method: 'get',
-          params:{
-            group:val,
+          url: "/admin/config/list",
+          method: "get",
+          params: {
+            group: val,
           }
         })
-        if(res.code === 0){
-          res.data.forEach((v)=>{
+        if (res.code === 0) {
+          res.data.forEach((v) => {
             this[val][v.key] = v.value
           })
         }

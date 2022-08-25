@@ -1,4 +1,4 @@
-import service from "@/core/request";
+import service from "@/core/request"
 
 export default {
     data() {
@@ -46,12 +46,12 @@ export default {
     watch: {
         "list.date": {
             handler(v) {
-                if(v){
-                    if(v.length === 2){
+                if (v) {
+                    if (v.length === 2) {
                         this.list.param.start_time = v[0]
                         this.list.param.end_time = v[1]
                     }
-                }else{
+                } else {
                     this.list.param.start_time = ""
                     this.list.param.end_time = ""
                 }

@@ -1,8 +1,8 @@
-.clearflex {
+.clear-flex {
   *zoom: 1;
 }
 
-.clearflex:after {
+.clear-flex:after {
   content: "";
   display: block;
   height: 0;
@@ -59,6 +59,6 @@
   text-align: center;
 }
 
-.el-range-editor--small .el-range__close-icon, .el-range-editor--small .el-range__icon{
+.el-range-editor--small .el-range__close-icon, .el-range-editor--small .el-range__icon {
   line-height: 23px;
 }

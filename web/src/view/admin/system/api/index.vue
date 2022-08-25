@@ -5,7 +5,7 @@
         <el-input v-model="list.param.keyword" placeholder="请输入关键词搜索" size="small"></el-input>
       </el-form-item>
       <el-form-item label="请选择请求方式">
-        <el-select placeholder="请选择请求方式" v-model="list.param.method" size="small" clearable>
+        <el-select v-model="list.param.method" clearable placeholder="请选择请求方式" size="small">
           <el-option value="GET">GET</el-option>
           <el-option value="POST">POST</el-option>
           <el-option value="PUT">PUT</el-option>
@@ -13,46 +13,46 @@
         </el-select>
       </el-form-item>
       <el-form-item label="请选择分组">
-        <el-select placeholder="请选择分组" v-model="list.param.group" size="small" clearable>
-          <el-option v-for="v in group" :value="v" :key="v" :label="v"></el-option>
+        <el-select v-model="list.param.group" clearable placeholder="请选择分组" size="small">
+          <el-option v-for="v in group" :key="v" :label="v" :value="v"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
             v-model="list.date"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            size="small">
+            range-separator="至"
+            size="small"
+            start-placeholder="开始日期"
+            type="datetimerange"
+            value-format="yyyy-MM-dd HH:mm:ss">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="this.getList" size="small">搜索</el-button>
+        <el-button icon="el-icon-search" size="small" type="primary" @click="this.getList">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-plus" @click="create" size="small">创建api</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建api</el-button>
       </el-form-item>
     </el-form>
     <el-table
         :data="list.data"
-        border
-        style="width: 100%" :header-cell-style="{backgroundColor:'#fafafa'}">
+        :header-cell-style="{backgroundColor:'#fafafa'}"
+        border style="width: 100%">
       <el-table-column
-          prop="path"
           label="路径"
-          min-width="130">
+          min-width="130"
+          prop="path">
       </el-table-column>
       <el-table-column
-          prop="group"
           label="分组"
-          min-width="130">
+          min-width="130"
+          prop="group">
       </el-table-column>
       <el-table-column
-          prop="name"
           label="名称"
-          min-width="130">
+          min-width="130"
+          prop="name">
       </el-table-column>
       <el-table-column
           label="请求方式"
@@ -67,9 +67,9 @@
         </template>
       </el-table-column>
       <el-table-column
-          prop="create_time"
           label="创建时间"
-          min-width="160">
+          min-width="160"
+          prop="create_time">
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -82,13 +82,13 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        background
         :current-page="list.page"
         :page-size="list.page_size"
         :page-sizes="[10, 30, 50, 100]"
-        :style="{float:'right',padding:'20px'}"
         :total="list.total"
+        background
         layout="total, sizes, prev, pager, next, jumper"
+        style="float:right;padding:20px"
         @current-change="pageChange"
         @size-change="pageSizeChange"
     />
@@ -96,23 +96,23 @@
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @closed="dialogClosed">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" @keyup.enter.native="formSubmit">
         <el-form-item label="路径" prop="path">
-          <el-input v-model="form.path" size="small" placeholder="请输入路径"/>
+          <el-input v-model="form.path" placeholder="请输入路径" size="small"/>
         </el-form-item>
         <el-form-item label="请求方式" prop="method">
-          <el-select placeholder="请选择请求方式" v-model="form.method" style="width: 100%;" size="small">
+          <el-select v-model="form.method" placeholder="请选择请求方式" size="small" style="width: 100%">
             <el-option value="GET">GET</el-option>
             <el-option value="POST">POST</el-option>
             <el-option value="PUT">PUT</el-option>
             <el-option value="DELETE">DELETE</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分组" prop="group" ref="formGroup">
+        <el-form-item ref="formGroup" label="分组" prop="group">
           <el-autocomplete
               v-model="form.group"
               :fetch-suggestions="groupSelectSearch"
               placeholder="请输入分组"
-              style="width: 100%;"
               size="small"
+              style="width: 100%"
               @select="groupSelectChecked">
             <template v-slot="{ item }">
               {{ item }}
@@ -120,20 +120,20 @@
           </el-autocomplete>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" size="small" placeholder="请输入名称"/>
+          <el-input v-model="form.name" placeholder="请输入名称" size="small"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialog.visible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="formSubmit" size="small">确 定</el-button>
+        <el-button size="small" @click="dialog.visible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="formSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
+import service from "@/core/request"
+import {Message} from "element-ui"
 
 export default {
   data() {
@@ -142,10 +142,10 @@ export default {
         url: "/admin/api/list",
         param: {
           method: "",
-          group:"",
+          group: "",
         }
       },
-      group:[],
+      group: [],
       dialog: {
         title: "",
         visible: false,
@@ -167,7 +167,7 @@ export default {
       form: {
         id: "",
         path: "",
-        group:"",
+        group: "",
         method: "",
         name: ""
       },
@@ -184,7 +184,7 @@ export default {
       }) : this.group
       cb(result)
     },
-    groupSelectChecked(item){
+    groupSelectChecked(item) {
       this.$refs.formGroup.resetField()
       this.form.group = item
     },
@@ -202,22 +202,22 @@ export default {
       this.form.name = row.name
     },
     del(row) {
-      this.$confirm('此操作将永久删除该api, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该api, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
           .then(async () => {
             let res = await service({
-              url: '/admin/api/delete',
-              method: 'delete',
+              url: "/admin/api/delete",
+              method: "delete",
               data: {
                 id: row.id
               }
             })
             if (res.code === 0) {
               Message({
-                type: 'success',
+                type: "success",
                 message: "删除成功",
                 showClose: true
               })
@@ -228,12 +228,12 @@ export default {
           .catch(() => {
           })
     },
-    async groupList(){
+    async groupList() {
       let res = await service({
-        url: '/admin/api/group',
-        method: 'get'
+        url: "/admin/api/group",
+        method: "get"
       })
-      if(res.code === 0){
+      if (res.code === 0) {
         this.group = res.data
       }
     },
@@ -249,8 +249,8 @@ export default {
       await this.$refs.form.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
@@ -259,22 +259,22 @@ export default {
         let res
         if (this.form.id === "") {
           res = await service({
-            url: '/admin/api/create',
-            method: 'post',
+            url: "/admin/api/create",
+            method: "post",
             data: this.form
           })
           successMsg = "创建成功"
         } else {
           res = await service({
-            url: '/admin/api/update',
-            method: 'put',
+            url: "/admin/api/update",
+            method: "put",
             data: this.form
           })
           successMsg = "修改成功"
         }
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: successMsg,
             showClose: true
           })

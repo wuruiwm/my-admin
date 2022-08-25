@@ -1,11 +1,11 @@
 <template>
   <div id="admin">
     <div id="userLayout">
-      <div class="login_panle">
-        <div class="login_panle_form">
-          <div class="login_panle_form_title">
-            <img alt="后台管理系统" class="login_panle_form_title_logo" src="@/assets/logo.png">
-            <p class="login_panle_form_title_p" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">后台管理系统</p>
+      <div class="login_panel">
+        <div class="login_panel_form">
+          <div class="login_panel_form_title">
+            <img alt="后台管理系统" class="login_panel_form_title_logo" src="@/assets/logo.png">
+            <p class="login_panel_form_title_p" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">后台管理系统</p>
           </div>
           <el-form
               ref="loginForm"
@@ -34,7 +34,7 @@
             <div/>
             <el-form-item>
               <el-button
-                  style="width: 100%;"
+                  style="width: 100%"
                   type="primary"
                   @click="submitForm"
               >登 录
@@ -42,8 +42,8 @@
             </el-form-item>
           </el-form>
         </div>
-        <div class="login_panle_right"/>
-        <div class="login_panle_foot">
+        <div class="login_panel_right"/>
+        <div class="login_panel_foot">
           <div class="copyright">Copyright &copy; {{ new Date().getFullYear() }} 💖 wuruiwm</div>
         </div>
       </div>
@@ -52,10 +52,10 @@
 </template>
 
 <script>
-import {Message} from "element-ui";
-import service from "@/core/request";
-import {adminDefaultRouterName, adminRouterInit} from "@/core/adminMenu";
-import router from "@/router";
+import {Message} from "element-ui"
+import service from "@/core/request"
+import {adminDefaultRouterName, adminRouterInit} from "@/core/adminMenu"
+import router from "@/router"
 
 export default {
   data() {
@@ -140,6 +140,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/style/base.scss";
 @import "@/style/mobile.scss";
+
 #admin {
   background: #eee;
   height: 100vh;
@@ -160,7 +161,7 @@ export default {
   height: 100%;
   position: relative;
 
-  .login_panle {
+  .login_panel {
     position: absolute;
     top: 3vh;
     left: 2vw;
@@ -173,7 +174,7 @@ export default {
     align-items: center;
     justify-content: space-evenly;
 
-    .login_panle_right {
+    .login_panel_right {
       background-image: url("~@/assets/login_left.svg");
       background-size: cover;
       width: 40%;
@@ -181,25 +182,25 @@ export default {
       float: right !important;
     }
 
-    .login_panle_form {
+    .login_panel_form {
       width: 420px;
       background-color: #fff;
       padding: 40px 40px 40px 40px;
       border-radius: 10px;
       box-shadow: 2px 3px 7px rgba(0, 0, 0, .2);
 
-      .login_panle_form_title {
+      .login_panel_form_title {
 
         display: flex;
         align-items: center;
         margin: 30px 0;
 
-        .login_panle_form_title_logo {
+        .login_panel_form_title_logo {
           width: 90px;
           height: 72px;
         }
 
-        .login_panle_form_title_p {
+        .login_panel_form_title_p {
           font-size: 40px;
 
           padding-left: 20px;
@@ -219,7 +220,7 @@ export default {
       }
     }
 
-    .login_panle_foot {
+    .login_panel_foot {
       position: absolute;
       bottom: 20px;
 
@@ -244,16 +245,16 @@ export default {
 
 //小屏幕不显示右侧，将登陆框居中
 @media (max-width: 750px) {
-  .login_panle_right {
+  .login_panel_right {
     display: none;
   }
-  .login_panle {
+  .login_panel {
     width: 100vw;
     height: 100vh;
     top: 0;
     left: 0;
   }
-  .login_panle_form {
+  .login_panel_form {
     width: 100%;
   }
 }
