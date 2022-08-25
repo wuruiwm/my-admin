@@ -2,23 +2,33 @@
   <div>
     <el-form :inline="true">
       <el-form-item>
-        <el-button type="primary" class="copy" icon="el-icon-document-copy" :disabled="!ssl.key" size="small" :data-clipboard-text="ssl.key" @click="copy">复制私钥</el-button>
+        <el-button :data-clipboard-text="ssl.key" :disabled="!ssl.key" class="copy" icon="el-icon-document-copy"
+                   size="small"
+                   type="primary" @click="copy">复制私钥
+        </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="copy" icon="el-icon-document-copy" :disabled="!ssl.pem" size="small" :data-clipboard-text="ssl.pem" @click="copy">复制公钥</el-button>
+        <el-button :data-clipboard-text="ssl.pem" :disabled="!ssl.pem" class="copy" icon="el-icon-document-copy"
+                   size="small"
+                   type="primary" @click="copy">复制公钥
+        </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-download" size="small" :disabled="!ssl.key" @click="download('key')">下载私钥</el-button>
+        <el-button :disabled="!ssl.key" icon="el-icon-download" size="small" @click="download('key')">下载私钥
+        </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-download" size="small" :disabled="!ssl.pem" @click="download('pem')">下载公钥</el-button>
+        <el-button :disabled="!ssl.pem" icon="el-icon-download" size="small" @click="download('pem')">下载公钥
+        </el-button>
       </el-form-item>
       <el-form-item v-if="ssl.expire_time">
-        <span style="color: #3d763e;">证书到期时间: {{ssl.expire_time}}</span>
+        <span style="color: #3d763e;">证书到期时间: {{ ssl.expire_time }}</span>
       </el-form-item>
     </el-form>
-    <prism-editor class="my-editor" v-if="ssl.key" :value="ssl.key" readonly :highlight="highlighter" line-numbers style="width: 48%;float: left;"></prism-editor>
-    <prism-editor class="my-editor" v-if="ssl.pem" :value="ssl.pem" readonly :highlight="highlighter" line-numbers style="width: 48%;float: right;"></prism-editor>
+    <prism-editor v-if="ssl.key" :highlight="highlighter" :value="ssl.key" class="my-editor" line-numbers readonly
+                  style="width: 48%;float: left;"></prism-editor>
+    <prism-editor v-if="ssl.pem" :highlight="highlighter" :value="ssl.pem" class="my-editor" line-numbers readonly
+                  style="width: 48%;float: right;"></prism-editor>
   </div>
 </template>
 
@@ -39,10 +49,10 @@ export default {
   },
   data() {
     return {
-      ssl:{
+      ssl: {
         key: "",
         pem: "",
-        expire_time:"",
+        expire_time: "",
       },
     }
   },
@@ -58,14 +68,14 @@ export default {
     }
   },
   methods: {
-    download(type){
+    download(type) {
       let export_blob = new Blob([this.ssl[type]])
       let save_link = document.createElement("a")
       save_link.href = window.URL.createObjectURL(export_blob)
-      save_link.download = type +'.txt'
+      save_link.download = type + '.txt'
       save_link.click()
     },
-    copy(){
+    copy() {
       let clipboard = new Clipboard(".copy")
       clipboard.on('success', e => {
         Message({

@@ -1,22 +1,25 @@
 <template>
-  <div style="height: 100%;width: 100%;background: #edeff0;display: flex;justify-content: space-between;align-items: center;">
+  <div class="box">
     <div style="background-color: #ffffff;width:60%;margin: 0 auto;border-radius: 4px;">
-      <div style="background: #326de6;width: 100%;color:#ffffff;font-size: 20px;height: 50px;line-height: 50px;text-indent: 22px;border-radius: 4px 4px 0 0;">
+      <div class="title">
         Kubernetes Dashboard
       </div>
-      <el-form ref="form" label-width="40px" :model="form" :rules="rules" style="margin-top: 20px;" @keyup.enter.native="login">
+      <el-form ref="form" :model="form" :rules="rules" label-width="40px" style="margin-top: 20px;"
+               @keyup.enter.native="login">
         <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="请输入用户名">
             <i slot="prefix" class="el-input__icon el-icon-user"/>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码">
+          <el-input v-model="form.password" placeholder="请输入密码" type="password">
             <i slot="prefix" class="el-input__icon el-icon-lock"/>
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="medium" @click="login" style="background: #326de6;border-color: #326de6;">登录</el-button>
+          <el-button size="medium" style="background: #326de6;border-color: #326de6;" type="primary" @click="login">
+            登录
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -59,8 +62,8 @@ export default {
             }, trigger: "blur"
           }]
       },
-      loading:null,
-      baseUrl:window.location.origin
+      loading: null,
+      baseUrl: window.location.origin
     }
   },
   created() {
@@ -70,9 +73,9 @@ export default {
     this.updateIco()
   },
   methods: {
-    async checkLoginStatus(){
+    async checkLoginStatus() {
       let jweToken = cookie.get("jweToken")
-      if(!jweToken){
+      if (!jweToken) {
         return
       }
       let res = await service({
@@ -80,22 +83,22 @@ export default {
         url: "/api/v1/csrftoken/token",
         method: "get",
       })
-      if(!res.hasOwnProperty("token")){
+      if (!res.hasOwnProperty("token")) {
         return
       }
       let refreshRes = await service({
         baseURL: this.baseUrl,
         url: "/api/v1/token/refresh",
         method: "post",
-        headers:{
+        headers: {
           "x-csrf-token": res.token,
-          "jwetoken":jweToken
+          "jwetoken": jweToken
         },
-        data:{
-          "jweToken":jweToken
+        data: {
+          "jweToken": jweToken
         }
       })
-      if(refreshRes.hasOwnProperty("jweToken")){
+      if (refreshRes.hasOwnProperty("jweToken")) {
         Message({
           type: "success",
           message: "已登录",
@@ -104,7 +107,7 @@ export default {
         location.href = "/"
       }
     },
-    updateIco(){
+    updateIco() {
       let icoUrl = "/assets/images/kubernetes-logo.png"
       let ico = document.querySelector('link[rel="icon"]')
       if (ico !== null) {
@@ -116,7 +119,7 @@ export default {
         document.head.appendChild(ico)
       }
     },
-    openLoading(){
+    openLoading() {
       this.loading = this.$loading({
         lock: true,
         text: "Loading",
@@ -124,7 +127,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
     },
-    closeLoading(){
+    closeLoading() {
       this.loading.close()
     },
     async login() {
@@ -153,7 +156,7 @@ export default {
           if (result[0].code !== 0) {
             return
           }
-          if(!result[1].hasOwnProperty("token")){
+          if (!result[1].hasOwnProperty("token")) {
             Message({
               type: "error",
               message: "登录失败",
@@ -177,7 +180,7 @@ export default {
           if (loginRes.hasOwnProperty("jweToken")) {
             cookie.set("jweToken", loginRes.jweToken, 30)
             location.href = "/"
-          }else{
+          } else {
             Message({
               type: "error",
               message: "登录失败",
@@ -194,7 +197,27 @@ export default {
 </script>
 
 <style scoped>
-.el-form-item{
+.el-form-item {
   margin-right: 40px
+}
+
+.title {
+  background: #326de6;
+  width: 100%;
+  color: #ffffff;
+  font-size: 20px;
+  height: 50px;
+  line-height: 50px;
+  text-indent: 22px;
+  border-radius: 4px 4px 0 0;
+}
+
+.box {
+  height: 100%;
+  width: 100%;
+  background: #edeff0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

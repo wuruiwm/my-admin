@@ -74,7 +74,7 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-const whiteList = ["adminLogin","k8sLogin"]
+const whiteList = ["adminLogin", "k8sLogin"]
 
 router.beforeEach(async (to, from, next) => {
     let isWhite = false

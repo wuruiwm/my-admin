@@ -79,7 +79,7 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
-    <el-button type="primary" @click="submit" style="margin-left: 80px">保存修改</el-button>
+    <el-button style="margin-left: 80px" type="primary" @click="submit">保存修改</el-button>
   </div>
 </template>
 
@@ -88,40 +88,40 @@ import service from "@/core/request";
 import {Message} from "element-ui";
 
 export default {
-  data(){
+  data() {
     return {
-      group:"notice",
-      notice:{
-        type:"email",//可选参数 email gotify
+      group: "notice",
+      notice: {
+        type: "email",//可选参数 email gotify
         //email配置
-        email_server_host:"",
-        email_username:"",
-        email_password:"",
-        email_is_encrypt:0,
-        email_port:"",
-        email_receive_user:"",
+        email_server_host: "",
+        email_username: "",
+        email_password: "",
+        email_is_encrypt: 0,
+        email_port: "",
+        email_receive_user: "",
         //gotify配置
-        gotify_server_url:"",
-        gotify_server_token:"",
+        gotify_server_url: "",
+        gotify_server_token: "",
       },
-      ssl:{
-        key:"",
-        pem:"",
+      ssl: {
+        key: "",
+        pem: "",
       },
-      k8s:{
-        admin_user:"",
-        host:"",
-        port:"",
-        user:"",
-        password:"",
+      k8s: {
+        admin_user: "",
+        host: "",
+        port: "",
+        user: "",
+        password: "",
       },
-      script:{
-        tw_lol_luck_draw_sk:"",
+      script: {
+        tw_lol_luck_draw_sk: "",
       },
     }
   },
-  methods:{
-    async submit(){
+  methods: {
+    async submit() {
       let res = await service({
         url: '/admin/config/update',
         method: 'put',
@@ -138,30 +138,30 @@ export default {
         })
       }
     },
-    configObjToArray(obj){
+    configObjToArray(obj) {
       let arr = []
-      for(let k in obj){
+      for (let k in obj) {
         arr.push({
-          key:k,
-          value:obj[k]
+          key: k,
+          value: obj[k]
         })
       }
       return arr
     }
   },
-  watch:{
-    group:{
-      immediate:true,
-      async handler(val){
+  watch: {
+    group: {
+      immediate: true,
+      async handler(val) {
         let res = await service({
           url: '/admin/config/list',
           method: 'get',
-          params:{
-            group:val,
+          params: {
+            group: val,
           }
         })
-        if(res.code === 0){
-          res.data.forEach((v)=>{
+        if (res.code === 0) {
+          res.data.forEach((v) => {
             this[val][v.key] = v.value
           })
         }
