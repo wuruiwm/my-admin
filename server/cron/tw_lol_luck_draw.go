@@ -8,6 +8,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
+	"go.uber.org/zap"
+	"time"
 )
 
 type TwLolLuckDraw struct {
@@ -17,8 +19,28 @@ func NewTwLolLuckDraw() *TwLolLuckDraw {
 	return &TwLolLuckDraw{}
 }
 func (t *TwLolLuckDraw) Run() {
-	if err := t.luckDraw(); err != nil {
-		fmt.Println(err)
+	retryTime := []int{0, 15, 30, 180, 600, 3600}
+	errList := make([]error, 0)
+	for i := 0; i < 6; i++ {
+		time.Sleep(time.Duration(retryTime[i]) * time.Second)
+		if err := t.luckDraw(); err != nil {
+			errList = append(errList, err)
+			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err))
+		} else {
+			break
+		}
+	}
+	errCount := len(errList)
+	//失败和重试成功 发送通知
+	if errCount > 0 {
+		content := ""
+		for k, v := range errList {
+			content = content + fmt.Sprintf("第%d次抽奖失败原因：%s\n", k+1, v.Error())
+		}
+		if errCount < 6 {
+			content = content + fmt.Sprintf("第%d次抽奖成功\n", errCount+1)
+		}
+		util.Notice("台服lol幸运抽奖", content)
 	}
 }
 
