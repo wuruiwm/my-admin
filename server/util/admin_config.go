@@ -3,6 +3,8 @@ package util
 import (
 	"app/global"
 	"context"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"strings"
 )
 
@@ -19,7 +21,11 @@ func AdminConfig(key string) string {
 			Where("key", arr[1]).
 			Select("value").
 			Scan(&val)
-		_ = global.Redis.Set(context.Background(), cacheKey, val, 86400).Err()
+		err = global.Redis.Set(context.Background(), cacheKey, val, 86400).Err()
+		global.Logger.Error("admin_config", []zapcore.Field{
+			zap.String("cacheKey", cacheKey),
+			zap.Any("error", err),
+		}...)
 	}
 	return val
 }
