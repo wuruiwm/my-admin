@@ -19,11 +19,17 @@
             <el-form-item label="密码">
               <el-input v-model="notice.email_password"></el-input>
             </el-form-item>
-            <el-form-item label="加密方式">
-              <el-input v-model="notice.email_encrypt"></el-input>
+            <el-form-item label="ssl加密">
+              <el-radio-group v-model="notice.email_is_encrypt">
+                <el-radio label="0">不加密</el-radio>
+                <el-radio label="1">加密</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item label="端口号">
               <el-input v-model="notice.email_port"></el-input>
+            </el-form-item>
+            <el-form-item label="接收人">
+              <el-input v-model="notice.email_receive_user"></el-input>
             </el-form-item>
           </div>
           <div v-show="notice.type === 'gotify'">
@@ -91,8 +97,9 @@ export default {
         email_server_host:"",
         email_username:"",
         email_password:"",
-        email_encrypt:"",
+        email_is_encrypt:0,
         email_port:"",
+        email_receive_user:"",
         //gotify配置
         gotify_server_url:"",
         gotify_server_token:"",
