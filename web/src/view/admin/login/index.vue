@@ -7,37 +7,21 @@
             <img alt="后台管理系统" class="login_panel_form_title_logo" src="@/assets/logo.png">
             <p class="login_panel_form_title_p" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">后台管理系统</p>
           </div>
-          <el-form
-              ref="loginForm"
-              :model="loginForm"
-              :rules="rules"
-              @keyup.enter.native="submitForm"
-          >
+          <el-form ref="loginForm" :model="loginForm" :rules="rules" @keyup.enter.native="submitForm">
             <el-form-item prop="username">
               <el-input v-model="loginForm.username" placeholder="请输入用户名">
                 <i slot="suffix" class="el-input__icon el-icon-user"/>
               </el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input
-                  v-model="loginForm.password"
-                  :type="lock === 'lock' ? 'password' : 'text'"
-                  placeholder="请输入密码"
-              >
-                <i
-                    slot="suffix"
-                    :class="'el-input__icon el-icon-' + lock"
-                    @click="changeLock"
-                />
+              <el-input v-model="loginForm.password" :type="lock === 'lock' ? 'password' : 'text'"
+                        placeholder="请输入密码">
+                <i slot="suffix" :class="'el-input__icon el-icon-' + lock" @click="changeLock"/>
               </el-input>
             </el-form-item>
-            <div/>
             <el-form-item>
-              <el-button
-                  style="width: 100%"
-                  type="primary"
-                  @click="submitForm"
-              >登 录
+              <el-button style="width: 100%" type="primary" @click="submitForm">
+                登 录
               </el-button>
             </el-form-item>
           </el-form>

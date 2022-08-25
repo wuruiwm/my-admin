@@ -2,7 +2,7 @@
   <div>
     <div class="big">
       <div class="inner">
-        <img src="@/assets/notFound.png" alt="404">
+        <img alt="404" src="@/assets/notFound.png">
         <p>页面被神秘力量吸走了</p>
       </div>
     </div>
