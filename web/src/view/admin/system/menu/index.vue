@@ -2,40 +2,40 @@
   <div>
     <el-form :inline="true">
       <el-form-item>
-        <el-button type="primary"
-                   :icon="isSort ?'el-icon-finished' :'el-icon-sort'"
-                   @click="isSort = !isSort"
-                   size="small">{{ isSort ? "退出排序" : "开始排序" }}
+        <el-button :icon="isSort ? 'el-icon-finished' : 'el-icon-sort'"
+                   size="small"
+                   type="primary"
+                   @click="isSort = !isSort">{{ isSort ? "退出排序" : "开始排序" }}
         </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-plus" @click="create" size="small">创建菜单</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建菜单</el-button>
       </el-form-item>
     </el-form>
     <el-table
         :data="isSort ? sortList : list.data"
-        row-key="id"
+        :header-cell-style="{backgroundColor:'#fafafa'}"
         border
-        style="width: 100%" :header-cell-style="{backgroundColor:'#fafafa'}">
+        row-key="id" style="width: 100%">
       <el-table-column
-          prop="title"
           label="菜单名称"
-          min-width="120">
+          min-width="120"
+          prop="title">
       </el-table-column>
       <el-table-column
-          prop="path"
           label="路由path"
-          min-width="100">
+          min-width="100"
+          prop="path">
       </el-table-column>
       <el-table-column
-          prop="name"
           label="路由name"
-          min-width="100">
+          min-width="100"
+          prop="name">
       </el-table-column>
       <el-table-column
-          prop="component"
           label="文件路径"
-          min-width="260">
+          min-width="260"
+          prop="component">
       </el-table-column>
       <el-table-column
           label="图标"
@@ -60,27 +60,27 @@
         </template>
       </el-table-column>
       <el-table-column
-          prop="create_time"
           label="创建时间"
-          min-width="160">
+          min-width="160"
+          prop="create_time">
       </el-table-column>
       <el-table-column
+          v-if="isSort"
           fixed="right"
           label="排序"
-          min-width="180"
-          v-if="isSort">
+          min-width="180">
         <template v-slot="scope">
-          <el-button icon="el-icon-top" size="small" :type="scope.row.parent_id ? 'success' : 'primary'"
-                     :disabled="!scope.row.top" @click="sort(scope.row,0)"></el-button>
-          <el-button icon="el-icon-bottom" size="small" :type="scope.row.parent_id ? 'success' : 'primary'"
-                     :disabled="!scope.row.bottom" @click="sort(scope.row,1)"></el-button>
+          <el-button :disabled="!scope.row.top" :type="scope.row.parent_id ? 'success' : 'primary'" icon="el-icon-top"
+                     size="small" @click="sort(scope.row,0)"></el-button>
+          <el-button :disabled="!scope.row.bottom" :type="scope.row.parent_id ? 'success' : 'primary'" icon="el-icon-bottom"
+                     size="small" @click="sort(scope.row,1)"></el-button>
         </template>
       </el-table-column>
       <el-table-column
+          v-if="!isSort"
           fixed="right"
           label="操作"
-          min-width="180"
-          v-if="!isSort">
+          min-width="180">
         <template v-slot="scope">
           <el-button icon="el-icon-edit" size="small" type="primary" @click="update(scope.row)">编辑</el-button>
           <el-button icon="el-icon-delete" size="small" type="danger" @click="del(scope.row)">删除</el-button>
@@ -91,45 +91,45 @@
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @closed="dialogClosed">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" @keyup.enter.native="formSubmit">
         <el-form-item label="上级菜单" prop="parent_id">
-          <el-select placeholder="请选择上级菜单" size="small" v-model="form.parent_id" style="width: 100%;">
-            <el-option value="" label="顶级菜单"></el-option>
-            <el-option v-for="v in list.data" :value="v.id" :key="v.id" :label="v.title"></el-option>
+          <el-select v-model="form.parent_id" placeholder="请选择上级菜单" size="small" style="width: 100%">
+            <el-option label="顶级菜单" value=""></el-option>
+            <el-option v-for="v in list.data" :key="v.id" :label="v.title" :value="v.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="路由path" prop="path">
-          <el-input v-model="form.path" size="small" placeholder="请输入路由path"/>
+          <el-input v-model="form.path" placeholder="请输入路由path" size="small"/>
         </el-form-item>
         <el-form-item label="路由name" prop="name">
-          <el-input v-model="form.name" size="small" placeholder="请输入路由name"/>
+          <el-input v-model="form.name" placeholder="请输入路由name" size="small"/>
         </el-form-item>
         <el-form-item label="菜单名称" prop="title">
-          <el-input v-model="form.title" size="small" placeholder="请输入菜单名称"/>
+          <el-input v-model="form.title" placeholder="请输入菜单名称" size="small"/>
         </el-form-item>
         <el-form-item label="文件路径" prop="component">
-          <el-input v-model="form.component" size="small" placeholder="请输入文件路径"/>
+          <el-input v-model="form.component" placeholder="请输入文件路径" size="small"/>
         </el-form-item>
         <el-form-item label="是否隐藏" prop="is_hidden">
-          <el-select placeholder="请选择是否隐藏" size="small" v-model="form.is_hidden" style="width: 100%;">
+          <el-select v-model="form.is_hidden" placeholder="请选择是否隐藏" size="small" style="width: 100%">
             <el-option :value="0" label="显示"></el-option>
             <el-option :value="1" label="隐藏"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="图标" prop="icon" v-show="!form.is_hidden">
+        <el-form-item v-show="!form.is_hidden" label="图标" prop="icon">
           <Icon :form="form"></Icon>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialog.visible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="formSubmit" size="small">确 定</el-button>
+        <el-button size="small" @click="dialog.visible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="formSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
-import Icon from '@/components/icon/icon'
+import service from "@/core/request"
+import {Message} from "element-ui"
+import Icon from "@/components/icon/icon"
 
 export default {
   components: {
@@ -147,29 +147,29 @@ export default {
       },
       rules: {
         name: [
-          {required: true, message: '请输入路由name', trigger: 'blur'}
+          {required: true, message: "请输入路由name", trigger: "blur"}
         ],
         path: [
-          {required: true, message: '请输入路由path', trigger: 'blur'}
+          {required: true, message: "请输入路由path", trigger: "blur"}
         ],
         component: [
-          {required: true, message: '请输入文件路径', trigger: 'blur'}
+          {required: true, message: "请输入文件路径", trigger: "blur"}
         ],
         title: [
-          {required: true, message: '请输入菜单名称', trigger: 'blur'}
+          {required: true, message: "请输入菜单名称", trigger: "blur"}
         ],
         is_hidden: [
-          {required: true, message: '请选择是否隐藏', trigger: 'blur'}
+          {required: true, message: "请选择是否隐藏", trigger: "blur"}
         ],
         icon: [],
       },
-      iconRule:[
-        {required: true, message: '请选择icon', trigger: 'blur'}
+      iconRule: [
+        {required: true, message: "请选择icon", trigger: "blur"}
       ],
       form: {
         id: "",
         parent_id: "",
-        path:"",
+        path: "",
         name: "",
         component: "",
         icon: "",
@@ -196,14 +196,14 @@ export default {
       return data
     }
   },
-  watch:{
-    'form.is_hidden':{
-      immediate:true,
-      handler(val){
-        if(val === 1){
+  watch: {
+    "form.is_hidden": {
+      immediate: true,
+      handler(val) {
+        if (val === 1) {
           this.form.icon = ""
           this.rules.icon = []
-        }else{
+        } else {
           this.rules.icon = this.iconRule
         }
       }
@@ -227,22 +227,22 @@ export default {
       this.form.is_hidden = row.is_hidden
     },
     del(row) {
-      this.$confirm('此操作将永久删除该菜单, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该菜单, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
           .then(async () => {
             let res = await service({
-              url: '/admin/menu/delete',
-              method: 'delete',
+              url: "/admin/menu/delete",
+              method: "delete",
               data: {
                 id: row.id
               }
             })
             if (res.code === 0) {
               Message({
-                type: 'success',
+                type: "success",
                 message: "删除成功",
                 showClose: true
               })
@@ -255,7 +255,7 @@ export default {
     async getList() {
       let listRes = await service({
         url: this.list.url,
-        method: 'get',
+        method: "get",
       })
       if (listRes.code === 0) {
         this.list.data = []
@@ -309,8 +309,8 @@ export default {
       await this.$refs.form.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
@@ -319,22 +319,22 @@ export default {
         let res
         if (this.form.id === "") {
           res = await service({
-            url: '/admin/menu/create',
-            method: 'post',
+            url: "/admin/menu/create",
+            method: "post",
             data: this.form
           })
           successMsg = "创建成功"
         } else {
           res = await service({
-            url: '/admin/menu/update',
-            method: 'put',
+            url: "/admin/menu/update",
+            method: "put",
             data: this.form
           })
           successMsg = "修改成功"
         }
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: successMsg,
             showClose: true
           })

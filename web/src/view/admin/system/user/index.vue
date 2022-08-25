@@ -7,53 +7,53 @@
       <el-form-item label="最后登录时间">
         <el-date-picker
             v-model="list.date"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            size="small">
+            range-separator="至"
+            size="small"
+            start-placeholder="开始日期"
+            type="datetimerange"
+            value-format="yyyy-MM-dd HH:mm:ss">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="this.getList" size="small">搜索</el-button>
+        <el-button icon="el-icon-search" size="small" type="primary" @click="this.getList">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-plus" @click="create" size="small">创建用户</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建用户</el-button>
       </el-form-item>
     </el-form>
     <el-table
         :data="list.data"
-        border
-        style="width: 100%" :header-cell-style="{backgroundColor:'#fafafa'}">
+        :header-cell-style="{backgroundColor:'#fafafa'}"
+        border style="width: 100%">
       <el-table-column
-          prop="username"
           label="用户名"
-          min-width="100">
+          min-width="100"
+          prop="username">
       </el-table-column>
       <el-table-column
-          prop="nickname"
           label="昵称"
-          min-width="130">
+          min-width="130"
+          prop="nickname">
       </el-table-column>
       <el-table-column
           label="用户角色"
           min-width="150">
         <template v-slot="scope">
-          <el-select placeholder="请选择角色" v-model="scope.row.admin_role_id" @change="roleUpdate(scope.row)">
-            <el-option v-for="v in role" :label="v.name" :value="v.id" :key="v.id"></el-option>
+          <el-select v-model="scope.row.admin_role_id" placeholder="请选择角色" @change="roleUpdate(scope.row)">
+            <el-option v-for="v in role" :key="v.id" :label="v.name" :value="v.id"></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column
-          prop="create_time"
           label="创建时间"
-          min-width="160">
+          min-width="160"
+          prop="create_time">
       </el-table-column>
       <el-table-column
-          prop="last_login_time"
           label="最后登录时间"
-          min-width="160">
+          min-width="160"
+          prop="last_login_time">
       </el-table-column>
       <el-table-column
           fixed="right"
@@ -68,13 +68,13 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        background
         :current-page="list.page"
         :page-size="list.page_size"
         :page-sizes="[10, 30, 50, 100]"
-        style="float:right;padding:20px"
         :total="list.total"
+        background
         layout="total, sizes, prev, pager, next, jumper"
+        style="float:right;padding:20px"
         @current-change="pageChange"
         @size-change="pageSizeChange"
     />
@@ -82,44 +82,45 @@
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" @closed="dialogClosed">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" @keyup.enter.native="formSubmit">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" size="small" placeholder="请输入用户名"/>
+          <el-input v-model="form.username" placeholder="请输入用户名" size="small"/>
         </el-form-item>
         <el-form-item label="昵称" prop="username">
-          <el-input v-model="form.nickname" size="small" placeholder="请输入昵称"/>
+          <el-input v-model="form.nickname" placeholder="请输入昵称" size="small"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" size="small"
-                    :placeholder="isEdit ? '留空则不修改' : '请输入密码'"/>
+          <el-input v-model="form.password" :placeholder="isEdit ? '留空则不修改' : '请输入密码'" size="small"
+                    type="password"/>
         </el-form-item>
         <el-form-item label="请选择角色" prop="admin_role_id">
-          <el-select placeholder="请选择角色" v-model="form.admin_role_id" style="width: 100%;">
-            <el-option v-for="v in role" :label="v.name" :value="v.id" :key="v.id"></el-option>
+          <el-select v-model="form.admin_role_id" placeholder="请选择角色" style="width: 100%">
+            <el-option v-for="v in role" :key="v.id" :label="v.name" :value="v.id"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialog.visible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="formSubmit" size="small">确 定</el-button>
+        <el-button size="small" @click="dialog.visible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="formSubmit">确 定</el-button>
       </div>
     </el-dialog>
     <!--修改密码弹窗-->
-    <el-dialog title="修改密码" :visible.sync="passwordDialogVisible" @closed="passwordUpdateDialogClosed">
-      <el-form ref="passwordUpdateForm" :model="form" :rules="passwordUpdateRules" label-width="100px" @keyup.enter.native="userPasswordUpdate">
+    <el-dialog :visible.sync="passwordDialogVisible" title="修改密码" @closed="passwordUpdateDialogClosed">
+      <el-form ref="passwordUpdateForm" :model="form" :rules="passwordUpdateRules" label-width="100px"
+               @keyup.enter.native="userPasswordUpdate">
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" size="small" placeholder="请输入密码"/>
+          <el-input v-model="form.password" placeholder="请输入密码" size="small" type="password"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="passwordDialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="userPasswordUpdate" size="small">确 定</el-button>
+        <el-button size="small" @click="passwordDialogVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="userPasswordUpdate">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
+import service from "@/core/request"
+import {Message} from "element-ui"
 
 export default {
   data() {
@@ -186,8 +187,8 @@ export default {
   methods: {
     async getRoleList() {
       let res = await service({
-        url: '/admin/user/role',
-        method: 'get',
+        url: "/admin/user/role",
+        method: "get",
       })
       if (res.code === 0) {
         this.role = res.data
@@ -316,8 +317,8 @@ export default {
           successMsg = "创建成功"
         } else {
           res = await service({
-            url: '/admin/user/update',
-            method: 'put',
+            url: "/admin/user/update",
+            method: "put",
             data: this.form
           })
           successMsg = "修改成功"

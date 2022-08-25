@@ -1,5 +1,5 @@
 import service from "@/core/request"
-import router from "@/router";
+import router from "@/router"
 
 
 export let adminMenu = []
@@ -40,11 +40,11 @@ export const adminRouterInit = async () => {
     }
     //key为父级路由id  value为该路由id下的所有子路由构成的数组
     let menuTmp = {}
-    menuRes.data.forEach((v)=>{
+    menuRes.data.forEach((v) => {
         v.children = []
-        if(v.parent_id === ""){
+        if (v.parent_id === "") {
             adminMenu.push(v)
-        }else{
+        } else {
             if (!menuTmp[v.parent_id]) {
                 menuTmp[v.parent_id] = []
             }
@@ -55,22 +55,22 @@ export const adminRouterInit = async () => {
         }
     })
     //将子路由数组放到父级的children
-    adminMenu.forEach((v)=>{
+    adminMenu.forEach((v) => {
         if (menuTmp[v.id]) {
             v.children = menuTmp[v.id]
         }
     })
     //将后端返回的结构转换为路由需要的结构
-    adminMenu.forEach((v1,k1)=>{
-        v1.children.forEach((v2,k2)=>{
+    adminMenu.forEach((v1, k1) => {
+        v1.children.forEach((v2, k2) => {
             v1.children[k2] = itemToMenu(v2)
         })
         adminMenu[k1] = itemToMenu(v1)
     })
     adminMenu.forEach(route => {
-        router.addRoute("admin",route)
+        router.addRoute("admin", route)
     })
-    router.addRoute("admin",{
+    router.addRoute("admin", {
         path: "/admin*",
         name: "admin404",
         component: () => import("@/view/404/index"),

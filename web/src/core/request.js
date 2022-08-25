@@ -1,24 +1,27 @@
 import axios from "axios"
 import {Message} from "element-ui"
-import router from "@/router";
+import router from "@/router"
 import vue from "@/main"
 
 const service = axios.create({
     baseURL: process.env.NODE_ENV === "development" ? "/" : process.env.VUE_APP_PROD_API_URL,
     timeout: 30000
 })
-let acitveRequest = 0
 
-function showLoading(){
-    acitveRequest++
+let activeRequest = 0
+
+function showLoading() {
+    activeRequest++
     vue.$bus.$emit("showLoading")
 }
-function closeLoading(){
-    acitveRequest--
-    if (acitveRequest <= 0) {
+
+function closeLoading() {
+    activeRequest--
+    if (activeRequest <= 0) {
         vue.$bus.$emit("closeLoading")
     }
 }
+
 // http request 拦截器
 service.interceptors.request.use(
     config => {
@@ -30,7 +33,7 @@ service.interceptors.request.use(
             config.headers["X-Admin-Token"] = token
         }
         return config
-    },error => {
+    }, error => {
         closeLoading()
     }
 )
@@ -44,7 +47,7 @@ service.interceptors.response.use(
         //常规错误 需要弹窗提示的场景
         //成功场景 在外面处理
         if (response.data.code) {
-            if(response.data.code === -1){
+            if (response.data.code === -1) {
                 Message({
                     type: "error",
                     message: response.data.msg,
@@ -52,7 +55,7 @@ service.interceptors.response.use(
                 })
                 localStorage.setItem("token", "")
                 router.push({name: "adminLogin", replace: true})
-            }else if(response.data.code === 1){
+            } else if (response.data.code === 1) {
                 Message({
                     type: "error",
                     message: response.data.msg,
@@ -65,9 +68,9 @@ service.interceptors.response.use(
     error => {
         closeLoading()
         let data = {
-            code:1,
-            msg:"请求失败,请重试",
-            data:null
+            code: 1,
+            msg: "请求失败,请重试",
+            data: null
         }
         Message({
             type: "error",

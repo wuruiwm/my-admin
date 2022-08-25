@@ -2,24 +2,24 @@
   <div style="width: 25rem">
     <el-form ref="form" :model="user" :rules="rules" label-width="100px" @keyup.enter.native="formSubmit">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="user.username" size="small" placeholder="请输入用户名" disabled/>
+        <el-input v-model="user.username" disabled placeholder="请输入用户名" size="small"/>
       </el-form-item>
       <el-form-item label="请选择角色" prop="admin_role_id">
-        <el-select placeholder="请选择角色" v-model="user.admin_role_id" style="width: 100%;" disabled>
+        <el-select v-model="user.admin_role_id" disabled placeholder="请选择角色" style="width: 100%">
           <el-option :label="user.admin_role_name" :value="user.admin_role_id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="昵称" prop="username">
-        <el-input v-model="user.nickname" size="small" placeholder="请输入昵称"/>
+        <el-input v-model="user.nickname" placeholder="请输入昵称" size="small"/>
       </el-form-item>
       <el-form-item label="原密码" prop="oldPassword">
-        <el-input type="password" v-model="user.oldPassword" size="small" placeholder="请输入原密码"/>
+        <el-input v-model="user.oldPassword" placeholder="请输入原密码" size="small" type="password"/>
       </el-form-item>
       <el-form-item label="新密码" prop="newPassword">
-        <el-input type="password" v-model="user.newPassword" size="small" placeholder="请输入新密码"/>
+        <el-input v-model="user.newPassword" placeholder="请输入新密码" size="small" type="password"/>
       </el-form-item>
       <el-form-item label="确认新密码" prop="confirmNewPassword">
-        <el-input type="password" v-model="user.confirmNewPassword" size="small" placeholder="请确认新密码"/>
+        <el-input v-model="user.confirmNewPassword" placeholder="请确认新密码" size="small" type="password"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="formSubmit">保存修改</el-button>
@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
+import service from "@/core/request"
+import {Message} from "element-ui"
 
 export default {
   data() {
@@ -80,7 +80,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (this.user.newPassword !== this.user.confirmNewPassword) {
-                return callback(new Error('密码不一致'))
+                return callback(new Error("密码不一致"))
               } else {
                 callback()
               }

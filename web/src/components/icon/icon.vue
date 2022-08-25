@@ -1,10 +1,11 @@
 <template>
   <div>
-    <span class="icon" :class="'el-icon-'+ form.icon"
-          style="position: absolute; z-index: 9999; padding: 5px 10px;"></span>
-    <el-select v-model="form.icon" size="small" class="gva-select" filterable  placeholder="请选择图标" style="width: 100%">
+    <span :class="'el-icon-'+ form.icon" class="icon"
+          style="position: absolute; z-index: 9999; padding: 5px 10px"></span>
+    <el-select v-model="form.icon" class="gva-select" filterable placeholder="请选择图标" size="small"
+               style="width: 100%">
       <el-option v-for="item in list" :key="item.key" :label="item.key" :value="item.key">
-        <span class="icon" :class="item.label"/>
+        <span :class="item.label" class="icon"/>
         <span style="float: left">{{ item.key }}</span>
       </el-option>
     </el-select>
