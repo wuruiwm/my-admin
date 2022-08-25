@@ -46,37 +46,37 @@ export default {
       },
       rules: {
         username: [
-          {required: true, message: '请填写用户名', trigger: 'blur'},
+          {required: true, message: "请填写用户名", trigger: "blur"},
         ],
         nickname: [
-          {required: true, message: '请填写昵称', trigger: 'blur'},
+          {required: true, message: "请填写昵称", trigger: "blur"},
         ],
         oldPassword: [
-          {required: true, message: '请填写密码', trigger: 'blur'},
+          {required: true, message: "请填写密码", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value.length < 6) {
-                return callback(new Error('密码不能少于六位'))
+                return callback(new Error("密码不能少于六位"))
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }
         ],
         newPassword: [
-          {required: true, message: '请填写新密码', trigger: 'blur'},
+          {required: true, message: "请填写新密码", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (value.length < 6) {
-                return callback(new Error('新密码不能少于六位'))
+                return callback(new Error("新密码不能少于六位"))
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }
         ],
         confirmNewPassword: [
-          {required: true, message: '请确认新密码', trigger: 'blur'},
+          {required: true, message: "请确认新密码", trigger: "blur"},
           {
             validator: (rule, value, callback) => {
               if (this.user.newPassword !== this.user.confirmNewPassword) {
@@ -84,11 +84,11 @@ export default {
               } else {
                 callback()
               }
-            }, trigger: 'blur'
+            }, trigger: "blur"
           }
         ],
         admin_role_id: [
-          {required: true, message: '请选择角色', trigger: 'blur'}
+          {required: true, message: "请选择角色", trigger: "blur"}
         ],
       }
     }
@@ -98,15 +98,15 @@ export default {
       await this.$refs.form.validate(async (valid) => {
         if (!valid) {
           Message({
-            type: 'error',
-            message: '请填写完整后提交',
+            type: "error",
+            message: "请填写完整后提交",
             showClose: true
           })
           return false
         }
         let res = await service({
-          url: '/admin/user/info/update',
-          method: 'put',
+          url: "/admin/user/info/update",
+          method: "put",
           data: {
             nickname: this.user.nickname,
             old_password: this.user.oldPassword,
@@ -115,7 +115,7 @@ export default {
         })
         if (res.code === 0) {
           Message({
-            type: 'success',
+            type: "success",
             message: "保存成功",
             showClose: true
           })
@@ -125,8 +125,8 @@ export default {
   },
   async created() {
     let res = await service({
-      url: '/admin/user/info',
-      method: 'get',
+      url: "/admin/user/info",
+      method: "get",
     })
     if (res.code === 0) {
       this.user.username = res.data.username
