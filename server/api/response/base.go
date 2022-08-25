@@ -26,6 +26,7 @@ func Success(c *gin.Context, msg string, data interface{}) {
 
 // Error 通用失败返回
 func Error(c *gin.Context, msg string) {
+	c.Set("error", msg)
 	Return(c, ErrorCode, msg, nil)
 }
 

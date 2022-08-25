@@ -18,7 +18,6 @@ func AdminRoleList(c *gin.Context) {
 	if result, err := logic.AdminRoleList(param); err == nil {
 		response.Success(c, "success", result)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -33,7 +32,6 @@ func AdminRoleCreate(c *gin.Context) {
 	if err := logic.AdminRoleCreate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -48,7 +46,6 @@ func AdminRoleUpdate(c *gin.Context) {
 	if err := logic.AdminRoleUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -63,7 +60,6 @@ func AdminRoleDelete(c *gin.Context) {
 	if err := logic.AdminRoleDelete(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -87,7 +83,6 @@ func AdminRoleAuthUpdate(c *gin.Context) {
 	if err := logic.AdminRoleAuthUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
