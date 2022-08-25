@@ -2,9 +2,7 @@
   <div>
     <el-form :inline="true">
       <el-form-item>
-        <el-button :icon="isSort ? 'el-icon-finished' : 'el-icon-sort'"
-                   size="small"
-                   type="primary"
+        <el-button :icon="isSort ? 'el-icon-finished' : 'el-icon-sort'" size="small" type="primary"
                    @click="isSort = !isSort">{{ isSort ? "退出排序" : "开始排序" }}
         </el-button>
       </el-form-item>
@@ -12,11 +10,8 @@
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建菜单</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-        :data="isSort ? sortList : list.data"
-        :header-cell-style="{backgroundColor:'#fafafa'}"
-        border
-        row-key="id" style="width: 100%">
+    <el-table :data="isSort ? sortList : list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border row-key="id"
+              style="width: 100%">
       <el-table-column
           label="菜单名称"
           min-width="120"
@@ -51,11 +46,8 @@
           label="是否隐藏"
           min-width="100">
         <template v-slot="scope">
-          <el-tag
-              :type="scope.row.is_hidden ? 'danger' : 'success'"
-              effect="dark"
-              size="mini"
-          >{{ scope.row.is_hidden ? "隐藏" : "显示" }}
+          <el-tag :type="scope.row.is_hidden ? 'danger' : 'success'" effect="dark" size="mini">
+            {{ scope.row.is_hidden ? "隐藏" : "显示" }}
           </el-tag>
         </template>
       </el-table-column>
@@ -72,15 +64,11 @@
         <template v-slot="scope">
           <el-button :disabled="!scope.row.top" :type="scope.row.parent_id ? 'success' : 'primary'" icon="el-icon-top"
                      size="small" @click="sort(scope.row,0)"></el-button>
-          <el-button :disabled="!scope.row.bottom" :type="scope.row.parent_id ? 'success' : 'primary'" icon="el-icon-bottom"
-                     size="small" @click="sort(scope.row,1)"></el-button>
+          <el-button :disabled="!scope.row.bottom" :type="scope.row.parent_id ? 'success' : 'primary'"
+                     icon="el-icon-bottom" size="small" @click="sort(scope.row,1)"></el-button>
         </template>
       </el-table-column>
-      <el-table-column
-          v-if="!isSort"
-          fixed="right"
-          label="操作"
-          min-width="180">
+      <el-table-column v-if="!isSort" fixed="right" label="操作" min-width="180">
         <template v-slot="scope">
           <el-button icon="el-icon-edit" size="small" type="primary" @click="update(scope.row)">编辑</el-button>
           <el-button icon="el-icon-delete" size="small" type="danger" @click="del(scope.row)">删除</el-button>

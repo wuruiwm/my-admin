@@ -371,6 +371,7 @@ li {
 
         .is-active {
           background-color: #1890ff;
+
           ul {
             border: none;
           }
@@ -862,6 +863,7 @@ $mainHeight: 100vh;
 
     .aside {
       overflow: auto;
+
       &::-webkit-scrollbar {
         display: none;
       }
@@ -974,6 +976,7 @@ $mainHeight: 100vh;
 
   .car-right {
     height: $height-car;
+
     .flow,
     .user-number,
     .feedback {

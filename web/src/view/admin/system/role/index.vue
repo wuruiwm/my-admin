@@ -22,10 +22,7 @@
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建角色</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-        :data="list.data"
-        :header-cell-style="{backgroundColor:'#fafafa'}"
-        border style="width: 100%">
+    <el-table :data="list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border style="width: 100%">
       <el-table-column
           label="角色名称"
           min-width="100"
@@ -80,14 +77,8 @@
             <el-button size="small" type="primary" @click="selectAll('menu')">全选</el-button>
             <el-button size="small" type="primary" @click="notSelectAll('menu')">全不选</el-button>
           </div>
-          <el-tree
-              ref="menu"
-              :data="auth.menu.data"
-              :default-checked-keys="auth.menu.checked"
-              :props="{children: 'children',label: 'name'}"
-              default-expand-all
-              node-key="id"
-              show-checkbox>
+          <el-tree ref="menu" :data="auth.menu.data" :default-checked-keys="auth.menu.checked"
+                   :props="{children: 'children',label: 'name'}" default-expand-all node-key="id" show-checkbox>
           </el-tree>
         </el-tab-pane>
         <el-tab-pane label="api权限">
@@ -95,13 +86,8 @@
             <el-button size="small" type="primary" @click="selectAll('api')">全选</el-button>
             <el-button size="small" type="primary" @click="notSelectAll('api')">全不选</el-button>
           </div>
-          <el-tree
-              ref="api"
-              :data="auth.api.data"
-              :default-checked-keys="auth.api.checked"
-              :props="{children: 'children',label: 'name'}"
-              node-key="id"
-              show-checkbox>
+          <el-tree ref="api" :data="auth.api.data" :default-checked-keys="auth.api.checked"
+                   :props="{children: 'children',label: 'name'}" node-key="id" show-checkbox>
           </el-tree>
         </el-tab-pane>
       </el-tabs>

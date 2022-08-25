@@ -7,7 +7,8 @@
           <div class="admin-title" style="background: #191a23">
             <img alt class="logo-img" src="@/assets/logo.png">
             <h2 v-if="isSide" class="tit-text" style="color:#fff" v-html="'&nbsp;&nbsp;后台管理系统&nbsp;&nbsp;'">
-              后台管理系统</h2>
+              后台管理系统
+            </h2>
           </div>
           <div class="aside">
             <el-scrollbar style="height:calc(100vh - 64px)">
@@ -52,10 +53,7 @@
         <!-- 分块滑动功能 -->
         <el-main class="main-cont main-right">
           <transition :duration="{ enter: 800, leave: 100 }" mode="out-in" name="el-fade-in-linear">
-            <div
-                :style="{width: `calc(100% - ${isMobile ? '0px' : isCollapse ? '54px' : '220px'})`}"
-                class="top-fix"
-            >
+            <div :style="{width: `calc(100% - ${isMobile ? '0px' : isCollapse ? '54px' : '220px'})`}" class="top-fix">
               <el-row>
                 <el-header class="header-cont">
                   <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="2">
@@ -76,10 +74,8 @@
                   <el-col :lg="9" :md="9" :sm="14" :xl="9" :xs="12">
                     <div class="fl-right right-box">
                       <div class="search-component">
-                        <div
-                            class="user-box"
-                            style="display:inline-block;float:right;width:31px;text-align:left;font-size:16px;padding-top:2px"
-                        >
+                        <div class="user-box"
+                             style="display:inline-block;float:right;width:31px;text-align:left;font-size:16px;padding-top:2px">
                           <i :class="[reloading ? 'reloading' : '']" class="el-icon-refresh reload"
                              style="cursor:pointer;padding-left:1px" @click="reload"/>
                         </div>

@@ -35,10 +35,7 @@
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建api</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-        :data="list.data"
-        :header-cell-style="{backgroundColor:'#fafafa'}"
-        border style="width: 100%">
+    <el-table :data="list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border style="width: 100%">
       <el-table-column
           label="路径"
           min-width="130"
@@ -58,11 +55,8 @@
           label="请求方式"
           min-width="80">
         <template v-slot="scope">
-          <el-tag
-              :type="methodType(scope.row.method)"
-              effect="dark"
-              size="mini"
-          >{{ scope.row.method }}
+          <el-tag :type="methodType(scope.row.method)" effect="dark" size="mini">
+            {{ scope.row.method }}
           </el-tag>
         </template>
       </el-table-column>
