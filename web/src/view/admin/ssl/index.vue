@@ -2,23 +2,23 @@
   <div>
     <el-form :inline="true">
       <el-form-item>
-        <el-button type="primary" class="copy" icon="el-icon-document-copy" size="small" :data-clipboard-text="ssl.key" @click="copy">复制私钥</el-button>
+        <el-button type="primary" class="copy" icon="el-icon-document-copy" :disabled="!ssl.key" size="small" :data-clipboard-text="ssl.key" @click="copy">复制私钥</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="copy" icon="el-icon-document-copy" size="small" :data-clipboard-text="ssl.pem" @click="copy">复制公钥</el-button>
+        <el-button type="primary" class="copy" icon="el-icon-document-copy" :disabled="!ssl.pem" size="small" :data-clipboard-text="ssl.pem" @click="copy">复制公钥</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-download" size="small" @click="download('key')">下载私钥</el-button>
+        <el-button icon="el-icon-download" size="small" :disabled="!ssl.key" @click="download('key')">下载私钥</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-download" size="small" @click="download('pem')">下载公钥</el-button>
+        <el-button icon="el-icon-download" size="small" :disabled="!ssl.pem" @click="download('pem')">下载公钥</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="ssl.expire_time">
         <span style="color: #3d763e;">证书到期时间: {{ssl.expire_time}}</span>
       </el-form-item>
     </el-form>
-    <prism-editor class="my-editor" :value="ssl.key" readonly :highlight="highlighter" line-numbers style="width: 48%;float: left;"></prism-editor>
-    <prism-editor class="my-editor" :value="ssl.pem" readonly :highlight="highlighter" line-numbers style="width: 48%;float: right;"></prism-editor>
+    <prism-editor class="my-editor" v-if="ssl.key" :value="ssl.key" readonly :highlight="highlighter" line-numbers style="width: 48%;float: left;"></prism-editor>
+    <prism-editor class="my-editor" v-if="ssl.pem" :value="ssl.pem" readonly :highlight="highlighter" line-numbers style="width: 48%;float: right;"></prism-editor>
   </div>
 </template>
 
