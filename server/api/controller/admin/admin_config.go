@@ -27,7 +27,6 @@ func AdminConfigUpdate(c *gin.Context) {
 	if err := logic.AdminConfigUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }

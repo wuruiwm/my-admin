@@ -18,7 +18,6 @@ func AdminApiList(c *gin.Context) {
 	if result, err := logic.AdminApiList(param); err == nil {
 		response.Success(c, "success", result)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -33,7 +32,6 @@ func AdminApiCreate(c *gin.Context) {
 	if err := logic.AdminApiCreate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -48,7 +46,6 @@ func AdminApiUpdate(c *gin.Context) {
 	if err := logic.AdminApiUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -63,7 +60,6 @@ func AdminApiDelete(c *gin.Context) {
 	if err := logic.AdminApiDelete(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }

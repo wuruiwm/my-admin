@@ -22,7 +22,6 @@ func AdminMenuCreate(c *gin.Context) {
 	if err := logic.AdminMenuCreate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -37,7 +36,6 @@ func AdminMenuUpdate(c *gin.Context) {
 	if err := logic.AdminMenuUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -52,7 +50,6 @@ func AdminMenuDelete(c *gin.Context) {
 	if err := logic.AdminMenuDelete(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -67,7 +64,6 @@ func AdminMenuSort(c *gin.Context) {
 	if err := logic.AdminMenuSort(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }

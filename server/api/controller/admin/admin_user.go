@@ -36,7 +36,6 @@ func AdminUserMenu(c *gin.Context) {
 	if result, err := logic.AdminUserMenu(userId); err == nil {
 		response.Success(c, "success", result)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -51,7 +50,6 @@ func AdminUserList(c *gin.Context) {
 	if result, err := logic.AdminUserList(param); err == nil {
 		response.Success(c, "success", result)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -66,7 +64,6 @@ func AdminUserCreate(c *gin.Context) {
 	if err := logic.AdminUserCreate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -81,7 +78,6 @@ func AdminUserUpdate(c *gin.Context) {
 	if err := logic.AdminUserUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -96,7 +92,6 @@ func AdminUserDelete(c *gin.Context) {
 	if err := logic.AdminUserDelete(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -111,7 +106,6 @@ func AdminUserRoleUpdate(c *gin.Context) {
 	if err := logic.AdminUserRoleUpdate(param); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -130,7 +124,6 @@ func AdminUserPasswordUpdate(c *gin.Context) {
 	if err := logic.AdminUserPasswordUpdate(param.Id, param.Password, global.Db); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -140,7 +133,6 @@ func AdminUserInfo(c *gin.Context) {
 	if result, err := logic.AdminUserInfo(userId); err == nil {
 		response.Success(c, "success", result)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
@@ -156,7 +148,6 @@ func AdminUserInfoUpdate(c *gin.Context) {
 	if err := logic.AdminUserInfoUpdate(param, userId); err == nil {
 		response.Success(c, "success", nil)
 	} else {
-		c.Set("error", err.Error())
 		response.Error(c, err.Error())
 	}
 }
