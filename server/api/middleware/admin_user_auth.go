@@ -15,6 +15,7 @@ func AdminUserAuth(c *gin.Context) {
 	}
 	if adminUserLogin, code, err := logic.AdminUserAuth(token, c.Request.URL.Path, c.Request.Method); err != nil {
 		c.Abort()
+		c.Set("error", err.Error())
 		response.Return(c, code, err.Error(), nil)
 	} else {
 		//将用户id存起来 以供上下文使用
