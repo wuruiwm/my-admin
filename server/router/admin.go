@@ -63,6 +63,14 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 		}
 		//ssl证书
 		adminGroup.GET("/ssl", admin.Ssl)
+		//密码管理
+		passwordGroup := adminGroup.Group("/password")
+		{
+			passwordGroup.GET("/list", admin.PasswordList)
+			passwordGroup.POST("/create", admin.PasswordCreate)
+			passwordGroup.PUT("/update", admin.PasswordUpdate)
+			passwordGroup.DELETE("/delete", admin.PasswordDelete)
+		}
 	}
 	return r
 }
