@@ -33,15 +33,15 @@
 </template>
 
 <script>
-import {PrismEditor} from 'vue-prism-editor';
-import 'vue-prism-editor/dist/prismeditor.min.css';
-import {highlight, languages} from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism-tomorrow.css';
-import Clipboard from "clipboard";
-import {Message} from "element-ui";
-import service from "@/core/request";
+import {PrismEditor} from "vue-prism-editor"
+import "vue-prism-editor/dist/prismeditor.min.css"
+import {highlight, languages} from "prismjs/components/prism-core"
+import "prismjs/components/prism-clike"
+import "prismjs/components/prism-javascript"
+import "prismjs/themes/prism-tomorrow.css"
+import Clipboard from "clipboard"
+import {Message} from "element-ui"
+import service from "@/core/request"
 
 export default {
   components: {

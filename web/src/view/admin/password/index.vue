@@ -22,35 +22,45 @@
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建密码</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border style="width: 100%">
+    <el-table :data="list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border
+              style="width: 100%">
       <el-table-column
           label="名称"
-          min-width="130"
+          min-width="160"
           prop="name">
       </el-table-column>
       <el-table-column
           label="用户名"
-          min-width="130"
-          prop="username">
+          min-width="160">
+        <template v-slot="scope">
+          {{ scope.row.username }}
+          <i class="el-icon-document-copy copy" :data-clipboard-text="scope.row.username" @click="copy"></i>
+        </template>
       </el-table-column>
       <el-table-column
           label="密码"
-          min-width="130">
+          min-width="160">
         <template v-slot="scope">
-          <span v-if="scope.row.hasOwnProperty('is_show') && scope.row.is_show">
-            {{ scope.row.password }} <img src="@/assets/eye.png" style="height: 16px;" alt="eye"
-                                          @click="scope.row.is_show=false">
+          <span v-if="scope.row.is_show">
+            {{ scope.row.password }}
+            <img src="@/assets/eye.png" style="height: 16px;" alt="eye" @click="scope.row.is_show = false">
           </span>
           <span v-else>
-            ********** <img src="@/assets/eye-close.png" style="height: 16px;" alt="eye-close"
-                            @click="scope.row.is_show = true">
+            **********
+            <img src="@/assets/eye-close.png" style="height: 16px;" alt="eye-close" @click="scope.row.is_show = true">
           </span>
+          <i class="el-icon-document-copy copy" :data-clipboard-text="scope.row.password" @click="copy"></i>
         </template>
       </el-table-column>
       <el-table-column
           label="备注"
-          min-width="130"
-          prop="remark">
+          min-width="160"
+          prop="remark"
+          show-overflow-tooltip>
+        <template v-slot="scope">
+          <span v-if="scope.row.remark">{{ scope.row.remark }}</span>
+          <span v-else>无备注</span>
+        </template>
       </el-table-column>
       <el-table-column
           label="创建时间"
@@ -105,6 +115,7 @@
 <script>
 import service from "@/core/request"
 import {Message} from "element-ui"
+import Clipboard from "clipboard"
 
 export default {
   data() {
@@ -140,9 +151,28 @@ export default {
     this.getList()
   },
   methods: {
+    copy() {
+      let clipboard = new Clipboard(".copy")
+      clipboard.on('success', e => {
+        Message({
+          type: 'success',
+          message: '复制成功',
+          showClose: true
+        })
+        clipboard.destroy()
+      })
+      clipboard.on('error', e => {
+        Message({
+          type: 'error',
+          message: '复制失败,',
+          showClose: true,
+        })
+        clipboard.destroy()
+      })
+    },
     watchListData(data) {
-      data.forEach((v, k) => {
-        this.$set(data[k], "is_show", false)
+      data.forEach((v) => {
+        v.is_show = false
       })
       return data
     },
