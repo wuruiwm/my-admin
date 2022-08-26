@@ -5,6 +5,7 @@ import (
 	"context"
 	"go.uber.org/zap"
 	"strings"
+	"time"
 )
 
 func AdminConfig(key string) string {
@@ -20,7 +21,7 @@ func AdminConfig(key string) string {
 			Where("key", arr[1]).
 			Select("value").
 			Scan(&val)
-		err = global.Redis.Set(context.Background(), cacheKey, val, 86400).Err()
+		err = global.Redis.Set(context.Background(), cacheKey, val, 86400*time.Second).Err()
 		if err != nil {
 			global.Logger.Error("admin_config", zap.String("cacheKey", cacheKey), zap.Any("error", err))
 		}
