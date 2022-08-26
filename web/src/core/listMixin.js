@@ -30,9 +30,12 @@ export default {
                 params: {page: this.list.page, page_size: this.list.page_size, ...this.list.param}
             })
             if (listRes.code === 0) {
-                this.list.data = listRes.data.list
+                this.list.data = this.watchListData(listRes.data.list)
                 this.list.total = listRes.data.total
             }
+        },
+        watchListData(data) {
+            return data
         },
         pageSizeChange(val) {
             this.list.page_size = val
