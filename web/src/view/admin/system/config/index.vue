@@ -109,10 +109,10 @@ export default {
         pem: "",
       },
       k8s: {
-        admin_user: "",
+        admin_username: "",
         host: "",
         port: "",
-        user: "",
+        username: "",
         password: "",
       },
       script: {
