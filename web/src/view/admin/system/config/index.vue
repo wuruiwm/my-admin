@@ -55,7 +55,7 @@
       <el-tab-pane label="k8s配置" name="k8s">
         <el-form label-width="150px" style="width: 50%">
           <el-form-item label="允许登录的用户">
-            <el-input v-model="k8s.admin_user"></el-input>
+            <el-input v-model="k8s.admin_username"></el-input>
           </el-form-item>
           <el-form-item label="主机">
             <el-input v-model="k8s.host"></el-input>
@@ -64,7 +64,7 @@
             <el-input v-model="k8s.port"></el-input>
           </el-form-item>
           <el-form-item label="账号">
-            <el-input v-model="k8s.user"></el-input>
+            <el-input v-model="k8s.username"></el-input>
           </el-form-item>
           <el-form-item label="密码">
             <el-input v-model="k8s.password"></el-input>
