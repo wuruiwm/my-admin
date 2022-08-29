@@ -2,6 +2,7 @@ package logic
 
 import (
 	"app/api/response"
+	"app/global"
 	"app/util"
 	"crypto/x509"
 	"encoding/pem"
@@ -10,8 +11,8 @@ import (
 )
 
 func Ssl() (*response.Ssl, error) {
-	keyPath := util.AdminConfig("ssl.key")
-	pemPath := util.AdminConfig("ssl.pem")
+	keyPath := global.Config.AdminConfig.Ssl.Key
+	pemPath := global.Config.AdminConfig.Ssl.Pem
 	keyByte, err := ioutil.ReadFile(keyPath)
 	if err != nil {
 		return nil, errors.New("读取证书私钥失败 error:" + err.Error())

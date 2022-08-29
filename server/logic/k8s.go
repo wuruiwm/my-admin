@@ -3,19 +3,18 @@ package logic
 import (
 	"app/api/request"
 	"app/api/response"
-	"app/util"
+	"app/global"
 	"errors"
 	"github.com/melbahja/goph"
 	"golang.org/x/crypto/ssh"
 	"net"
-	"strconv"
 )
 
-func K8sLogin(param *request.AdminUserLogin) (interface{}, error) {
+func K8sLogin(param *request.AdminUserLogin) (*response.K8sLogin, error) {
 	if err := param.Check(); err != nil {
 		return nil, err
 	}
-	if param.Username != util.AdminConfig("k8s.admin_user") {
+	if param.Username != global.Config.AdminConfig.K8s.AdminUsername {
 		return nil, errors.New("该用户不允许登录k8s")
 	}
 	_, err := AdminUserCheckPassword(param.Username, param.Password, "id", "password", "salt", "admin_role_id")
@@ -26,15 +25,11 @@ func K8sLogin(param *request.AdminUserLogin) (interface{}, error) {
 }
 
 func K8sCreateToken() (*response.K8sLogin, error) {
-	port, err := strconv.Atoi(util.AdminConfig("k8s.port"))
-	if err != nil {
-		return nil, errors.New("端口参数不正确 error:" + err.Error())
-	}
 	config := &goph.Config{
-		User:    util.AdminConfig("k8s.user"),
-		Addr:    util.AdminConfig("k8s.host"),
-		Port:    uint(port),
-		Auth:    goph.Password(util.AdminConfig("k8s.password")),
+		User:    global.Config.AdminConfig.K8s.Username,
+		Addr:    global.Config.AdminConfig.K8s.Host,
+		Port:    uint(global.Config.AdminConfig.K8s.Port),
+		Auth:    goph.Password(global.Config.AdminConfig.K8s.Password),
 		Timeout: goph.DefaultTimeout,
 		Callback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
