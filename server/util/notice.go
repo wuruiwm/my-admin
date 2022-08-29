@@ -7,17 +7,24 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
+	"go.uber.org/zap"
 	"gopkg.in/gomail.v2"
 )
 
 func Notice(title, content string) error {
+	var err error
 	noticeType := global.Config.AdminConfig.Notice.Type
 	if noticeType == "email" {
-		return NoticeEmail(title, content)
+		err = NoticeEmail(title, content)
 	} else if noticeType == "gotify" {
-		return NoticeGotify(title, content)
+		err = NoticeGotify(title, content)
+	} else {
+		err = errors.New("通知类型错误")
 	}
-	return errors.New("通知类型错误")
+	if err != nil {
+		global.Logger.Error("notice", zap.String("title", title), zap.String("content", content), zap.String("error", err.Error()))
+	}
+	return err
 }
 
 func NoticeEmail(title, content string) error {
