@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-//GetUnix 获取当前时间戳(秒)
-func GetUnix() int64 {
+//Unix 获取当前时间戳(秒)
+func Unix() int64 {
 	return time.Now().Unix()
 }
 
@@ -15,8 +15,8 @@ func UnixToDate(unix int64) string {
 	return time.Unix(unix, 0).Format("2006-01-02 15:04:05")
 }
 
-//GetDate 获取当前Y-m-d H:i:s格式的日期字符串
-func GetDate() string {
+//Date 获取当前Y-m-d H:i:s格式的日期字符串
+func Date() string {
 	return time.Now().Format("2006-01-02 15:04:05")
 }
 

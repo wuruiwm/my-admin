@@ -23,7 +23,7 @@ func AdminConfig(key string) string {
 			Scan(&val)
 		err = global.Redis.Set(context.Background(), cacheKey, val, 86400*time.Second).Err()
 		if err != nil {
-			global.Logger.Error("admin_config", zap.String("cacheKey", cacheKey), zap.Any("error", err))
+			global.Logger.Error("admin_config", zap.String("cacheKey", cacheKey), zap.String("error", err.Error()))
 		}
 	}
 	return val

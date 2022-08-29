@@ -90,18 +90,14 @@ func (r *Rabbitmq) Consume(queueName string, handle func(amqp.Delivery, *Rabbitm
 		}()
 		//异常重连逻辑 保证网络抖动或rabbitmq宕机等情况下 重启消费者
 		if err != nil {
-			global.Logger.Error("rabbitmq",
-				zap.String("error", err.Error()),
-			)
+			global.Logger.Error("rabbitmq", zap.String("error", err.Error()))
 			for {
 				time.Sleep(time.Second * 5)
 				err := r.InitConn()
 				if err == nil {
 					break
 				}
-				global.Logger.Error("rabbitmq",
-					zap.String("error", err.Error()),
-				)
+				global.Logger.Error("rabbitmq", zap.String("error", err.Error()))
 			}
 		}
 	}

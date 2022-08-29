@@ -9,8 +9,8 @@ import (
 
 // Logger 初始化Log
 func Logger() {
-	writeSyncer := getLogWriter()
-	encoder := getEncoder()
+	writeSyncer := loggerLogWriter()
+	encoder := loggerEncoder()
 	var log = new(zapcore.Level)
 	err := log.UnmarshalText([]byte("info"))
 	if err != nil {
@@ -20,7 +20,7 @@ func Logger() {
 	global.Logger = zap.New(core, zap.AddCaller())
 }
 
-func getEncoder() zapcore.Encoder {
+func loggerEncoder() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05")
 	encoderConfig.TimeKey = "time"
@@ -31,7 +31,7 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
 
-func getLogWriter() zapcore.WriteSyncer {
+func loggerLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   "./log/server.log", // 保存的文件位置
 		MaxSize:    100,                // 在进行切割之前，日志文件的最大大小（以MB为单位）

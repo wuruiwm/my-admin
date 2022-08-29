@@ -10,13 +10,9 @@ func Config() {
 	viper.SetConfigFile("./config.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic("read config file error: " + err.Error())
+		panic("config file read error: " + err.Error())
 	}
-	readConfig()
-}
-
-func readConfig() {
-	if err := viper.Unmarshal(&global.Config); err != nil {
-		panic("format config error:" + err.Error())
+	if err = viper.Unmarshal(&global.Config); err != nil {
+		panic("config unmarshal error:" + err.Error())
 	}
 }

@@ -27,9 +27,5 @@ func Server() {
 	//路由设置
 	r = router.Router(r)
 	//启动服务
-	_ = r.Run(getHttpString())
-}
-
-func getHttpString() string {
-	return fmt.Sprintf("0.0.0.0:%d", global.Config.ServerPort)
+	_ = r.Run(fmt.Sprintf("0.0.0.0:%d", global.Config.ServerPort))
 }

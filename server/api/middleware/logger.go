@@ -41,10 +41,10 @@ func Logger(c *gin.Context) {
 		fields = append(fields, zap.Any("panic", panicErr))
 	}
 	//controller返回的错误 写入到error字段
-	err, ok := c.Get("error")
-	if ok {
+	err := c.GetString("error")
+	if err != "" {
 		isError = true
-		fields = append(fields, zap.Any("error", err))
+		fields = append(fields, zap.String("error", err))
 	}
 
 	//写入日志
