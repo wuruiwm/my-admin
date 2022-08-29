@@ -41,11 +41,15 @@ func NewCronTab(name string, spec string, task func(), maxRunTime int) *cronTab 
 }
 
 func (c *cronTab) run() {
-	ok, err := global.Redis.SetNX(context.Background(), "crontab_lock:"+c.name, 1, time.Duration(c.maxRunTime)*time.Second).Result()
+	key := "crontab_lock:" + c.name
+	ok, err := global.Redis.SetNX(context.Background(), key, 1, time.Duration(c.maxRunTime)*time.Second).Result()
 	if err != nil {
-		global.Logger.Error("crontab_lock", zap.Any("cronTab", c), zap.String("error", "定时任务分布式锁 error:"+err.Error()))
+		global.Logger.Error("crontab_lock", zap.Any("cronTab", c), zap.String("error", "定时任务分布式锁lock error:"+err.Error()))
 	}
 	if ok {
 		c.task()
+		if err = global.Redis.Del(context.Background(), key).Err(); err != nil {
+			global.Logger.Error("crontab_lock", zap.Any("cronTab", c), zap.String("error", "定时任务分布式锁unlock error:"+err.Error()))
+		}
 	}
 }
