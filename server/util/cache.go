@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-//SetCache 设置缓存
-func SetCache(key string, data interface{}, expire int64) error {
+//CacheSet 设置缓存
+func CacheSet(key string, data interface{}, expire int64) error {
 	jsonString, err := json.Marshal(data)
 	if err != nil {
 		return errors.New("序列化为json字符串失败 error:" + err.Error())
@@ -21,8 +21,8 @@ func SetCache(key string, data interface{}, expire int64) error {
 	return nil
 }
 
-//GetCache 获取缓存
-func GetCache(key string, data interface{}) error {
+//CacheGet 获取缓存
+func CacheGet(key string, data interface{}) error {
 	jsonString, err := global.Redis.Get(context.Background(), key).Result()
 	if err != nil {
 		return errors.New("获取缓存失败 error:" + err.Error())

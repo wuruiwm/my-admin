@@ -107,7 +107,7 @@ func AdminUserHashToken(adminUser *model.AdminUser, lastLoginTime string) string
 
 func AdminUserLogin(param *request.AdminUserLogin) (*response.AdminUserLogin, error) {
 	if err := param.Check(); err != nil {
-		return nil,err
+		return nil, err
 	}
 	adminUser, err := AdminUserCheckPassword(param.Username, param.Password, "id", "password", "salt", "admin_role_id")
 	if err != nil {

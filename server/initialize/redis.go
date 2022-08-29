@@ -7,16 +7,9 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-//获取redis连接字符串
-func getRedisConnString() string {
-	return fmt.Sprintf("%s:%d",
-		global.Config.Redis.Host,
-		global.Config.Redis.Port)
-}
-
 func Redis() {
 	global.Redis = redis.NewClient(&redis.Options{
-		Addr:         getRedisConnString(),
+		Addr:         fmt.Sprintf("%s:%d", global.Config.Redis.Host, global.Config.Redis.Port),
 		Password:     global.Config.Redis.Password,
 		DB:           global.Config.Redis.Database,
 		PoolSize:     global.Config.Redis.MaxOpenConn, //最大连接数

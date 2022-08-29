@@ -10,15 +10,15 @@ import (
 	"time"
 )
 
-//MD5 计算md5
-func MD5(str string) string {
+//Md5 计算md5
+func Md5(str string) string {
 	h := md5.New()
 	h.Write([]byte(str))
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-//GetRandString 生成随机字符串
-func GetRandString(num int) string {
+//RandString 生成随机字符串
+func RandString(num int) string {
 	rand.Seed(time.Now().UnixNano())
 	var rangString string
 	baseStr := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -34,8 +34,8 @@ func Uuid() string {
 	return uuid.NewV4().String()
 }
 
-//GetFileExt 获取文件或者带文件的路径中的后缀名 并转小写
-func GetFileExt(filePath string) string {
+//FileExt 获取文件或者带文件的路径中的后缀名 并转小写
+func FileExt(filePath string) string {
 	return strings.ToLower(path.Ext(filePath))
 }
 

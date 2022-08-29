@@ -49,11 +49,9 @@ func AdminConfigUpdate(param *request.AdminConfigUpdate) error {
 		return errors.New("更新配置失败 error: " + err.Error())
 	}
 
-	for _, v := range configList {
-		if err := global.Redis.Del(context.Background(), "admin_config:"+param.Group+":"+v.Key).
-			Err(); err != nil {
-			return errors.New("删除配置缓存失败 error:" + err.Error())
-		}
+	if err := global.Redis.Publish(context.Background(), "watch_admin_config", 1).
+		Err(); err != nil {
+		return errors.New("删除配置缓存失败 error:" + err.Error())
 	}
 	return nil
 }
