@@ -20,7 +20,7 @@ func UploadImage(c *gin.Context, fileField string) (*response.Upload, error) {
 	if err != nil {
 		return nil, errors.New("请上传文件")
 	}
-	ext := util.GetFileExt(fileHeader.Filename)
+	ext := util.FileExt(fileHeader.Filename)
 	if !util.InArray(ext, []string{".jpg", ".jpeg", ".png", ".gif"}) {
 		return nil, errors.New("请上传正确的图片类型 jpg,jpeg,png,gif,bmp")
 	}
@@ -78,7 +78,7 @@ func UploadFile(c *gin.Context, fileField string) (*response.Upload, error) {
 	if err != nil {
 		return nil, errors.New("请上传文件")
 	}
-	filePath := "./resource/upload/" + util.Uuid() + util.GetFileExt(fileHeader.Filename)
+	filePath := "./resource/upload/" + util.Uuid() + util.FileExt(fileHeader.Filename)
 	err = c.SaveUploadedFile(fileHeader, filePath)
 	if err != nil {
 		return nil, errors.New("保存文件失败 error: " + err.Error())
