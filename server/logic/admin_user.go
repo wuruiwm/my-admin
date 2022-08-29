@@ -29,14 +29,14 @@ func AdminUserLoginAuth(token string) (*response.AdminUserLogin, error) {
 	}
 	adminUserLogin := &response.AdminUserLogin{}
 	cacheKey := "admin_token:" + token
-	if err := util.GetCache(cacheKey, adminUserLogin); err != nil {
+	if err := util.CacheGet(cacheKey, adminUserLogin); err != nil {
 		return nil, errors.New("登录已过期")
 	}
 	expireTime, err := util.DateToUnix(adminUserLogin.ExpireTime)
 	if err != nil {
 		return nil, errors.New("登录有效期异常,请重新登录")
 	}
-	if expireTime < util.GetUnix() {
+	if expireTime < util.Unix() {
 		return nil, errors.New("登录已过期")
 	}
 	adminUser := &model.AdminUser{}
@@ -58,7 +58,7 @@ func AdminUserApiAuth(userRoleId string, urlPath string, method string) error {
 	result := make(map[string]int, 0)
 	//获取缓存的api权限
 	cacheKey := "admin_role_api_auth:" + userRoleId
-	if err = util.GetCache(cacheKey, &result); err != nil {
+	if err = util.CacheGet(cacheKey, &result); err != nil {
 		apiList := make([]*model.AdminApi, 0)
 		global.Db.Table("admin_role as ar").
 			Joins("inner join admin_role_api as ara on ar.id=ara.admin_role_id").
@@ -69,7 +69,7 @@ func AdminUserApiAuth(userRoleId string, urlPath string, method string) error {
 		for _, v := range apiList {
 			result[strings.ToLower(v.Path)+"_"+strings.ToLower(v.Method)] = 1
 		}
-		err = util.SetCache(cacheKey, result, 0)
+		err = util.CacheSet(cacheKey, result, 0)
 		if err != nil {
 			return errors.New("角色api权限缓存失败 error:" + err.Error())
 		}
@@ -81,7 +81,7 @@ func AdminUserApiAuth(userRoleId string, urlPath string, method string) error {
 }
 
 func AdminUserCreateToken(adminUser *model.AdminUser) (*response.AdminUserLogin, error) {
-	time := util.GetUnix()
+	time := util.Unix()
 	lastLoginTime := util.UnixToDate(time)
 	expireTime := util.UnixToDate(time + 60*60*24*30)
 	if err := AdminUserUpdateLastLoginTime(global.Db, adminUser.Id, lastLoginTime); err != nil {
@@ -95,14 +95,14 @@ func AdminUserCreateToken(adminUser *model.AdminUser) (*response.AdminUserLogin,
 		Token:       AdminUserHashToken(adminUser, lastLoginTime),
 	}
 	cacheKey := "admin_token:" + adminUserLogin.Token
-	if err := util.SetCache(cacheKey, adminUserLogin, 60*60*24*30); err != nil {
+	if err := util.CacheSet(cacheKey, adminUserLogin, 60*60*24*30); err != nil {
 		return nil, errors.New("保存token失败 error: " + err.Error())
 	}
 	return adminUserLogin, nil
 }
 
 func AdminUserHashToken(adminUser *model.AdminUser, lastLoginTime string) string {
-	return util.MD5(adminUser.Id + adminUser.AdminRoleId + adminUser.Password + adminUser.Salt + lastLoginTime)
+	return util.Md5(adminUser.Id + adminUser.AdminRoleId + adminUser.Password + adminUser.Salt + lastLoginTime)
 }
 
 func AdminUserLogin(param *request.AdminUserLogin) (*response.AdminUserLogin, error) {
@@ -117,7 +117,7 @@ func AdminUserLogin(param *request.AdminUserLogin) (*response.AdminUserLogin, er
 }
 
 func AdminUserHashPassword(password string, salt string) string {
-	return util.MD5(util.MD5(password+global.Config.Key) + salt)
+	return util.Md5(util.Md5(password+global.Config.Key) + salt)
 }
 
 func AdminUserUpdateLastLoginTime(db *gorm.DB, id string, lastLoginTime string) error {
@@ -221,7 +221,7 @@ func AdminUserCreate(param *request.AdminUserCreate) error {
 		Password:      AdminUserHashPassword(param.Password, salt),
 		AdminRoleId:   param.AdminRoleId,
 		Salt:          salt,
-		LastLoginTime: util.GetDate(),
+		LastLoginTime: util.Date(),
 	}
 	if err := global.Db.Create(user).Error; err != nil {
 		return errors.New("用户创建失败 error: " + err.Error())
