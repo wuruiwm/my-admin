@@ -11,7 +11,7 @@ import (
 
 func CronTab() {
 	//添加定时任务 cron表达式文档 https://pkg.go.dev/github.com/robfig/cron
-	c := cron.New(cron.WithSeconds())
+	c := cron.New()
 	cronTabList := []*cronTab{
 		NewCronTab("tw_lol_luck_draw", "0 0 */8 * * *", crontab.TwLolLuckDraw, 3600*2),
 	}
