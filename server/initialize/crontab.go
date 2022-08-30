@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"app/crontab"
 	"app/global"
 	"context"
 	"github.com/robfig/cron/v3"
@@ -10,10 +11,9 @@ import (
 
 func CronTab() {
 	//添加定时任务 cron表达式文档 https://pkg.go.dev/github.com/robfig/cron
-	c := cron.New(cron.WithSeconds())
+	c := cron.New()
 	cronTabList := []*cronTab{
-		//NewCronTab("second", "* * * * * *", crontab.Second, 1),  //秒  级 定时任务
-		//NewCronTab("minute", "0 * * * * *", crontab.Minute, 60), //分钟级 定时任务
+		NewCronTab("minute", "* * * * *", crontab.Minute, 60), //每分钟执行一次定时任务
 	}
 	for _, v := range cronTabList {
 		_, err := c.AddFunc(v.spec, v.run)
