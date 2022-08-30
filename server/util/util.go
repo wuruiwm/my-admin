@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 //Md5 计算md5
 func Md5(str string) string {
 	h := md5.New()
@@ -19,7 +23,6 @@ func Md5(str string) string {
 
 //RandString 生成随机字符串
 func RandString(num int) string {
-	rand.Seed(time.Now().UnixNano())
 	var rangString string
 	baseStr := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	for i := 0; i < num; i++ {
