@@ -1,7 +1,6 @@
 package router
 
 import (
-	"app/api/controller/admin"
 	"app/api/controller/api"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +19,9 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 		//k8s登录
 		apiGroup.POST("/k8s/login", api.K8sLogin)
 		//ssl证书
-		apiGroup.GET("/ssl", admin.Ssl)
+		apiGroup.GET("/ssl", api.Ssl)
+		//一言
+		apiGroup.GET("/yiyan", api.Yiyan)
 	}
 	return r
 }
