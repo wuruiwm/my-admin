@@ -13,7 +13,8 @@ func CronTab() {
 	//添加定时任务 cron表达式文档 https://pkg.go.dev/github.com/robfig/cron
 	c := cron.New()
 	cronTabList := []*cronTab{
-		NewCronTab("tw_lol_luck_draw", "0 0 */8 * * *", crontab.TwLolLuckDraw, 3600*2),
+		NewCronTab("tw_lol_luck_draw", "0 */8 * * *", crontab.TwLolLuckDraw, 3600*2),
+		NewCronTab("yiyan", "0 0 * * 1", crontab.Yiyan, 3600*8),
 	}
 	for _, v := range cronTabList {
 		_, err := c.AddFunc(v.spec, v.run)
