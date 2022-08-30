@@ -4,12 +4,14 @@ import (
 	"app/api/middleware"
 	"app/global"
 	"app/router"
+	"embed"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"html/template"
 )
 
 //Server 初始化gin的http服务
-func Server() {
+func Server(view embed.FS) {
 	//是否开启debug
 	if global.Config.Debug {
 		gin.SetMode(gin.DebugMode)
@@ -24,6 +26,12 @@ func Server() {
 	r.Use(middleware.Recover)
 	//上传文件目录
 	r.Static("/upload", "./resource/upload")
+	t, err := template.ParseFS(view, "api/view/*.html")
+	if err != nil {
+		panic("view error:" + err.Error())
+	}
+	//html页面
+	r.SetHTMLTemplate(t)
 	//路由设置
 	r = router.Router(r)
 	//启动服务

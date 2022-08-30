@@ -8,5 +8,6 @@ import (
 func Router(r *gin.Engine) *gin.Engine {
 	r = adminRouter(r)
 	r = apiRouter(r)
+	r = webRouter(r)
 	return r
 }
