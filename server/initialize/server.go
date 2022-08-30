@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"app/api/middleware"
+	"app/api/response"
 	"app/global"
 	"app/router"
 	"embed"
@@ -32,8 +33,15 @@ func Server(view embed.FS) {
 	}
 	//html页面
 	r.SetHTMLTemplate(t)
+	//处理不存在的路由
+	r.NoMethod(ErrRoute)
+	r.NoRoute(ErrRoute)
 	//路由设置
 	r = router.Router(r)
 	//启动服务
 	_ = r.Run(fmt.Sprintf("0.0.0.0:%d", global.Config.ServerPort))
+}
+
+func ErrRoute(c *gin.Context) {
+	response.Error(c, fmt.Sprintf("api不存在 path:%s method:%s", c.Request.URL, c.Request.Method))
 }
