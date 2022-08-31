@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="group">
       <el-tab-pane label="通知配置" name="notice">
-        <el-form label-width="150px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
           <el-form-item label="类型">
             <el-radio-group v-model="notice.type">
               <el-radio label="email">邮件推送</el-radio>
@@ -43,13 +43,13 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
-    <el-button style="margin-left: 80px" type="primary" @click="submit">保存修改</el-button>
+    <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
   </div>
 </template>
 
 <script>
-import service from "@/core/request";
-import {Message} from "element-ui";
+import service from "@/core/request"
+import {Message} from "element-ui"
 
 export default {
   data() {
