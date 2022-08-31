@@ -43,7 +43,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="ssl证书配置" name="ssl">
-        <el-form label-width="150px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
           <el-form-item label="KEY(私钥)">
             <el-input v-model="ssl.key"></el-input>
           </el-form-item>
@@ -53,7 +53,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="k8s配置" name="k8s">
-        <el-form label-width="150px" style="width: 50%">
+        <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
           <el-form-item label="允许登录的用户">
             <el-input v-model="k8s.admin_username"></el-input>
           </el-form-item>
@@ -72,7 +72,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="脚本配置" name="script">
-        <el-form label-width="150px" style="width: 50%" @submit.native.prevent>
+        <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
           <el-form-item label="台服lol幸运抽奖sk">
             <el-input v-model="script.tw_lol_luck_draw_sk"></el-input>
           </el-form-item>
