@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true" @keyup.enter.native="this.getList">
+    <el-form :inline="true" @keyup.enter.native="getList">
       <el-form-item>
         <el-button :icon="isSort ? 'el-icon-finished' : 'el-icon-sort'" size="small" type="primary"
                    @click="isSort = !isSort">{{ isSort ? "退出排序" : "开始排序" }}
