@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true">
+    <el-form :inline="true" @keyup.enter.native="getList">
       <el-form-item label="请输入关键词">
         <el-input v-model="list.param.keyword" placeholder="请输入关键词搜索" size="small"></el-input>
       </el-form-item>
@@ -16,7 +16,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-search" size="small" type="primary" @click="this.getList">搜索</el-button>
+        <el-button icon="el-icon-search" size="small" type="primary" @click="getList">搜索</el-button>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建密码</el-button>
