@@ -123,8 +123,8 @@ export default {
   methods: {
     async submit() {
       let res = await service({
-        url: '/admin/config/update',
-        method: 'put',
+        url: "/admin/config/update",
+        method: "put",
         data: {
           group: this.group,
           data: this.configObjToArray(this[this.group]),
@@ -132,7 +132,7 @@ export default {
       })
       if (res.code === 0) {
         Message({
-          type: 'success',
+          type: "success",
           message: "保存成功",
           showClose: true
         })
@@ -154,8 +154,8 @@ export default {
       immediate: true,
       async handler(val) {
         let res = await service({
-          url: '/admin/config/list',
-          method: 'get',
+          url: "/admin/config/list",
+          method: "get",
           params: {
             group: val,
           }

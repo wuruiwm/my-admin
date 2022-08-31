@@ -72,23 +72,23 @@ export default {
       let export_blob = new Blob([this.ssl[type]])
       let save_link = document.createElement("a")
       save_link.href = window.URL.createObjectURL(export_blob)
-      save_link.download = type + '.txt'
+      save_link.download = type + ".txt"
       save_link.click()
     },
     copy() {
       let clipboard = new Clipboard(".copy")
-      clipboard.on('success', e => {
+      clipboard.on("success", e => {
         Message({
-          type: 'success',
-          message: '复制成功',
+          type: "success",
+          message: "复制成功",
           showClose: true
         })
         clipboard.destroy()
       })
-      clipboard.on('error', e => {
+      clipboard.on("error", e => {
         Message({
-          type: 'error',
-          message: '复制失败,',
+          type: "error",
+          message: "复制失败",
           showClose: true,
         })
         clipboard.destroy()

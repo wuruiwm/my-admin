@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import service from "@/core/request";
+import service from "@/core/request"
 import cookie from "vue-cookie"
-import {Message} from "element-ui";
+import {Message} from "element-ui"
 
 export default {
   data() {
