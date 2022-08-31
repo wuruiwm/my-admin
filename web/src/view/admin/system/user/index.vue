@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true">
+    <el-form :inline="true" @keyup.enter.native="this.getList">
       <el-form-item label="用户名">
         <el-input v-model="list.param.keyword" placeholder="请输入用户名" size="small"></el-input>
       </el-form-item>
