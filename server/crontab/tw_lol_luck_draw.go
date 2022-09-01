@@ -13,7 +13,7 @@ import (
 )
 
 func TwLolLuckDraw() {
-	retryTime := []int{0, 15, 30, 180, 600, 3600}
+	retryTime := []int{0, 15, 15, 15, 15, 15}
 	errList := make([]error, 0)
 	var (
 		prize string
