@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true" @keyup.enter.native="getList">
+    <el-form :inline="true" @keyup.enter.native="refreshList">
       <el-form-item label="用户名">
         <el-input v-model="list.param.keyword" placeholder="请输入用户名" size="small"></el-input>
       </el-form-item>
@@ -16,7 +16,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button icon="el-icon-search" size="small" type="primary" @click="getList">搜索</el-button>
+        <el-button icon="el-icon-search" size="small" type="primary" @click="refreshList">搜索</el-button>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建用户</el-button>
@@ -252,7 +252,7 @@ export default {
                 message: "删除成功",
                 showClose: true
               })
-              this.getList()
+              this.refreshList()
             }
           })
           .catch(() => {
@@ -292,7 +292,7 @@ export default {
             showClose: true
           })
           this.passwordDialogVisible = false
-          this.getList()
+          this.refreshList()
         }
       })
     },
@@ -330,7 +330,7 @@ export default {
             showClose: true
           })
           this.dialog.visible = false
-          this.getList()
+          this.refreshList()
         }
       })
     }

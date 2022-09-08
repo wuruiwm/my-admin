@@ -34,6 +34,10 @@ export default {
                 this.list.total = listRes.data.total
             }
         },
+        refreshList(){
+            this.list.page = 1
+            this.getList()
+        },
         watchListData(data) {
             return data
         },
