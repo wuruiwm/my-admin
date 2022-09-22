@@ -35,7 +35,7 @@ func TwLolLuckDraw() {
 			content = content + fmt.Sprintf("第%d次抽奖失败原因：%s\n", k+1, v.Error())
 		}
 		if errCount < 6 {
-			content = content + fmt.Sprintf("第%d次抽奖成功\n", errCount+1)
+			content = content + fmt.Sprintf("第%d次抽奖成功：%s\n", errCount+1, prize)
 		}
 		_ = util.Notice("台服lol幸运抽奖", content)
 	} else {
