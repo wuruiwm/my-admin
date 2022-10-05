@@ -21,7 +21,6 @@ func TwLolLuckDraw() {
 		panic(err)
 	}
 	mq.Consume("tw_lol_luck_draw", "delay", func(delivery amqp.Delivery, rabbitmq *util.Rabbitmq) {
-		fmt.Println("444444444444")
 		twLolLuckDraw()
 		_ = delivery.Ack(true)
 	})
@@ -101,7 +100,6 @@ func twLolLuckDraw() {
 	)
 	_ = prize
 	for {
-		break
 		if prize, err = twLolLuckDrawRun(); err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
 			errNum++
@@ -115,21 +113,19 @@ func twLolLuckDraw() {
 		}
 	}
 	for {
-		log.Println(2222222)
 		mq, err = util.NewRabbitmq()
 		if err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
 			continue
 		}
-		if err = mq.Publish("tw_lol_luck_draw", "delay", "1", 2*1000); err != nil {
+		if err = mq.Publish("tw_lol_luck_draw", "delay", "1", 8*3601*1000); err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
 			continue
 		}
 		mq.Close()
 		break
 	}
-	log.Println(33333333)
-	//_ = util.Notice("台服lol幸运抽奖", prize)
+	_ = util.Notice("台服lol幸运抽奖", prize)
 }
 
 func twLolLuckDrawRun() (string, error) {
