@@ -1,4 +1,4 @@
-package crontab
+package task
 
 import (
 	"app/global"
@@ -8,39 +8,23 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
+	"github.com/streadway/amqp"
 	"go.uber.org/zap"
+	"log"
 	"time"
 )
 
 func TwLolLuckDraw() {
-	retryTime := []int{0, 15, 15, 15, 15, 15}
-	errList := make([]error, 0)
-	var (
-		prize string
-		err   error
-	)
-	for i := 0; i < 6; i++ {
-		time.Sleep(time.Duration(retryTime[i]) * time.Second)
-		if prize, err = twLolLuckDraw(); err != nil {
-			errList = append(errList, err)
-			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
-		} else {
-			break
-		}
+	twLolLuckDraw()
+	mq, err := util.NewRabbitmq()
+	if err != nil {
+		panic(err)
 	}
-	errCount := len(errList)
-	if errCount > 0 {
-		content := ""
-		for k, v := range errList {
-			content = content + fmt.Sprintf("第%d次抽奖失败原因：%s\n", k+1, v.Error())
-		}
-		if errCount < 6 {
-			content = content + fmt.Sprintf("第%d次抽奖成功：%s\n", errCount+1, prize)
-		}
-		_ = util.Notice("台服lol幸运抽奖", content)
-	} else {
-		_ = util.Notice("台服lol幸运抽奖", prize)
-	}
+	mq.Consume("tw_lol_luck_draw", "delay", func(delivery amqp.Delivery, rabbitmq *util.Rabbitmq) {
+		fmt.Println("444444444444")
+		twLolLuckDraw()
+		_ = delivery.Ack(true)
+	})
 }
 
 type twLolLuckDrawError struct {
@@ -107,16 +91,56 @@ type twLolLuckDrawResponse struct {
 	} `json:"result"`
 }
 
-func twLolLuckDraw() (string, error) {
-	sk := global.Config.AdminConfig.Script.TwLolLuckDrawSk
-	version, err := twLolLuckDrawVersion(sk)
+func twLolLuckDraw() {
+	log.Println(1111)
+	var (
+		prize  string
+		err    error
+		errNum int
+		mq     *util.Rabbitmq
+	)
+	_ = prize
+	for {
+		break
+		if prize, err = twLolLuckDrawRun(); err != nil {
+			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
+			errNum++
+			if errNum > 5 {
+				_ = util.Notice("台服lol幸运抽奖", fmt.Sprintf("抽奖失败: %s", err.Error()))
+				errNum = 0
+			}
+			time.Sleep(time.Second * 1200)
+		} else {
+			break
+		}
+	}
+	for {
+		log.Println(2222222)
+		mq, err = util.NewRabbitmq()
+		if err != nil {
+			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
+			continue
+		}
+		if err = mq.Publish("tw_lol_luck_draw", "delay", "1", 2*1000); err != nil {
+			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
+			continue
+		}
+		mq.Close()
+		break
+	}
+	log.Println(33333333)
+	//_ = util.Notice("台服lol幸运抽奖", prize)
+}
+
+func twLolLuckDrawRun() (string, error) {
+	version, err := twLolLuckDrawVersion(global.Config.AdminConfig.Script.TwLolLuckDrawSk)
 	if err != nil {
 		return "", err
 	}
 	resp, err := nic.Post("https://luckydraw.gamehub.garena.tw/service/luckydraw", nic.H{
 		Data: nic.KV{
 			"game":    "lol",
-			"sk":      sk,
+			"sk":      global.Config.AdminConfig.Script.TwLolLuckDrawSk,
 			"region":  "TW",
 			"version": fmt.Sprintf("%d", version),
 			"tid":     fmt.Sprintf("%d", util.Unix()),
