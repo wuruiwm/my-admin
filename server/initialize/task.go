@@ -3,6 +3,6 @@ package initialize
 import "app/task"
 
 func Task() {
-	go task.AdminConfig()
+	task.AdminConfig()
 	go task.TwLolLuckDraw()
 }

@@ -12,7 +12,7 @@ import (
 
 func AdminConfig() {
 	adminConfigInit()
-	adminConfigWatch()
+	go adminConfigWatch()
 }
 
 func adminConfigWatch() {
