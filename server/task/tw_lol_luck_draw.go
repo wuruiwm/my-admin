@@ -10,7 +10,6 @@ import (
 	"github.com/eddieivan01/nic"
 	"github.com/streadway/amqp"
 	"go.uber.org/zap"
-	"log"
 	"time"
 )
 
@@ -91,14 +90,12 @@ type twLolLuckDrawResponse struct {
 }
 
 func twLolLuckDraw() {
-	log.Println(1111)
 	var (
 		prize  string
 		err    error
 		errNum int
 		mq     *util.Rabbitmq
 	)
-	_ = prize
 	for {
 		if prize, err = twLolLuckDrawRun(); err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
