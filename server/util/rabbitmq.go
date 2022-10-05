@@ -122,6 +122,7 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 		autoAck      bool        //是否自动ack
 		autoDelete   bool        //是否自动删除队列
 		exchangeName = queueName //交换机名
+		key          string
 		err          error
 	)
 	if err = r.CheckMode(mode); err != nil {
@@ -134,6 +135,8 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 		autoAck = true
 		autoDelete = true
 		queueName = queueName + "-" + Uuid()
+	} else if mode == "delay" {
+		key = r.GetDelayQueueName(queueName)
 	}
 	//死循环 如果异常退出 则进行重连操作 重新启动消费者
 	for {
@@ -144,7 +147,7 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 				return errors.New("rabbitmq create queue error: " + err.Error())
 			}
 			//绑定队列和交换机
-			err = r.Channel.QueueBind(queueName, "", exchangeName, false, nil)
+			err = r.Channel.QueueBind(queueName, key, exchangeName, false, nil)
 			if err != nil {
 				return errors.New("rabbitmq queue bind error: " + err.Error())
 			}
