@@ -1,8 +1,9 @@
 package initialize
 
-import "app/task"
+import (
+	"app/task"
+)
 
 func Task() {
 	task.AdminConfig()
-	go task.TwLolLuckDraw()
 }

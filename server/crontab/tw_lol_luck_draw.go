@@ -1,4 +1,4 @@
-package task
+package crontab
 
 import (
 	"app/global"
@@ -8,21 +8,30 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
-	"github.com/streadway/amqp"
 	"go.uber.org/zap"
 	"time"
 )
 
 func TwLolLuckDraw() {
-	twLolLuckDraw()
-	mq, err := util.NewRabbitmq()
-	if err != nil {
-		panic(err)
+	twLolLuckDrawModel := &model.TwLolLuckDraw{}
+	global.Db.Order("create_time desc").Find(&twLolLuckDrawModel)
+	unix, _ := util.DateToUnix(twLolLuckDrawModel.CreateTime)
+	nowUnix := util.Unix()
+	if unix > 0 && nowUnix-unix < 8*3600 {
+		return
 	}
-	mq.Consume("tw_lol_luck_draw", "delay", func(delivery amqp.Delivery, rabbitmq *util.Rabbitmq) {
-		twLolLuckDraw()
-		_ = delivery.Ack(true)
-	})
+	for i := 0; i < 6; i++ {
+		if prize, err := twLolLuckDraw(); err != nil {
+			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
+			if i == 5 {
+				_ = util.Notice("台服lol幸运抽奖", fmt.Sprintf("抽奖失败: %s", err.Error()))
+			}
+			time.Sleep(time.Second * 5)
+		} else {
+			_ = util.Notice("台服lol幸运抽奖", prize)
+			break
+		}
+	}
 }
 
 type twLolLuckDrawError struct {
@@ -89,43 +98,7 @@ type twLolLuckDrawResponse struct {
 	} `json:"result"`
 }
 
-func twLolLuckDraw() {
-	var (
-		prize  string
-		err    error
-		errNum int
-		mq     *util.Rabbitmq
-	)
-	for {
-		if prize, err = twLolLuckDrawRun(); err != nil {
-			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
-			errNum++
-			if errNum > 5 {
-				_ = util.Notice("台服lol幸运抽奖", fmt.Sprintf("抽奖失败: %s", err.Error()))
-				errNum = 0
-			}
-			time.Sleep(time.Second * 1200)
-		} else {
-			break
-		}
-	}
-	for {
-		mq, err = util.NewRabbitmq()
-		if err != nil {
-			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
-			continue
-		}
-		if err = mq.Publish("tw_lol_luck_draw", "delay", "1", 8*3601*1000); err != nil {
-			global.Logger.Error("tw_lol_luck_draw", zap.String("error", err.Error()))
-			continue
-		}
-		mq.Close()
-		break
-	}
-	_ = util.Notice("台服lol幸运抽奖", prize)
-}
-
-func twLolLuckDrawRun() (string, error) {
+func twLolLuckDraw() (string, error) {
 	version, err := twLolLuckDrawVersion(global.Config.AdminConfig.Script.TwLolLuckDrawSk)
 	if err != nil {
 		return "", err
