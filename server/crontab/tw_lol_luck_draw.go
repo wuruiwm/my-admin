@@ -20,7 +20,7 @@ func TwLolLuckDraw() {
 	if unix > 0 && nowUnix-unix < 8*3600 {
 		return
 	}
-	for i := 0; i < 6; i++ {
+	for i := 0; i < 120; i++ {
 		if prize, err := twLolLuckDraw(); err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
 			if i == 5 {
