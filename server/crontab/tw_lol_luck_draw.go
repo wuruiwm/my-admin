@@ -17,7 +17,7 @@ func TwLolLuckDraw() {
 	global.Db.Order("create_time desc").Find(&twLolLuckDrawModel)
 	unix, _ := util.DateToUnix(twLolLuckDrawModel.CreateTime)
 	nowUnix := util.Unix()
-	if unix > 0 && nowUnix-unix < 8*3600 {
+	if unix > 0 && nowUnix-unix < (8*3600-600) {
 		return
 	}
 	for i := 0; i < 120; i++ {
