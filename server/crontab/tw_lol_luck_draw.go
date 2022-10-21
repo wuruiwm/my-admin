@@ -20,17 +20,22 @@ func TwLolLuckDraw() {
 	if unix > 0 && nowUnix-unix < (8*3600-600) {
 		return
 	}
+	var (
+		prize string
+		err   error
+	)
 	for i := 0; i < 120; i++ {
-		if prize, err := twLolLuckDraw(); err != nil {
+		if prize, err = twLolLuckDraw(); err != nil {
 			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
-			if i == 5 {
-				_ = util.Notice("台服lol幸运抽奖", fmt.Sprintf("抽奖失败: %s", err.Error()))
-			}
 			time.Sleep(time.Second * 5)
 		} else {
-			_ = util.Notice("台服lol幸运抽奖", prize)
 			break
 		}
+	}
+	if err != nil {
+		_ = util.Notice("台服lol幸运抽奖", fmt.Sprintf("抽奖失败: %s", err.Error()))
+	} else {
+		_ = util.Notice("台服lol幸运抽奖", prize)
 	}
 }
 
