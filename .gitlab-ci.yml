@@ -1,30 +1,32 @@
 stages:
-  - server-docker-build
-  - server-docker-push
-  - web-docker-build
-  - web-docker-push
+  - login
+  - build
+  - push
   - deploy
 
-server-docker-build:
-  stage: server-docker-build
+login:
+  stage: login
+  script:
+    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
+
+server-build:
+  stage: build
   script:
     - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server -f deploy/server/Dockerfile .
 
-server-docker-push:
-  stage: server-docker-push
+server-push:
+  stage: push
   script:
-    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
     - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server
 
-web-docker-build:
-  stage: web-docker-build
+web-build:
+  stage: build
   script:
     - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web -f deploy/web/Dockerfile .
 
-web-docker-push:
-  stage: web-docker-push
+web-push:
+  stage: push
   script:
-    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
     - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web
 
 deploy:
