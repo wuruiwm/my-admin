@@ -14,7 +14,7 @@ import (
 
 func TwLolLuckDraw() {
 	twLolLuckDrawModel := &model.TwLolLuckDraw{}
-	global.Db.Order("create_time desc").Find(&twLolLuckDrawModel)
+	global.Db.Order("create_time desc").Take(&twLolLuckDrawModel)
 	unix, _ := util.DateToUnix(twLolLuckDrawModel.CreateTime)
 	nowUnix := util.Unix()
 	if unix > 0 && nowUnix-unix < (8*3600-600) {
