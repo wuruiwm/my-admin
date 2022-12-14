@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-//Db 初始化Db
+// Db 初始化Db
 func Db() {
 	var gormConfig *gorm.Config
 	var logLevel logger.LogLevel
@@ -46,7 +46,7 @@ func dbDsn() string {
 		global.Config.Mysql.Charset)
 }
 
-//dbPool 设置db连接池参数
+// dbPool 设置db连接池参数
 func dbPool() {
 	sqlDB, err := global.Db.DB()
 	if err != nil {
@@ -113,10 +113,16 @@ func (l *dbSqlLog) After(db *gorm.DB) {
 		return
 	}
 	sql := db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)
+	costMicrosecond := time.Since(t).Microseconds()
+	var cost string
+	if costMicrosecond/1000/1000 >= 1 {
+		cost = fmt.Sprintf("%.2fs", util.Float64Round(float64(costMicrosecond)/1000/1000))
+	} else {
+		cost = fmt.Sprintf("%.2fms", util.Float64Round(float64(costMicrosecond)/1000))
+	}
 	global.Logger.Info("sql",
-		zap.String("time", util.Date()),
 		zap.String("sql", sql),
 		zap.Int64("row", db.Statement.RowsAffected),
-		zap.Duration("cost", time.Since(t)),
+		zap.String("cost", cost),
 	)
 }
