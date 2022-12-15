@@ -113,16 +113,9 @@ func (l *dbSqlLog) After(db *gorm.DB) {
 		return
 	}
 	sql := db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)
-	costMicrosecond := time.Since(t).Microseconds()
-	var cost string
-	if costMicrosecond/1000/1000 >= 1 {
-		cost = fmt.Sprintf("%.2fs", util.Float64Round(float64(costMicrosecond)/1000/1000))
-	} else {
-		cost = fmt.Sprintf("%.2fms", util.Float64Round(float64(costMicrosecond)/1000))
-	}
 	global.Logger.Info("sql",
 		zap.String("sql", sql),
 		zap.Int64("row", db.Statement.RowsAffected),
-		zap.String("cost", cost),
+		zap.String("cost", util.TimeSince(t)),
 	)
 }
