@@ -14,13 +14,13 @@ RUN go mod tidy && go build -ldflags="-s -w" -o /app/main main.go
 
 FROM alpine:latest
 
-#拷贝builder阶段的时区和编译好的二进制文件
-COPY --from=builder /app/main /app/main
-
 #更改时区为东八区
 RUN apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone
+
+#拷贝builder阶段的时区和编译好的二进制文件
+COPY --from=builder /app/main /app/main
 
 # 设置工作目录为/app
 WORKDIR /app
