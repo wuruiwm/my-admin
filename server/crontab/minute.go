@@ -1,10 +1,10 @@
 package crontab
 
 import (
+	"app/util"
 	"fmt"
-	"time"
 )
 
 func Minute() {
-	fmt.Printf("分钟级定时任务：%s\n", time.Now().Format("2006-01-02 03:04:05"))
+	fmt.Printf("分钟级定时任务：%s\n", util.Date())
 }
