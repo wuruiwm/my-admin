@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"app/global"
+	"app/util"
 	"bytes"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ import (
 
 func Logger(c *gin.Context) {
 	//获取请求开始时间
-	start := time.Now()
+	t := time.Now()
 	//获取body内容 因为body只能读一次 所以再写回body
 	bodyByt, _ := c.GetRawData()
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyByt))
@@ -23,14 +24,13 @@ func Logger(c *gin.Context) {
 	c.Next()
 
 	//获取请求结束时间
-	cost := time.Since(start)
 	fields := []zapcore.Field{
 		zap.String("method", c.Request.Method),
 		zap.String("path", c.Request.URL.Path),
 		zap.String("query", c.Request.URL.RawQuery),
 		zap.Any("body", body),
 		zap.String("ip", c.ClientIP()),
-		zap.Duration("cost", cost),
+		zap.String("cost", util.TimeSince(t)),
 	}
 
 	//recover捕获到panic之后 将捕获到的error写入panic字段
