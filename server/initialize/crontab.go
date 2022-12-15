@@ -9,12 +9,11 @@ import (
 	"time"
 )
 
-func CronTab() {
+func Crontab() {
 	//添加定时任务 cron表达式文档 https://pkg.go.dev/github.com/robfig/cron
 	c := cron.New()
-	cronTabList := []*cronTab{
-		NewCronTab("yiyan", "0 0 * * 1", crontab.Yiyan, 3600*8),
-		NewCronTab("tw_lol_luck_draw", "*/10 * * * *", crontab.TwLolLuckDraw, 3600*8),
+	cronTabList := []*CronTabTask{
+		NewCrontab("minute", "* * * * *", crontab.Minute, 60), //每分钟执行一次定时任务
 	}
 	for _, v := range cronTabList {
 		_, err := c.AddFunc(v.spec, v.run)
@@ -25,15 +24,15 @@ func CronTab() {
 	}
 }
 
-type cronTab struct {
+type CronTabTask struct {
 	name       string //定时任务分布式锁 保证唯一
 	spec       string
 	task       func()
 	maxRunTime int //最大执行时间(秒) 如果还没有释放锁 则其他定时任务可重新开始执行
 }
 
-func NewCronTab(name string, spec string, task func(), maxRunTime int) *cronTab {
-	return &cronTab{
+func NewCrontab(name string, spec string, task func(), maxRunTime int) *CronTabTask {
+	return &CronTabTask{
 		name:       name,
 		spec:       spec,
 		task:       task,
@@ -41,7 +40,7 @@ func NewCronTab(name string, spec string, task func(), maxRunTime int) *cronTab 
 	}
 }
 
-func (c *cronTab) run() {
+func (c *CronTabTask) run() {
 	key := "crontab_lock:" + c.name
 	ok, err := global.Redis.SetNX(context.Background(), key, 1, time.Duration(c.maxRunTime)*time.Second).Result()
 	if err != nil {
