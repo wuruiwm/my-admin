@@ -18,8 +18,9 @@ FROM alpine:latest
 COPY --from=builder /app/main /app/main
 
 #更改时区为东八区
-COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo "Asia/Shanghai" > /etc/timezone
+RUN apk add --no-cache tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone
 
 # 设置工作目录为/app
 WORKDIR /app
