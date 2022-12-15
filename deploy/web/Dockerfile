@@ -12,7 +12,7 @@ COPY ./web .
 
 # 下载依赖包并编译
 RUN npm install \
-    && npm run build
+    && npm run build \
 
 FROM docker.nikm.cn/wuruiwm/nginx:1.23
 
