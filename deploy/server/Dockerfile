@@ -10,12 +10,14 @@ WORKDIR /build
 COPY ./server .
 
 #下载依赖包 并编译
-RUN go mod tidy && go build -ldflags="-s -w" -o /app/main main.go
+RUN go mod tidy \
+    && go build -ldflags="-s -w" -o /app/main main.go
 
 FROM alpine:latest
 
 #更改时区为东八区
-RUN apk add --no-cache tzdata \
+RUN apk update \
+    && apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone
 
