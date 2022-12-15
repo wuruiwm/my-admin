@@ -55,10 +55,6 @@ func (r *Rabbitmq) CheckMode(mode string) (err error) {
 	return nil
 }
 
-func (r *Rabbitmq) GetDelayQueueName(queueName string) string {
-	return queueName + "-" + "delay"
-}
-
 /*
 Publish 推送消息
 queueName 队列名
@@ -67,44 +63,45 @@ data 消息内容
 delayMilliSecond 延迟队列消息延迟时间(毫秒) mode为delay有效
 */
 func (r *Rabbitmq) Publish(queueName string, mode string, data string, delayMilliSecond int) (err error) {
+	var (
+		exchangeArgs = amqp.Table{} //交换机参数
+		publishArgs  = amqp.Table{} //插入消息参数
+		queueType    = mode         //队列类型
+		exchangeName = queueName    //交换机名称
+		routingKey   = queueName    //路由键名称
+	)
 	if err = r.CheckMode(mode); err != nil {
 		panic(err)
 	}
-	exchangeName := queueName
-	queueType := mode
 	if mode == "delay" {
-		//设置队列 不存在则创建
-		_, err = r.Channel.QueueDeclare(r.GetDelayQueueName(queueName), true, false, false, false, amqp.Table{
-			"x-dead-letter-exchange": exchangeName,
-		})
-		if err != nil {
-			return errors.New("rabbitmq create queue error: " + err.Error())
-		}
-		queueType = "direct"
+		queueType = "x-delayed-message"
+		exchangeArgs["x-delayed-type"] = "direct"
+		publishArgs["x-delay"] = fmt.Sprintf("%d", delayMilliSecond)
 	}
-	err = r.Channel.ExchangeDeclare(exchangeName, queueType, true, false, false, false, nil)
+	//设置交换机 不存在则创建
+	err = r.Channel.ExchangeDeclare(exchangeName, queueType, true, false, false, false, exchangeArgs)
 	if err != nil {
 		return errors.New("rabbitmq create exchange error: " + err.Error())
 	}
-	//向交换机插入消息
-	if mode == "delay" {
-		expiration := ""
-		if delayMilliSecond > 0 {
-			expiration = fmt.Sprintf("%d", delayMilliSecond)
+	if mode == "direct" || mode == "delay" {
+		//设置队列 不存在则创建
+		_, err = r.Channel.QueueDeclare(queueName, true, false, false, false, nil)
+		if err != nil {
+			return errors.New("rabbitmq create queue error: " + err.Error())
 		}
-		err = r.Channel.Publish("", r.GetDelayQueueName(queueName), false, false, amqp.Publishing{
-			ContentType:  "application/json",
-			Body:         []byte(data),
-			DeliveryMode: 2,
-			Expiration:   expiration,
-		})
-	} else {
-		err = r.Channel.Publish(exchangeName, "", false, false, amqp.Publishing{
-			ContentType:  "application/json",
-			Body:         []byte(data),
-			DeliveryMode: 2,
-		})
+		//绑定队列和交换机
+		err = r.Channel.QueueBind(queueName, routingKey, exchangeName, false, nil)
+		if err != nil {
+			return errors.New("rabbitmq queue bind error: " + err.Error())
+		}
 	}
+	//向交换机插入消息
+	err = r.Channel.Publish(exchangeName, routingKey, false, false, amqp.Publishing{
+		ContentType:  "application/json",
+		Body:         []byte(data),
+		DeliveryMode: 2,
+		Headers:      publishArgs,
+	})
 	if err != nil {
 		return errors.New("rabbitmq publish message error: " + err.Error())
 	}
@@ -119,11 +116,13 @@ handle 消息处理函数
 */
 func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Delivery, *Rabbitmq)) {
 	var (
-		autoAck      bool        //是否自动ack
-		autoDelete   bool        //是否自动删除队列
-		exchangeName = queueName //交换机名
-		key          string
+		autoAck      bool //是否自动ack
+		autoDelete   bool //是否自动删除队列
 		err          error
+		queueType    = mode         //队列类型
+		exchangeName = queueName    //交换机名称
+		routingKey   = queueName    //路由键名称
+		exchangeArgs = amqp.Table{} //交换机参数
 	)
 	if err = r.CheckMode(mode); err != nil {
 		panic(err)
@@ -136,7 +135,8 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 		autoDelete = true
 		queueName = queueName + "-" + Uuid()
 	} else if mode == "delay" {
-		key = r.GetDelayQueueName(queueName)
+		queueType = "x-delayed-message"
+		exchangeArgs["x-delayed-type"] = "direct"
 	}
 	//死循环 如果异常退出 则进行重连操作 重新启动消费者
 	for {
@@ -146,8 +146,13 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 			if err != nil {
 				return errors.New("rabbitmq create queue error: " + err.Error())
 			}
+			//设置交换机 不存在则创建
+			err = r.Channel.ExchangeDeclare(exchangeName, queueType, true, false, false, false, exchangeArgs)
+			if err != nil {
+				return errors.New("rabbitmq create exchange error: " + err.Error())
+			}
 			//绑定队列和交换机
-			err = r.Channel.QueueBind(queueName, key, exchangeName, false, nil)
+			err = r.Channel.QueueBind(queueName, routingKey, exchangeName, false, nil)
 			if err != nil {
 				return errors.New("rabbitmq queue bind error: " + err.Error())
 			}
