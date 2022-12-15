@@ -4,36 +4,25 @@ import (
 	"app/config"
 	"app/global"
 	"app/model"
-	"context"
+	"app/util"
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
+	"github.com/streadway/amqp"
 	"go.uber.org/zap"
-	"time"
 )
 
 func AdminConfig() {
 	adminConfigInit()
-	adminConfigWatch()
+	go adminConfigWatch()
 }
 
 func adminConfigWatch() {
-	var (
-		sub *redis.PubSub
-		err error
-	)
-	for {
-		sub = global.Redis.Subscribe(context.Background(), "admin_config_watch")
-		for {
-			_, err = sub.ReceiveMessage(context.Background())
-			if err != nil {
-				break
-			}
-			adminConfigInit()
-		}
-		_ = sub.Close()
-		time.Sleep(time.Second * 10)
-		global.Logger.Error("admin_config_watch", zap.String("error", "连接断开 error:"+err.Error()))
+	mq, err := util.NewRabbitmq()
+	if err != nil {
+		panic(err)
 	}
+	mq.Consume("admin_config", "fanout", func(delivery amqp.Delivery, rabbitmq *util.Rabbitmq) {
+		adminConfigInit()
+	})
 }
 
 func adminConfigInit() {
