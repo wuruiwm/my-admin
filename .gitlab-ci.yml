@@ -1,33 +1,83 @@
 stages:
-  - server-docker-build
-  - server-docker-push
-  - web-docker-build
-  - web-docker-push
+  - login
+  - build
   - deploy
+  - notice
 
-server-docker-build:
-  stage: server-docker-build
+login:
+  stage: login
+  only:
+    - /^\d+(.\d+)*$/
+    - main
   script:
-    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server -f deploy/server/Dockerfile .
+    - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
 
-server-docker-push:
-  stage: server-docker-push
+server_build_tag:
+  stage: build
+  only:
+    - /^\d+(.\d+)*$/
   script:
-    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:server
+    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} -f deploy/server/Dockerfile .
+    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG}
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
 
-web-docker-build:
-  stage: web-docker-build
+web_build_tag:
+  stage: build
+  only:
+    - /^\d+(.\d+)*$/
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web -f deploy/web/Dockerfile .
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG} -f deploy/web/Dockerfile .
+    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG}
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
 
-web-docker-push:
-  stage: web-docker-push
+server_build_main:
+  stage: build
+  only:
+    - main
   script:
-    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/gin_vue_admin:web
+    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest -f deploy/server/Dockerfile .
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
 
-deploy:
+web_build_main:
+  stage: build
+  only:
+    - main
+  script:
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest -f deploy/web/Dockerfile .
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
+
+deploy_tag:
   stage: deploy
+  only:
+    - /^\d+(.\d+)*$/
   script:
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment gin-vue-admin"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment my-admin-new my-admin-new-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} my-admin-new-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG}"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+
+deploy_main:
+  stage: deploy
+  only:
+    - main
+  script:
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment my-admin-new my-admin-new-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest my-admin-new-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+
+notice_success:
+  stage: notice
+  only:
+    - /^\d+(.\d+)*$/
+    - main
+  script:
+    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_SUCCESS_MESSAGE}"
+  when: on_success
+
+notice_error:
+  stage: notice
+  only:
+    - /^\d+(.\d+)*$/
+    - main
+  script:
+    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_ERROR_MESSAGE}"
+  when: on_failure

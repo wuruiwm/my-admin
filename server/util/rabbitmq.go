@@ -157,7 +157,7 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 				return errors.New("rabbitmq queue bind error: " + err.Error())
 			}
 			//开始消费 获取消息队列chan
-			msgChan, err := r.Channel.Consume(queueName, "", autoAck, false, false, false, nil)
+			msgChan, err := r.Channel.Consume(queueName, Uuid(), autoAck, false, false, false, nil)
 			if err != nil {
 				return errors.New("rabbitmq get queue chan error: " + err.Error())
 			}
