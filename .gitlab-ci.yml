@@ -1,7 +1,7 @@
 stages:
   - login
   - build
-#  - deploy
+  - deploy
   - notice
 
 login:
@@ -48,7 +48,36 @@ web_build_main:
     - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest -f deploy/web/Dockerfile .
     - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest
 
-#deploy:
-#  stage: deploy
-#  script:
-#    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+deploy_tag:
+  stage: deploy
+  only:
+    - /^\d+(.\d+)*$/
+  script:
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment my-admin-new my-admin-new-server=${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:${CI_BUILD_TAG} my-admin-new-web=${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:${CI_BUILD_TAG}"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+
+deploy_main:
+  stage: deploy
+  only:
+    - main
+  script:
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment my-admin-new my-admin-new-server=${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:latest my-admin-new-web=${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+
+notice_success:
+  stage: notice
+  only:
+    - /^\d+(.\d+)*$/
+    - main
+  script:
+    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_SUCCESS_MESSAGE}"
+  when: on_success
+
+notice_error:
+  stage: notice
+  only:
+    - /^\d+(.\d+)*$/
+    - main
+  script:
+    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_ERROR_MESSAGE}"
+  when: on_failure
