@@ -1,6 +1,7 @@
 stages:
   - login
   - build
+#  - deploy
   - notice
 
 login:
@@ -47,7 +48,7 @@ web_build_main:
     - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest -f deploy/web/Dockerfile .
     - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest
 
-deploy:
-  stage: deploy
-  script:
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
+#deploy:
+#  stage: deploy
+#  script:
+#    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment my-admin-new"
