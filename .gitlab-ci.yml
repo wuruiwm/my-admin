@@ -1,33 +1,51 @@
 stages:
   - login
   - build
-  - push
-  - deploy
+  - notice
 
 login:
   stage: login
+  only:
+    - /^\d+(.\d+)*$/
+    - main
   script:
-    - docker login $DOCKER_REGISTER_HOST -u $DOCKER_REGISTER_USERNAME -p $DOCKER_REGISTER_PASSWORD
+    - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
 
-server-build:
+server_build_tag:
   stage: build
+  only:
+    - /^\d+(.\d+)*$/
   script:
-    - docker build -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server -f deploy/server/Dockerfile .
+    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:${CI_BUILD_TAG} -f deploy/server/Dockerfile .
+    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:latest
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:${CI_BUILD_TAG}
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:latest
 
-server-push:
-  stage: push
-  script:
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:server
-
-web-build:
+web_build_tag:
   stage: build
+  only:
+    - /^\d+(.\d+)*$/
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web -f deploy/web/Dockerfile .
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:${CI_BUILD_TAG} -f deploy/web/Dockerfile .
+    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:${CI_BUILD_TAG}
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest
 
-web-push:
-  stage: push
+server_build_main:
+  stage: build
+  only:
+    - main
   script:
-    - docker push $DOCKER_REGISTER_HOST/wuruiwm/my_admin_new:web
+    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:latest -f deploy/server/Dockerfile .
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_server:latest
+
+web_build_main:
+  stage: build
+  only:
+    - main
+  script:
+    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest -f deploy/web/Dockerfile .
+    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/my_admin_new_web:latest
 
 deploy:
   stage: deploy
