@@ -10,6 +10,7 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 	//路由组
 	apiGroup := r.Group("/api")
 	{
+		//上传
 		uploadGroup := apiGroup.Group("/upload")
 		{
 			uploadGroup.POST("/image", api.UploadImage)

@@ -15,18 +15,6 @@ import (
 	"time"
 )
 
-//https://blog.csdn.net/qq_34857250/article/details/105122272/
-/*
-TODO 多节点广播通知 已完成
-TODO group分组 避免遍历 已完成
-TODO UserId 连接副本 避免遍历 已完成
-TODO msg json优化 已完成
-TODO 发送消息自动被关闭连接问题修复 已完成
-TODO 发送消息太慢 导致整体堵塞修复 已完成
-TODO 新增连接和删除连接 使用chan 避免多处锁竞争 已完成
-TODO 代码命名和风格优化 已完成 待验证
-*/
-
 var server *Server          //单例server
 var queueName = "websocket" //广播队列名
 
