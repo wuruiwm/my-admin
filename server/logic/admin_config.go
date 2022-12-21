@@ -5,7 +5,7 @@ import (
 	"app/api/response"
 	"app/global"
 	"app/model"
-	"context"
+	"app/util"
 	"errors"
 )
 
@@ -49,8 +49,11 @@ func AdminConfigUpdate(param *request.AdminConfigUpdate) error {
 		return errors.New("更新配置失败 error: " + err.Error())
 	}
 
-	if err := global.Redis.Publish(context.Background(), "admin_config_watch", 1).
-		Err(); err != nil {
+	mq, err := util.NewRabbitmq()
+	if err != nil {
+		return errors.New("删除配置缓存失败 error:" + err.Error())
+	}
+	if err = mq.Publish("admin_config", "fanout", []byte(""), 0); err != nil {
 		return errors.New("删除配置缓存失败 error:" + err.Error())
 	}
 	return nil
