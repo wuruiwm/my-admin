@@ -53,7 +53,7 @@ func AdminConfigUpdate(param *request.AdminConfigUpdate) error {
 	if err != nil {
 		return errors.New("删除配置缓存失败 error:" + err.Error())
 	}
-	if err = mq.Publish("admin_config", "fanout", "1", 0); err != nil {
+	if err = mq.Publish("admin_config", "fanout", []byte(""), 0); err != nil {
 		return errors.New("删除配置缓存失败 error:" + err.Error())
 	}
 	return nil
