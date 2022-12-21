@@ -11,8 +11,11 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 	apiGroup := r.Group("/api")
 	{
 		//上传
-		apiGroup.POST("/upload/image", api.UploadImage)
-		apiGroup.POST("/upload/file", api.UploadFile)
+		uploadGroup := apiGroup.Group("/upload")
+		{
+			uploadGroup.POST("/image", api.UploadImage)
+			uploadGroup.POST("/file", api.UploadFile)
+		}
 		//websocket
 		apiGroup.GET("/websocket", api.Websocket)
 		apiGroup.POST("/sendMsg", api.SendMsg)
