@@ -17,6 +17,7 @@ require (
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/pelletier/go-toml v1.8.1 // indirect
+	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/assertions v0.0.0-20190116191733-b6c0e53d7304 // indirect
@@ -25,7 +26,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/streadway/amqp v1.0.0
 	github.com/ugorji/go v1.2.7 // indirect
 	github.com/xuri/excelize/v2 v2.6.0
 	go.uber.org/atomic v1.9.0 // indirect
@@ -40,4 +40,5 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.0.1
 	gorm.io/gorm v1.23.5
+	nhooyr.io/websocket v1.8.7
 )

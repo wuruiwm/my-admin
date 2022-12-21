@@ -2,20 +2,21 @@ package util
 
 import (
 	"app/global"
+	"context"
 	"errors"
 	"fmt"
-	"github.com/streadway/amqp"
+	"github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 	"time"
 )
 
 type Rabbitmq struct {
-	Conn    *amqp.Connection
-	Channel *amqp.Channel
+	Conn    *amqp091.Connection
+	Channel *amqp091.Channel
 }
 
 func (r *Rabbitmq) conn() (err error) {
-	r.Conn, err = amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%d/", global.Config.Rabbitmq.Username, global.Config.Rabbitmq.Password, global.Config.Rabbitmq.Host, global.Config.Rabbitmq.Port))
+	r.Conn, err = amqp091.Dial(fmt.Sprintf("amqp://%s:%s@%s:%d/", global.Config.Rabbitmq.Username, global.Config.Rabbitmq.Password, global.Config.Rabbitmq.Host, global.Config.Rabbitmq.Port))
 	return
 }
 
@@ -31,7 +32,7 @@ func NewRabbitmq() (*Rabbitmq, error) {
 	rabbitmq := &Rabbitmq{}
 	err := rabbitmq.InitConn()
 	if err != nil {
-		return nil, err
+		return rabbitmq, err
 	}
 	return rabbitmq, nil
 }
@@ -62,13 +63,13 @@ mode 模式 可选值 direct生产消费  fanout订阅发布  delay延迟队列
 data 消息内容
 delayMilliSecond 延迟队列消息延迟时间(毫秒) mode为delay有效
 */
-func (r *Rabbitmq) Publish(queueName string, mode string, data string, delayMilliSecond int) (err error) {
+func (r *Rabbitmq) Publish(queueName string, mode string, data []byte, delayMilliSecond int) (err error) {
 	var (
-		exchangeArgs = amqp.Table{} //交换机参数
-		publishArgs  = amqp.Table{} //插入消息参数
-		queueType    = mode         //队列类型
-		exchangeName = queueName    //交换机名称
-		routingKey   = queueName    //路由键名称
+		exchangeArgs = amqp091.Table{} //交换机参数
+		publishArgs  = amqp091.Table{} //插入消息参数
+		queueType    = mode            //队列类型
+		exchangeName = queueName       //交换机名称
+		routingKey   = queueName       //路由键名称
 	)
 	if err = r.CheckMode(mode); err != nil {
 		panic(err)
@@ -96,9 +97,11 @@ func (r *Rabbitmq) Publish(queueName string, mode string, data string, delayMill
 		}
 	}
 	//向交换机插入消息
-	err = r.Channel.Publish(exchangeName, routingKey, false, false, amqp.Publishing{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	err = r.Channel.PublishWithContext(ctx, exchangeName, routingKey, false, false, amqp091.Publishing{
 		ContentType:  "application/json",
-		Body:         []byte(data),
+		Body:         data,
 		DeliveryMode: 2,
 		Headers:      publishArgs,
 	})
@@ -114,15 +117,15 @@ queueName 队列名
 mode 模式 可选值 direct生产消费  fanout订阅发布  delay延迟队列
 handle 消息处理函数
 */
-func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Delivery, *Rabbitmq)) {
+func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp091.Delivery, *Rabbitmq)) {
 	var (
 		autoAck      bool //是否自动ack
 		autoDelete   bool //是否自动删除队列
 		err          error
-		queueType    = mode         //队列类型
-		exchangeName = queueName    //交换机名称
-		routingKey   = queueName    //路由键名称
-		exchangeArgs = amqp.Table{} //交换机参数
+		queueType    = mode            //队列类型
+		exchangeName = queueName       //交换机名称
+		routingKey   = queueName       //路由键名称
+		exchangeArgs = amqp091.Table{} //交换机参数
 	)
 	if err = r.CheckMode(mode); err != nil {
 		panic(err)
@@ -185,6 +188,10 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp.Deliv
 }
 
 func (r *Rabbitmq) Close() {
-	_ = r.Channel.Close()
-	_ = r.Conn.Close()
+	if r.Channel != nil {
+		_ = r.Channel.Close()
+	}
+	if r.Conn != nil {
+		_ = r.Conn.Close()
+	}
 }

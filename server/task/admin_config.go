@@ -6,7 +6,7 @@ import (
 	"app/model"
 	"app/util"
 	"encoding/json"
-	"github.com/streadway/amqp"
+	"github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +20,7 @@ func adminConfigWatch() {
 	if err != nil {
 		panic(err)
 	}
-	mq.Consume("admin_config", "fanout", func(delivery amqp.Delivery, rabbitmq *util.Rabbitmq) {
+	mq.Consume("admin_config", "fanout", func(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		adminConfigInit()
 	})
 }
