@@ -2,7 +2,6 @@ stages:
   - login
   - build
   - deploy
-  - notice
 
 login:
   stage: login
@@ -63,21 +62,3 @@ deploy_main:
   script:
     - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest"
     - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment gin-vue-admin"
-
-notice_success:
-  stage: notice
-  only:
-    - /^\d+(.\d+)*$/
-    - main
-  script:
-    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_SUCCESS_MESSAGE}"
-  when: on_success
-
-notice_error:
-  stage: notice
-  only:
-    - /^\d+(.\d+)*$/
-    - main
-  script:
-    - curl "${GOTIFY_SERVER}/message?token=${GOTIFY_TOKEN}" -F "title=${CI_PROJECT_TITLE} cicd" -F "message=${GOTIFY_ERROR_MESSAGE}"
-  when: on_failure
