@@ -4,13 +4,14 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/go.uuid"
 	"math/rand"
 	"path"
 	"strings"
 	"time"
 )
 
+// init 初始化随机数种子
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
@@ -70,7 +71,7 @@ func InArray(needle interface{}, slice interface{}) bool {
 	return false
 }
 
-// 获取经过的时间
+// TimeSince 获取经过的时间
 func TimeSince(t time.Time) string {
 	costMicrosecond := time.Since(t).Microseconds()
 	if costMicrosecond/1000/1000 >= 1 {
