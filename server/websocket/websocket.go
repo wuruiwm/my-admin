@@ -11,7 +11,6 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 	"nhooyr.io/websocket"
-	"sync"
 	"time"
 )
 
@@ -20,7 +19,6 @@ var queueName = "websocket" //广播队列名
 
 // Server websocket服务端
 type Server struct {
-	Lock       sync.Mutex                    //互斥锁
 	Client     map[string]map[string]*Client //客户端map
 	UserClient map[string][]string           //用户id到客户端id映射关系
 	Register   chan *Client                  //注册客户端chan
@@ -36,7 +34,6 @@ type Client struct {
 	Conn    *websocket.Conn     //websocket连接
 	Context context.Context     //连接context
 	Message chan *ClientMessage //消息chan
-	Closed  bool                //是否断开连接
 }
 
 // ServerMessage 用于多节点广播消息
@@ -66,64 +63,55 @@ func NewServer() *Server {
 			UnRegister: make(chan *Client, 16),
 			Message:    make(chan *ServerMessage, 128),
 		}
-		go server.RegisterClientHandle()
-		go server.UnregisterClientHandle()
+		go server.ClientHandle()
 		go server.MessageConsumeHandle()
 		go server.MessagePublishHandle()
 	}
 	return server
 }
 
-// RegisterClientHandle 将客户端注册到server
-func (s *Server) RegisterClientHandle() {
+// ClientHandle 客户端注册与取消注册处理
+func (s *Server) ClientHandle() {
 	var (
 		ok     bool
 		client *Client
 	)
-	for client = range s.Register {
-		s.Lock.Lock()
-		//维护客户端列表
-		if _, ok = s.Client[client.Group]; !ok {
-			s.Client[client.Group] = make(map[string]*Client, 0)
-		}
-		s.Client[client.Group][client.Id] = client
-		//维护用户到客户端映射列表
-		if client.UserId != "" {
-			if _, ok = s.UserClient[client.UserClientKey()]; !ok {
-				s.UserClient[client.UserClientKey()] = make([]string, 0)
+	for {
+		select {
+		//注册
+		case client = <-s.Register:
+			//维护客户端列表
+			if _, ok = s.Client[client.Group]; !ok {
+				s.Client[client.Group] = make(map[string]*Client, 0)
 			}
-			s.UserClient[client.UserClientKey()] = append(s.UserClient[client.UserClientKey()], client.Id)
-		}
-		s.Lock.Unlock()
-	}
-}
-
-// UnregisterClientHandle 将连接关闭的客户端从server中注销
-func (s *Server) UnregisterClientHandle() {
-	var (
-		ok     bool
-		client *Client
-	)
-	for client = range s.UnRegister {
-		s.Lock.Lock()
-		//维护用户到客户端映射列表
-		if client.UserId != "" {
-			if _, ok = s.UserClient[client.UserClientKey()]; ok {
-				for k, v := range s.UserClient[client.UserClientKey()] {
-					if v == client.Id {
-						s.UserClient[client.UserClientKey()] = append(s.UserClient[client.UserClientKey()][:k], s.UserClient[client.UserClientKey()][k+1:]...)
-						break
+			s.Client[client.Group][client.Id] = client
+			//维护用户到客户端映射列表
+			if client.UserId != "" {
+				if _, ok = s.UserClient[client.UserClientKey()]; !ok {
+					s.UserClient[client.UserClientKey()] = make([]string, 0)
+				}
+				s.UserClient[client.UserClientKey()] = append(s.UserClient[client.UserClientKey()], client.Id)
+			}
+		//取消注册
+		case client = <-s.UnRegister:
+			//维护用户到客户端映射列表
+			if client.UserId != "" {
+				if _, ok = s.UserClient[client.UserClientKey()]; ok {
+					for k, v := range s.UserClient[client.UserClientKey()] {
+						if v == client.Id {
+							s.UserClient[client.UserClientKey()] = append(s.UserClient[client.UserClientKey()][:k], s.UserClient[client.UserClientKey()][k+1:]...)
+							break
+						}
 					}
 				}
 			}
-		}
-		//维护客户端列表
-		if _, ok = s.Client[client.Group]; ok {
-			if _, ok = s.Client[client.Group][client.Id]; ok {
-				delete(s.Client[client.Group], client.Id)
+			//维护客户端列表
+			if _, ok = s.Client[client.Group]; ok {
+				if _, ok = s.Client[client.Group][client.Id]; ok {
+					delete(s.Client[client.Group], client.Id)
+				}
 			}
 		}
-		s.Lock.Unlock()
 	}
 }
 
@@ -277,14 +265,12 @@ func NewClient(c *gin.Context, conn *websocket.Conn, userId string, group string
 		Conn:    conn,
 		Context: c.Request.Context(),
 		Message: make(chan *ClientMessage, 16),
-		Closed:  false,
 	}
 }
 
 // Close 关闭客户端websocket连接
 func (c *Client) Close() {
 	_ = c.Conn.Close(websocket.StatusPolicyViolation, "close")
-	c.Closed = true
 }
 
 // ReadHandle 读取websocket客户端发送的消息 这里只处理连接错误和关闭连接 不处理消息
@@ -317,25 +303,30 @@ func (c *Client) WriteHandle() {
 			if err != nil {
 				c.Close()
 				global.Logger.Error("websocket", zap.String("error", "write message error:"+err.Error()))
+				return
 			}
 		case <-c.Context.Done():
 			c.Close()
+			return
 		}
 	}
 }
 
 // Ping 向客户端发送ping 并等待pong 使用心跳包保持连接
 func (c *Client) Ping() {
+	ticker := time.NewTicker(time.Second * 5)
+	defer ticker.Stop()
 	for {
-		if c.Closed {
+		select {
+		case <-ticker.C:
+			err := c.Conn.Ping(c.Context)
+			if err != nil {
+				c.Close()
+				return
+			}
+		case <-c.Context.Done():
 			return
 		}
-		err := c.Conn.Ping(c.Context)
-		if err != nil {
-			c.Close()
-			return
-		}
-		time.Sleep(time.Second * 5)
 	}
 }
 
