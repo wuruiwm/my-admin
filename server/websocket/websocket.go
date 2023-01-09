@@ -70,7 +70,7 @@ func NewServer() *Server {
 	return server
 }
 
-// ClientHandle 客户端注册与取消注册处理
+// ClientHandle 客户端注册与注销处理
 func (s *Server) ClientHandle() {
 	var (
 		ok     bool
@@ -360,8 +360,8 @@ func (m *ServerMessage) Json() []byte {
 }
 
 // UserClientKey 拼接并返回UserClient的key
-func (s *ServerMessage) UserClientKey() string {
-	return fmt.Sprintf("%s_%s", s.Group, s.UserId)
+func (m *ServerMessage) UserClientKey() string {
+	return fmt.Sprintf("%s_%s", m.Group, m.UserId)
 }
 
 // NewClientMessage 实例化客户端消息
