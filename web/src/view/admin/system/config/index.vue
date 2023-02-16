@@ -76,6 +76,9 @@
           <el-form-item label="台服lol幸运抽奖sk">
             <el-input v-model="script.tw_lol_luck_draw_sk"></el-input>
           </el-form-item>
+          <el-form-item label="honeygain开罐token">
+            <el-input v-model="script.honeygain_token"></el-input>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
     </el-tabs>
@@ -117,6 +120,7 @@ export default {
       },
       script: {
         tw_lol_luck_draw_sk: "",
+        honeygain_token: "",
       },
     }
   },

@@ -34,4 +34,5 @@ type K8s struct {
 
 type Script struct {
 	TwLolLuckDrawSk string `json:"tw_lol_luck_draw_sk"`
+	HoneygainToken  string `json:"honeygain_token"`
 }
