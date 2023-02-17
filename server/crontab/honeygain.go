@@ -30,7 +30,7 @@ func Honeygain() {
 		if err != nil {
 			global.Logger.Error("Honeygain", zap.String("error", err.Error()))
 		} else {
-			global.Logger.Info("Honeygain", zap.String("msg", fmt.Sprintf("开罐成功 获取%d", openJar.Data.Credits)))
+			global.Logger.Info("Honeygain", zap.String("msg", fmt.Sprintf("开罐成功 获取%.0f", openJar.Data.Credits)))
 		}
 	} else {
 		global.Logger.Info("Honeygain", zap.String("msg", fmt.Sprintf("未完成目标流量 目标%d 完成%d", needFlow.Data.MaxBytes, myFlow.GatheringBytes)))
@@ -49,7 +49,7 @@ type NeedFlowResponse struct {
 }
 type OpenJarResponse struct {
 	Data struct {
-		Credits int `json:"credits"` //开罐获得的流量
+		Credits float64 `json:"credits"` //开罐获得的流量
 	} `json:"data"`
 }
 
