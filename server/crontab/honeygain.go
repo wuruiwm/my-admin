@@ -17,7 +17,7 @@ func Honeygain() {
 		return
 	}
 	if myFlow.WinningCredits > 0 {
-		global.Logger.Info("Honeygain", zap.String("msg", "今天奖励已获取"))
+		global.Logger.Info("Honeygain", zap.String("content", "今天奖励已获取"))
 		return
 	}
 	needFlow, err := NeedFlow(token)
@@ -30,10 +30,10 @@ func Honeygain() {
 		if err != nil {
 			global.Logger.Error("Honeygain", zap.String("error", err.Error()))
 		} else {
-			global.Logger.Info("Honeygain", zap.String("msg", fmt.Sprintf("开罐成功 获取%.0f", openJar.Data.Credits)))
+			global.Logger.Info("Honeygain", zap.String("content", fmt.Sprintf("开罐成功 获取%.0f", openJar.Data.Credits)))
 		}
 	} else {
-		global.Logger.Info("Honeygain", zap.String("msg", fmt.Sprintf("未完成目标流量 目标%d 完成%d", needFlow.Data.MaxBytes, myFlow.GatheringBytes)))
+		global.Logger.Info("Honeygain", zap.String("content", fmt.Sprintf("未完成目标流量 目标%d 完成%d", needFlow.Data.MaxBytes, myFlow.GatheringBytes)))
 	}
 }
 
