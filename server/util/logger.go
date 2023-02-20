@@ -2,6 +2,7 @@ package util
 
 import (
 	"app/global"
+	"encoding/json"
 	"go.uber.org/zap"
 )
 
@@ -24,9 +25,11 @@ func NewLogger(logger ...*zap.Logger) *Logger {
 }
 
 func (l *Logger) Info(msg string, content Map) {
-	l.logger.Info(msg, zap.Any("content", content))
+	jsonByt, _ := json.Marshal(content)
+	l.logger.Info(msg, zap.String("content", string(jsonByt)))
 }
 
 func (l *Logger) Error(msg string, content Map) {
-	l.logger.Error(msg, zap.Any("content", content))
+	jsonByt, _ := json.Marshal(content)
+	l.logger.Error(msg, zap.String("content", string(jsonByt)))
 }
