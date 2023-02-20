@@ -22,7 +22,7 @@ func Logger() {
 
 func loggerEncoder() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
-	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02")
+	encoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-0215:04:05")
 	encoderConfig.TimeKey = "time"
 	encoderConfig.CallerKey = "line"
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
