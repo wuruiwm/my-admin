@@ -2,12 +2,10 @@ package api
 
 import (
 	"app/api/response"
-	"app/global"
 	"app/util"
 	"app/websocket"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"strings"
 )
 
@@ -28,7 +26,9 @@ func Websocket(c *gin.Context) {
 	}
 	err := websocket.NewServer().RegisterClient(c, userId, group)
 	if err != nil {
-		global.Logger.Error("websocket", zap.String("error", err.Error()))
+		util.NewLogger().Error("websocket", util.Map{
+			"error": err.Error(),
+		})
 		return
 	}
 }

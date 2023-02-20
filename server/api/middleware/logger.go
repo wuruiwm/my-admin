@@ -1,14 +1,11 @@
 package middleware
 
 import (
-	"app/global"
 	"app/util"
 	"bytes"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"io/ioutil"
+	"io"
 	"time"
 )
 
@@ -17,20 +14,20 @@ func Logger(c *gin.Context) {
 	t := time.Now()
 	//获取body内容 因为body只能读一次 所以再写回body
 	bodyByt, _ := c.GetRawData()
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyByt))
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyByt))
 	body := make(map[string]interface{}, 0)
 	_ = json.Unmarshal(bodyByt, &body)
 
 	c.Next()
 
 	//获取请求结束时间
-	fields := []zapcore.Field{
-		zap.String("method", c.Request.Method),
-		zap.String("path", c.Request.URL.Path),
-		zap.String("query", c.Request.URL.RawQuery),
-		zap.Any("body", body),
-		zap.String("ip", c.ClientIP()),
-		zap.String("cost", util.TimeSince(t)),
+	logContent := util.Map{
+		"method": c.Request.Method,
+		"path":   c.Request.URL.Path,
+		"query":  c.Request.URL.RawQuery,
+		"body":   body,
+		"ip":     c.ClientIP(),
+		"cost":   util.TimeSince(t),
 	}
 
 	//recover捕获到panic之后 将捕获到的error写入panic字段
@@ -38,19 +35,19 @@ func Logger(c *gin.Context) {
 	panicErr, ok := c.Get("panic")
 	if ok {
 		isError = true
-		fields = append(fields, zap.Any("panic", panicErr))
+		logContent["panic"] = panicErr
 	}
 	//controller返回的错误 写入到error字段
 	err := c.GetString("error")
 	if err != "" {
 		isError = true
-		fields = append(fields, zap.String("error", err))
+		logContent["error"] = err
 	}
 
 	//写入日志
 	if isError {
-		global.Logger.Error(c.Request.URL.Path, fields...)
+		util.NewLogger().Error(c.Request.URL.Path, logContent)
 	} else {
-		global.Logger.Info(c.Request.URL.Path, fields...)
+		util.NewLogger().Info(c.Request.URL.Path, logContent)
 	}
 }

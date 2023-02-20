@@ -3,9 +3,9 @@ package initialize
 import (
 	"app/crontab"
 	"app/global"
+	"app/util"
 	"context"
 	"github.com/robfig/cron/v3"
-	"go.uber.org/zap"
 	"time"
 )
 
@@ -46,12 +46,22 @@ func (c *CronTabTask) run() {
 	key := "crontab_lock:" + c.name
 	ok, err := global.Redis.SetNX(context.Background(), key, 1, time.Duration(c.maxRunTime)*time.Second).Result()
 	if err != nil {
-		global.Logger.Error("crontab_lock", zap.Any("cronTab", c), zap.String("error", "定时任务分布式锁lock error:"+err.Error()))
+		util.NewLogger().Error("crontab_lock", util.Map{
+			"name":       c.name,
+			"spec":       c.spec,
+			"maxRunTime": c.maxRunTime,
+			"error":      "定时任务分布式锁lock error:" + err.Error(),
+		})
 	}
 	if ok {
 		c.task()
 		if err = global.Redis.Del(context.Background(), key).Err(); err != nil {
-			global.Logger.Error("crontab_lock", zap.Any("cronTab", c), zap.String("error", "定时任务分布式锁unlock error:"+err.Error()))
+			util.NewLogger().Error("crontab_lock", util.Map{
+				"name":       c.name,
+				"spec":       c.spec,
+				"maxRunTime": c.maxRunTime,
+				"error":      "定时任务分布式锁unlock error:" + err.Error(),
+			})
 		}
 	}
 }

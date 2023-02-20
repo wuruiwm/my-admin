@@ -1,7 +1,6 @@
 package websocket
 
 import (
-	"app/global"
 	"app/util"
 	"context"
 	"encoding/json"
@@ -9,7 +8,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rabbitmq/amqp091-go"
-	"go.uber.org/zap"
 	"nhooyr.io/websocket"
 	"time"
 )
@@ -124,12 +122,16 @@ func (s *Server) MessageConsumeHandle() {
 	)
 	mq, err = util.NewRabbitmq()
 	if err != nil {
-		global.Logger.Error("websocket", zap.String("error", err.Error()))
+		util.NewLogger().Error("websocket", util.Map{
+			"error": err.Error(),
+		})
 	}
 	mq.Consume(queueName, "fanout", func(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		message = &ServerMessage{}
 		if err = json.Unmarshal(delivery.Body, message); err != nil {
-			global.Logger.Error("websocket", zap.String("error", err.Error()))
+			util.NewLogger().Error("websocket", util.Map{
+				"error": err.Error(),
+			})
 			return
 		}
 		if message.Type == "group" {
@@ -156,7 +158,9 @@ func (s *Server) MessagePublishHandle() {
 			mq.Close()
 			err = mq.InitConn()
 			if err != nil {
-				global.Logger.Error("websocket", zap.String("error", err.Error()))
+				util.NewLogger().Error("websocket", util.Map{
+					"error": err.Error(),
+				})
 				continue
 			}
 		}
@@ -302,7 +306,9 @@ func (c *Client) WriteHandle() {
 			err = c.WriteMessage(message)
 			if err != nil {
 				c.Close()
-				global.Logger.Error("websocket", zap.String("error", "write message error:"+err.Error()))
+				util.NewLogger().Error("websocket", util.Map{
+					"error": "write message error:" + err.Error(),
+				})
 				return
 			}
 		case <-c.Context.Done():
