@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/rabbitmq/amqp091-go"
-	"go.uber.org/zap"
 	"time"
 )
 
@@ -173,7 +172,9 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp091.De
 		}()
 		//异常重连逻辑 保证网络异常或rabbitmq宕机等情况下 重启消费者
 		if err != nil {
-			global.Logger.Error("rabbitmq", zap.String("error", err.Error()))
+			NewLogger().Error("rabbitmq", Map{
+				"error": err.Error(),
+			})
 			for {
 				time.Sleep(time.Second * 5)
 				r.Close()
@@ -181,7 +182,9 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp091.De
 				if err == nil {
 					break
 				}
-				global.Logger.Error("rabbitmq", zap.String("error", err.Error()))
+				NewLogger().Error("rabbitmq", Map{
+					"error": err.Error(),
+				})
 			}
 		}
 	}

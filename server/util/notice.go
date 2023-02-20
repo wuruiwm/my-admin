@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
-	"go.uber.org/zap"
 	"gopkg.in/gomail.v2"
 )
 
@@ -22,7 +21,11 @@ func Notice(title, content string) error {
 		err = errors.New("通知类型错误")
 	}
 	if err != nil {
-		global.Logger.Error("notice", zap.String("title", title), zap.String("content", content), zap.String("error", err.Error()))
+		NewLogger().Error("notice", Map{
+			"title":   title,
+			"content": content,
+			"error":   err.Error(),
+		})
 	}
 	return err
 }

@@ -7,7 +7,6 @@ import (
 	"app/util"
 	"encoding/json"
 	"github.com/rabbitmq/amqp091-go"
-	"go.uber.org/zap"
 )
 
 func AdminConfig() {
@@ -39,12 +38,19 @@ func adminConfigInit() {
 	}
 	jsonByte, err := json.Marshal(data)
 	if err != nil {
-		global.Logger.Error("admin_config", zap.Any("configList", configList), zap.Any("data", data), zap.String("error", err.Error()))
+		util.NewLogger().Error("admin_config", util.Map{
+			"configList": configList,
+			"data":       data,
+			"error":      err.Error(),
+		})
 		return
 	}
 	adminConfig := &config.AdminConfig{}
 	if err = json.Unmarshal(jsonByte, adminConfig); err != nil {
-		global.Logger.Error("admin_config", zap.String("jsonByte", string(jsonByte)), zap.String("error", err.Error()))
+		util.NewLogger().Error("admin_config", util.Map{
+			"jsonByte": string(jsonByte),
+			"error":    err.Error(),
+		})
 		return
 	}
 	global.Config.AdminConfig = adminConfig
