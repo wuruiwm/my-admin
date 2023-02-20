@@ -45,10 +45,9 @@ func Logger(c *gin.Context) {
 	}
 
 	//写入日志
-	msg := "request_" + c.Request.URL.Path
 	if isError {
-		util.NewLogger().Error(msg, logContent)
+		util.NewLogger().Error(c.Request.URL.Path, logContent)
 	} else {
-		util.NewLogger().Info(msg, logContent)
+		util.NewLogger().Info(c.Request.URL.Path, logContent)
 	}
 }
