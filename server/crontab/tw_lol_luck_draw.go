@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eddieivan01/nic"
-	"go.uber.org/zap"
 	"time"
 )
 
@@ -26,7 +25,9 @@ func TwLolLuckDraw() {
 	)
 	for i := 0; i < 120; i++ {
 		if prize, err = twLolLuckDraw(); err != nil {
-			global.Logger.Error("tw_lol_luck_draw", zap.Any("error", err.Error()))
+			util.NewLogger().Error("tw_lol_luck_draw", util.Map{
+				"error": err.Error(),
+			})
 			time.Sleep(time.Second * 5)
 		} else {
 			break
