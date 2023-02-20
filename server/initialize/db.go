@@ -4,7 +4,6 @@ import (
 	"app/global"
 	"app/util"
 	"fmt"
-	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -113,9 +112,9 @@ func (l *dbSqlLog) After(db *gorm.DB) {
 		return
 	}
 	sql := db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)
-	global.Logger.Info("sql",
-		zap.String("sql", sql),
-		zap.Int64("row", db.Statement.RowsAffected),
-		zap.String("cost", util.TimeSince(t)),
-	)
+	util.NewLogger().Info("sql", util.Map{
+		"sql":  sql,
+		"row":  db.Statement.RowsAffected,
+		"cost": util.TimeSince(t),
+	})
 }

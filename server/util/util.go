@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+type Map map[string]interface{}
+
 // init 初始化随机数种子
 func init() {
 	rand.Seed(time.Now().UnixNano())
