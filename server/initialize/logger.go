@@ -35,8 +35,8 @@ func loggerLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   "./log/server.log", // 保存的文件位置
 		MaxSize:    100,                // 在进行切割之前，日志文件的最大大小（以MB为单位）
-		MaxBackups: 100,                // 保留归档日志文件的最大个数
-		MaxAge:     30,                 // 保留归档日志文件的最大天数
+		MaxBackups: 10,                 // 保留归档日志文件的最大个数
+		MaxAge:     90,                 // 保留归档日志文件的最大天数
 		Compress:   false,              // 是否压缩归档日志文件
 		LocalTime:  true,               // 采用本地时区
 	}
