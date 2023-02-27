@@ -14,7 +14,7 @@ func Crontab() {
 	c := cron.New()
 	cronTabList := []*CronTabTask{
 		NewCrontab("yiyan", "0 0 * * 1", crontab.Yiyan, 3600*8),
-		NewCrontab("honeygain", "*/10 * * * *", crontab.Honeygain, 10),
+		NewCrontab("honeygain", "*/10 * * * *", crontab.Honeygain, 60*8),
 		// NewCrontab("tw_lol_luck_draw", "*/10 * * * *", crontab.TwLolLuckDraw, 3600*8),
 	}
 	for _, v := range cronTabList {
