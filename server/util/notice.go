@@ -26,6 +26,11 @@ func Notice(title, content string) error {
 			"content": content,
 			"error":   err.Error(),
 		})
+	} else {
+		NewLogger().Info("notice", Map{
+			"title":   title,
+			"content": content,
+		})
 	}
 	return err
 }
