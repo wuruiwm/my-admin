@@ -3,6 +3,7 @@ module app
 go 1.16
 
 require (
+	github.com/bytedance/sonic v1.8.3 // indirect
 	github.com/eddieivan01/nic v0.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/locales v0.14.0
@@ -12,9 +13,9 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/magiconair/properties v1.8.3 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/melbahja/goph v1.3.0
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/pelletier/go-toml v1.8.1 // indirect
@@ -32,8 +33,9 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0
-	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	golang.org/x/arch v0.3.0 // indirect
+	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
