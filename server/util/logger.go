@@ -2,7 +2,7 @@ package util
 
 import (
 	"app/global"
-	"encoding/json"
+	"github.com/bytedance/sonic"
 	"go.uber.org/zap"
 )
 
@@ -19,11 +19,11 @@ func NewLogger() *Logger {
 }
 
 func (l *Logger) Info(msg string, content Map) {
-	jsonByt, _ := json.Marshal(content)
+	jsonByt, _ := sonic.Marshal(content)
 	global.Logger.Info(msg, zap.String("content", string(jsonByt)))
 }
 
 func (l *Logger) Error(msg string, content Map) {
-	jsonByt, _ := json.Marshal(content)
+	jsonByt, _ := sonic.Marshal(content)
 	global.Logger.Error(msg, zap.String("content", string(jsonByt)))
 }

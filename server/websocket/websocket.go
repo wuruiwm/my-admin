@@ -3,9 +3,9 @@ package websocket
 import (
 	"app/util"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/rabbitmq/amqp091-go"
 	"nhooyr.io/websocket"
@@ -128,7 +128,7 @@ func (s *Server) MessageConsumeHandle() {
 	}
 	mq.Consume(queueName, "fanout", func(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		message = &ServerMessage{}
-		if err = json.Unmarshal(delivery.Body, message); err != nil {
+		if err = sonic.Unmarshal(delivery.Body, message); err != nil {
 			util.NewLogger().Error("websocket", util.Map{
 				"error": err.Error(),
 			})
@@ -360,7 +360,7 @@ func (c *Client) UserClientKey() string {
 // Json json自身 返回json后的字节数组 并缓存
 func (m *ServerMessage) Json() []byte {
 	if m.JsonByte == nil {
-		m.JsonByte, _ = json.Marshal(m)
+		m.JsonByte, _ = sonic.Marshal(m)
 	}
 	return m.JsonByte
 }
@@ -382,7 +382,7 @@ func NewClientMessage(t string, data interface{}) *ClientMessage {
 // Json json自身 返回json后的字节数组 并缓存
 func (m *ClientMessage) Json() []byte {
 	if m.JsonByte == nil {
-		m.JsonByte, _ = json.Marshal(m)
+		m.JsonByte, _ = sonic.Marshal(m)
 	}
 	return m.JsonByte
 }
