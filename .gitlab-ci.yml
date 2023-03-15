@@ -1,3 +1,6 @@
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
 stages:
   - login
   - build
@@ -9,6 +12,8 @@ login:
     - /^\d+(.\d+)*$/
     - main
   script:
+    - export
+    - ls /var/run
     - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
 
 server_build_tag:
