@@ -24,9 +24,9 @@ func Websocket(c *gin.Context) {
 		response.Error(c, "header Upgrade not websocket")
 		return
 	}
-	err := websocket.NewServer().RegisterClient(c, userId, group)
+	err := websocket.Server.RegisterClient(c, userId, group)
 	if err != nil {
-		util.NewLogger().Error("websocket", util.Map{
+		util.Logger.Error("websocket", util.Map{
 			"error": err.Error(),
 		})
 		return
@@ -45,10 +45,10 @@ func SendMsg(c *gin.Context) {
 	}
 	msg := websocket.NewClientMessage("test1", group+"_"+msgType+"_"+util.Date())
 	if msgType == "group" {
-		websocket.NewServer().SendGroupMessage(msg, group)
+		websocket.Server.SendGroupMessage(msg, group)
 	} else if msgType == "user" {
 		fmt.Println(msg, group, id)
-		websocket.NewServer().SendUserMessage(msg, group, id)
+		websocket.Server.SendUserMessage(msg, group, id)
 	}
 	response.Success(c, "success", nil)
 	return

@@ -172,7 +172,7 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp091.De
 		}()
 		//异常重连逻辑 保证网络异常或rabbitmq宕机等情况下 重启消费者
 		if err != nil {
-			NewLogger().Error("rabbitmq", Map{
+			Logger.Error("rabbitmq", Map{
 				"error": err.Error(),
 			})
 			for {
@@ -182,7 +182,7 @@ func (r *Rabbitmq) Consume(queueName string, mode string, handle func(amqp091.De
 				if err == nil {
 					break
 				}
-				NewLogger().Error("rabbitmq", Map{
+				Logger.Error("rabbitmq", Map{
 					"error": err.Error(),
 				})
 			}

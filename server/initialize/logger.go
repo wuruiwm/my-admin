@@ -1,7 +1,7 @@
 package initialize
 
 import (
-	"app/global"
+	"app/util"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -17,7 +17,7 @@ func Logger() {
 		panic(err)
 	}
 	core := zapcore.NewCore(encoder, writeSyncer, log)
-	global.Logger = zap.New(core, zap.AddCaller())
+	util.InitLogger(zap.New(core, zap.AddCaller()))
 }
 
 func loggerEncoder() zapcore.Encoder {

@@ -21,13 +21,13 @@ func Notice(title, content string) error {
 		err = errors.New("通知类型错误")
 	}
 	if err != nil {
-		NewLogger().Error("notice", Map{
+		Logger.Error("notice", Map{
 			"title":   title,
 			"content": content,
 			"error":   err.Error(),
 		})
 	} else {
-		NewLogger().Info("notice", Map{
+		Logger.Info("notice", Map{
 			"title":   title,
 			"content": content,
 		})

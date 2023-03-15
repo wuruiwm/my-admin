@@ -47,8 +47,8 @@ func Logger(c *gin.Context) {
 	//写入日志
 	msg := "api"
 	if isError {
-		util.NewLogger().Error(msg, logContent)
+		util.Logger.Error(msg, logContent)
 	} else {
-		util.NewLogger().Info(msg, logContent)
+		util.Logger.Info(msg, logContent)
 	}
 }

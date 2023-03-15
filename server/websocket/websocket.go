@@ -12,11 +12,15 @@ import (
 	"time"
 )
 
-var server *Server          //单例server
+var Server *server
 var queueName = "websocket" //广播队列名
 
-// Server websocket服务端
-type Server struct {
+func InitServer() {
+	Server = newServer()
+}
+
+// server websocket服务端
+type server struct {
 	Client     map[string]map[string]*Client //客户端map
 	UserClient map[string][]string           //用户id到客户端id映射关系
 	Register   chan *Client                  //注册客户端chan
@@ -52,24 +56,22 @@ type ClientMessage struct {
 }
 
 // NewServer 实例化server并返回一个单例server
-func NewServer() *Server {
-	if server == nil {
-		server = &Server{
-			Client:     make(map[string]map[string]*Client, 0),
-			UserClient: make(map[string][]string, 0),
-			Register:   make(chan *Client, 16),
-			UnRegister: make(chan *Client, 16),
-			Message:    make(chan *ServerMessage, 128),
-		}
-		go server.ClientHandle()
-		go server.MessageConsumeHandle()
-		go server.MessagePublishHandle()
+func newServer() *server {
+	server := &server{
+		Client:     make(map[string]map[string]*Client, 0),
+		UserClient: make(map[string][]string, 0),
+		Register:   make(chan *Client, 16),
+		UnRegister: make(chan *Client, 16),
+		Message:    make(chan *ServerMessage, 128),
 	}
+	go server.ClientHandle()
+	go server.MessageConsumeHandle()
+	go server.MessagePublishHandle()
 	return server
 }
 
 // ClientHandle 客户端注册与注销处理
-func (s *Server) ClientHandle() {
+func (s *server) ClientHandle() {
 	var (
 		ok     bool
 		client *Client
@@ -114,7 +116,7 @@ func (s *Server) ClientHandle() {
 }
 
 // MessageConsumeHandle 订阅消息 在本节点客户端连接中发送消息
-func (s *Server) MessageConsumeHandle() {
+func (s *server) MessageConsumeHandle() {
 	var (
 		mq      *util.Rabbitmq
 		err     error
@@ -122,14 +124,14 @@ func (s *Server) MessageConsumeHandle() {
 	)
 	mq, err = util.NewRabbitmq()
 	if err != nil {
-		util.NewLogger().Error("websocket", util.Map{
+		util.Logger.Error("websocket", util.Map{
 			"error": err.Error(),
 		})
 	}
 	mq.Consume(queueName, "fanout", func(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		message = &ServerMessage{}
 		if err = sonic.Unmarshal(delivery.Body, message); err != nil {
-			util.NewLogger().Error("websocket", util.Map{
+			util.Logger.Error("websocket", util.Map{
 				"error": err.Error(),
 			})
 			return
@@ -145,7 +147,7 @@ func (s *Server) MessageConsumeHandle() {
 }
 
 // MessagePublishHandle 发布消息 将本节点收到的消息进行发布
-func (s *Server) MessagePublishHandle() {
+func (s *server) MessagePublishHandle() {
 	var (
 		mq  *util.Rabbitmq
 		err error
@@ -158,7 +160,7 @@ func (s *Server) MessagePublishHandle() {
 			mq.Close()
 			err = mq.InitConn()
 			if err != nil {
-				util.NewLogger().Error("websocket", util.Map{
+				util.Logger.Error("websocket", util.Map{
 					"error": err.Error(),
 				})
 				continue
@@ -178,7 +180,7 @@ func (s *Server) MessagePublishHandle() {
 }
 
 // RegisterClient 注册客户端到server
-func (s *Server) RegisterClient(c *gin.Context, userId string, group string) error {
+func (s *server) RegisterClient(c *gin.Context, userId string, group string) error {
 	var (
 		conn *websocket.Conn
 		err  error
@@ -201,7 +203,7 @@ func (s *Server) RegisterClient(c *gin.Context, userId string, group string) err
 }
 
 // sendGroupMessage 将消息发送到组
-func (s *Server) sendGroupMessage(message *ServerMessage) {
+func (s *server) sendGroupMessage(message *ServerMessage) {
 	if groupClient, ok := s.Client[message.Group]; ok {
 		for _, client := range groupClient {
 			client.SendMessage(message.Message)
@@ -210,7 +212,7 @@ func (s *Server) sendGroupMessage(message *ServerMessage) {
 }
 
 // sendClientMessage 将消息发送给指定客户端
-func (s *Server) sendClientMessage(message *ServerMessage) {
+func (s *server) sendClientMessage(message *ServerMessage) {
 	if _, ok := s.Client[message.Group]; ok {
 		if client, ok := s.Client[message.Group][message.Id]; ok {
 			client.SendMessage(message.Message)
@@ -219,7 +221,7 @@ func (s *Server) sendClientMessage(message *ServerMessage) {
 }
 
 // sendUserMessage 将消息发送给指定用户的所有客户端
-func (s *Server) sendUserMessage(message *ServerMessage) {
+func (s *server) sendUserMessage(message *ServerMessage) {
 	if _, ok := s.UserClient[message.UserClientKey()]; ok {
 		for _, id := range s.UserClient[message.UserClientKey()] {
 			message.Id = id
@@ -229,7 +231,7 @@ func (s *Server) sendUserMessage(message *ServerMessage) {
 }
 
 // SendGroupMessage 将需要发送到组的消息发送到server
-func (s *Server) SendGroupMessage(msg *ClientMessage, group string) {
+func (s *server) SendGroupMessage(msg *ClientMessage, group string) {
 	message := &ServerMessage{
 		Id:      "",
 		UserId:  "",
@@ -241,7 +243,7 @@ func (s *Server) SendGroupMessage(msg *ClientMessage, group string) {
 }
 
 // SendUserMessage 将需要发送到指定用户的所有客户端的消息发送到server
-func (s *Server) SendUserMessage(msg *ClientMessage, group string, userId string) {
+func (s *server) SendUserMessage(msg *ClientMessage, group string, userId string) {
 	message := &ServerMessage{
 		Id:      "",
 		UserId:  userId,
@@ -253,7 +255,7 @@ func (s *Server) SendUserMessage(msg *ClientMessage, group string, userId string
 }
 
 // SendMessage 将消息发送到server 如果server chan堵塞 则丢弃本条消息
-func (s *Server) SendMessage(message *ServerMessage) {
+func (s *server) SendMessage(message *ServerMessage) {
 	select {
 	case s.Message <- message:
 	default:
@@ -306,7 +308,7 @@ func (c *Client) WriteHandle() {
 			err = c.WriteMessage(message)
 			if err != nil {
 				c.Close()
-				util.NewLogger().Error("websocket", util.Map{
+				util.Logger.Error("websocket", util.Map{
 					"error": "write message error:" + err.Error(),
 				})
 				return
