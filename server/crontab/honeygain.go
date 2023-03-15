@@ -13,20 +13,20 @@ func Honeygain() {
 	token := global.Config.AdminConfig.Script.HoneygainToken
 	myFlow, err := MyFlow(token)
 	if err != nil {
-		util.NewLogger().Error("honeygain", util.Map{
+		util.Logger.Error("honeygain", util.Map{
 			"error": err.Error(),
 		})
 		return
 	}
 	if myFlow.WinningCredits > 0 {
-		util.NewLogger().Info("honeygain", util.Map{
+		util.Logger.Info("honeygain", util.Map{
 			"msg": "今天奖励已获取",
 		})
 		return
 	}
 	needFlow, err := NeedFlow(token)
 	if err != nil {
-		util.NewLogger().Error("honeygain", util.Map{
+		util.Logger.Error("honeygain", util.Map{
 			"error": err.Error(),
 		})
 		return
@@ -34,16 +34,16 @@ func Honeygain() {
 	if myFlow.GatheringBytes > needFlow.Data.MaxBytes {
 		openJar, err := OpenJar(token)
 		if err != nil {
-			util.NewLogger().Error("honeygain", util.Map{
+			util.Logger.Error("honeygain", util.Map{
 				"error": err.Error(),
 			})
 		} else {
-			util.NewLogger().Info("honeygain", util.Map{
+			util.Logger.Info("honeygain", util.Map{
 				"msg": fmt.Sprintf("开罐成功 获取%.0f", openJar.Data.Credits),
 			})
 		}
 	} else {
-		util.NewLogger().Info("honeygain", util.Map{
+		util.Logger.Info("honeygain", util.Map{
 			"msg": fmt.Sprintf("未完成目标流量 目标%d 完成%d", needFlow.Data.MaxBytes, myFlow.GatheringBytes),
 		})
 	}

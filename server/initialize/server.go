@@ -11,7 +11,7 @@ import (
 	"html/template"
 )
 
-//Server 初始化gin的http服务
+// Server 初始化gin的http服务
 func Server(view embed.FS) {
 	//是否开启debug
 	if global.Config.Debug {

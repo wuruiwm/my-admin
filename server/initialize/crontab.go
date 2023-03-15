@@ -46,7 +46,7 @@ func (c *CronTabTask) run() {
 	key := "crontab_lock:" + c.name
 	ok, err := global.Redis.SetNX(context.Background(), key, 1, time.Duration(c.maxRunTime)*time.Second).Result()
 	if err != nil {
-		util.NewLogger().Error("crontab_lock", util.Map{
+		util.Logger.Error("crontab_lock", util.Map{
 			"name":       c.name,
 			"spec":       c.spec,
 			"maxRunTime": c.maxRunTime,
@@ -56,7 +56,7 @@ func (c *CronTabTask) run() {
 	if ok {
 		c.task()
 		if err = global.Redis.Del(context.Background(), key).Err(); err != nil {
-			util.NewLogger().Error("crontab_lock", util.Map{
+			util.Logger.Error("crontab_lock", util.Map{
 				"name":       c.name,
 				"spec":       c.spec,
 				"maxRunTime": c.maxRunTime,

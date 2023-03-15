@@ -25,7 +25,7 @@ func TwLolLuckDraw() {
 	)
 	for i := 0; i < 120; i++ {
 		if prize, err = twLolLuckDraw(); err != nil {
-			util.NewLogger().Error("tw_lol_luck_draw", util.Map{
+			util.Logger.Error("tw_lol_luck_draw", util.Map{
 				"error": err.Error(),
 			})
 			time.Sleep(time.Second * 5)

@@ -1,29 +1,28 @@
 package util
 
 import (
-	"app/global"
 	"github.com/bytedance/sonic/encoder"
 	"go.uber.org/zap"
 )
 
-var logger *Logger
+var Logger *logger
 
-type Logger struct {
+type logger struct {
+	drive *zap.Logger
 }
 
-func NewLogger() *Logger {
-	if logger == nil {
-		logger = &Logger{}
+func InitLogger(drive *zap.Logger) {
+	Logger = &logger{
+		drive: drive,
 	}
-	return logger
 }
 
-func (l *Logger) Info(msg string, content Map) {
+func (l *logger) Info(msg string, content Map) {
 	jsonByt, _ := encoder.Encode(content, encoder.SortMapKeys)
-	global.Logger.Info(msg, zap.String("content", string(jsonByt)))
+	l.drive.Info(msg, zap.String("content", string(jsonByt)))
 }
 
-func (l *Logger) Error(msg string, content Map) {
+func (l *logger) Error(msg string, content Map) {
 	jsonByt, _ := encoder.Encode(content, encoder.SortMapKeys)
-	global.Logger.Error(msg, zap.String("content", string(jsonByt)))
+	l.drive.Error(msg, zap.String("content", string(jsonByt)))
 }

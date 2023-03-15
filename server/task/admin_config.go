@@ -38,7 +38,7 @@ func adminConfigInit() {
 	}
 	jsonByte, err := sonic.Marshal(data)
 	if err != nil {
-		util.NewLogger().Error("admin_config", util.Map{
+		util.Logger.Error("admin_config", util.Map{
 			"configList": configList,
 			"data":       data,
 			"error":      err.Error(),
@@ -47,7 +47,7 @@ func adminConfigInit() {
 	}
 	adminConfig := &config.AdminConfig{}
 	if err = sonic.Unmarshal(jsonByte, adminConfig); err != nil {
-		util.NewLogger().Error("admin_config", util.Map{
+		util.Logger.Error("admin_config", util.Map{
 			"jsonByte": string(jsonByte),
 			"error":    err.Error(),
 		})

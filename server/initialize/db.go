@@ -112,7 +112,7 @@ func (l *dbSqlLog) After(db *gorm.DB) {
 		return
 	}
 	sql := db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)
-	util.NewLogger().Info("sql", util.Map{
+	util.Logger.Info("sql", util.Map{
 		"sql":  sql,
 		"row":  db.Statement.RowsAffected,
 		"cost": util.TimeSince(t),

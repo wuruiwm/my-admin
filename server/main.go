@@ -16,5 +16,6 @@ func main() {
 	initialize.Validator()  //初始化验证器翻译
 	initialize.Task()       //初始化常驻任务
 	initialize.Crontab()    //初始化定时任务
+	initialize.Websocket()  //初始化websocketServer
 	initialize.Server(view) //初始化httpServer
 }
