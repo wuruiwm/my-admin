@@ -1,4 +1,4 @@
-FROM docker.nikm.cn/wuruiwm/golang:1.18 AS builder
+FROM golang:1.18.10-alpine3.17 AS builder
 
 #禁用CGO 设置镜像
 ENV CGO_ENABLED 0
@@ -13,7 +13,7 @@ COPY ./server .
 RUN go mod tidy \
     && go build -ldflags="-s -w" -o /app/main main.go
 
-FROM alpine:latest
+FROM alpine:3.17
 
 #更改时区为东八区
 RUN apk update \
