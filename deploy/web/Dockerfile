@@ -1,4 +1,4 @@
-FROM docker.nikm.cn/wuruiwm/node:16 AS builder
+FROM node:16.20.0-alpine3.17 AS builder
 # 从构建参数里拿到宿主机的环境变量
 ARG VUE_APP_PROD_API_URL
 ENV VUE_APP_PROD_API_URL $VUE_APP_PROD_API_URL
