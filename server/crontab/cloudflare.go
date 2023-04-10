@@ -11,11 +11,11 @@ import (
 	"time"
 )
 
-// 国内id
+// 国内ip
 var interiorIp = "1.117.115.94"
 
 // 国外ip
-var externalIp = "152.69.208.46"
+var externalIp = "13.224.249.121"
 
 // dns域名
 var domainName = "video.nikm.cn"
