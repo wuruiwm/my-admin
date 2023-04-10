@@ -33,6 +33,9 @@ type K8s struct {
 }
 
 type Script struct {
-	TwLolLuckDrawSk string `json:"tw_lol_luck_draw_sk"`
-	HoneygainToken  string `json:"honeygain_token"`
+	TwLolLuckDrawSk  string `json:"tw_lol_luck_draw_sk"`
+	HoneygainToken   string `json:"honeygain_token"`
+	CloudflareZoneId string `json:"cloudflare_zone_id"`
+	CloudflareKey    string `json:"cloudflare_key"`
+	CloudflareEmail  string `json:"cloudflare_email"`
 }

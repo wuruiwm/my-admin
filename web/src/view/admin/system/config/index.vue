@@ -79,6 +79,15 @@
           <el-form-item label="honeygain开罐token">
             <el-input v-model="script.honeygain_token"></el-input>
           </el-form-item>
+          <el-form-item label="CloudflareKey">
+              <el-input v-model="script.cloudflare_key"></el-input>
+          </el-form-item>
+          <el-form-item label="CloudflareEmail">
+              <el-input v-model="script.cloudflare_email"></el-input>
+          </el-form-item>
+          <el-form-item label="CloudflareZoneId">
+              <el-input v-model="script.cloudflare_zone_id"></el-input>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
     </el-tabs>
@@ -121,6 +130,9 @@ export default {
       script: {
         tw_lol_luck_draw_sk: "",
         honeygain_token: "",
+        cloudflare_email:"",
+        cloudflare_key:"",
+        cloudflare_zone_id:"",
       },
     }
   },
