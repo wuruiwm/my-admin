@@ -11,14 +11,21 @@ import (
 	"time"
 )
 
-// 国内ip
-var interiorIp = "1.117.115.94"
+var data = []Dns{{
+	DomainName: "video.nikm.cn",
+	InteriorIp: "1.117.115.94",
+	ExternalIp: "13.224.249.121",
+}, {
+	DomainName: "cdn.nikm.cn",
+	InteriorIp: "1.117.115.94",
+	ExternalIp: "13.227.254.84",
+}}
 
-// 国外ip
-var externalIp = "13.224.249.121"
-
-// dns域名
-var domainName = "video.nikm.cn"
+type Dns struct {
+	DomainName string
+	InteriorIp string
+	ExternalIp string
+}
 
 type CloudflareListResponse struct {
 	Result []struct {
@@ -38,100 +45,77 @@ type CloudflareDnsRequest struct {
 func Cloudflare() {
 	response, err := CloudflareList()
 	if err != nil {
-		util.Logger.Error("Cloudflare", map[string]interface{}{
+		util.Logger.Error("Cloudflare", util.Map{
 			"msg": err.Error(),
 		})
 		return
 	}
-	isExist := false
 	for _, v := range response.Result {
-		if v.Name == domainName {
-			isExist = true
-			err = CloudflareUpdate(v.Id)
-			if err != nil {
-				util.Logger.Error("Cloudflare", map[string]interface{}{
-					"msg": "修改dns解析记录失败",
-				})
-			} else {
-				util.Logger.Info("Cloudflare", map[string]interface{}{
-					"msg": "修改dns解析记录成功",
-				})
+		for _, dns := range data {
+			if v.Name == dns.DomainName {
+				err = dns.CloudflareUpdate(v.Id)
+				if err == nil {
+					util.Logger.Info("Cloudflare", util.Map{
+						"msg": "修改dns解析记录成功",
+					})
+				}
 			}
-			return
 		}
-	}
-	if isExist {
-		util.Logger.Error("Cloudflare", map[string]interface{}{
-			"msg":    "未找到dns解析记录",
-			"result": response.Result,
-		})
 	}
 }
 
 func CloudflareList() (*CloudflareListResponse, error) {
 	url := fmt.Sprintf("https://api.cloudflare.com/client/v4/zones/%s/dns_records", CloudflareZoneId())
 	header := CloudflareHeader()
-	for i := 0; i < 3; i++ {
-		result, err := nic.Get(url, nic.H{
-			Headers: header,
+	result, err := nic.Get(url, nic.H{
+		Headers: header,
+	})
+	if err != nil {
+		util.Logger.Error("Cloudflare", util.Map{
+			"url":    url,
+			"header": header,
+			"msg":    err.Error(),
 		})
-		if err != nil {
-			util.Logger.Error("Cloudflare", map[string]interface{}{
-				"url":    url,
-				"header": header,
-				"msg":    err.Error(),
-				"num":    i + 1,
-			})
-			time.Sleep(5 * time.Second)
-			continue
-		}
-		response := &CloudflareListResponse{}
-		err = sonic.Unmarshal(result.Bytes, response)
-		if err != nil {
-			util.Logger.Error("Cloudflare", map[string]interface{}{
-				"url":    url,
-				"header": header,
-				"msg":    err.Error(),
-				"num":    i + 1,
-			})
-			time.Sleep(5 * time.Second)
-			continue
-		}
-		return response, nil
+		return nil, errors.New("请求列表失败 error:" + err.Error())
 	}
-	return nil, errors.New("获取dns解析列表失败")
+	response := &CloudflareListResponse{}
+	err = sonic.Unmarshal(result.Bytes, response)
+	if err != nil {
+		util.Logger.Error("Cloudflare", util.Map{
+			"url":    url,
+			"header": header,
+			"msg":    errors.New("json反序列化失败 error:" + err.Error()),
+		})
+		return nil, errors.New("请求列表失败 error:" + err.Error())
+	}
+	return response, nil
 }
 
-func CloudflareUpdate(id string) error {
+func (d *Dns) CloudflareUpdate(id string) error {
 	url := fmt.Sprintf("https://api.cloudflare.com/client/v4/zones/%s/dns_records/%s", CloudflareZoneId(), id)
 	header := CloudflareHeader()
-	data := &CloudflareDnsRequest{
-		Content: CloudflareIp(),
-		Name:    domainName,
+	cloudflareDnsRequest := &CloudflareDnsRequest{
+		Content: d.CloudflareIp(),
+		Name:    d.DomainName,
 		Proxied: false,
 		Type:    "A",
 		Ttl:     60,
 	}
-	body, _ := sonic.Marshal(data)
-	for i := 0; i < 3; i++ {
-		_, err := nic.Put(url, nic.H{
-			Headers: header,
-			Raw:     string(body),
+	body, _ := sonic.Marshal(cloudflareDnsRequest)
+	_, err := nic.Put(url, nic.H{
+		Headers: header,
+		Raw:     string(body),
+	})
+	if err != nil {
+		util.Logger.Error("Cloudflare", util.Map{
+			"url":    url,
+			"header": header,
+			"data":   data,
+			"msg":    "修改dns解析失败 error" + err.Error(),
 		})
-		if err != nil {
-			util.Logger.Error("Cloudflare", map[string]interface{}{
-				"url":    url,
-				"header": header,
-				"data":   data,
-				"msg":    err.Error(),
-				"num":    i + 1,
-			})
-			time.Sleep(5 * time.Second)
-			continue
-		}
-		return nil
+		return errors.New("修改dns解析失败")
 	}
-	return errors.New("修改dns解析失败")
+	return nil
 }
 
 func CloudflareHeader() map[string]interface{} {
@@ -146,11 +130,11 @@ func CloudflareZoneId() string {
 	return global.Config.AdminConfig.Script.CloudflareZoneId
 }
 
-func CloudflareIp() string {
+func (d *Dns) CloudflareIp() string {
 	hour, _ := strconv.Atoi(time.Now().Format("15"))
 	if hour >= 8 && hour < 18 {
-		return externalIp
+		return d.ExternalIp
 	} else {
-		return interiorIp
+		return d.InteriorIp
 	}
 }
