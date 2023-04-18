@@ -25,7 +25,7 @@ web-build-tag:
     - /^\d+(.\d+)*$/
   script:
     - docker buildx create --name my-admin-web-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
 
 server-build-main:
   stage: build
@@ -41,7 +41,7 @@ web-build-main:
     - main
   script:
     - docker buildx create --name my-admin-web-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
 
 deploy-tag:
   stage: deploy
