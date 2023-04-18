@@ -11,54 +11,52 @@ login:
   script:
     - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
 
-server_build_tag:
+server-build-tag:
   stage: build
   only:
     - /^\d+(.\d+)*$/
   script:
-    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} -f deploy/server/Dockerfile .
-    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG}
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
+    - docker buildx create --name gin-vue-admin-server-build || true
+    - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-server-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:latest --push -f deploy/server/Dockerfile .
 
-web_build_tag:
+web-build-tag:
   stage: build
   only:
     - /^\d+(.\d+)*$/
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG} -f deploy/web/Dockerfile .
-    - docker tag ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG} ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG}
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
+    - docker buildx create --name gin-vue-admin-web-build || true
+    - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:latest --push -f deploy/web/Dockerfile .
 
-server_build_main:
+server-build-main:
   stage: build
   only:
     - main
   script:
-    - docker build -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest -f deploy/server/Dockerfile .
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest
+    - docker buildx create --name gin-vue-admin-server-build || true
+    - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-server-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:latest --push -f deploy/server/Dockerfile .
 
-web_build_main:
+web-build-main:
   stage: build
   only:
     - main
   script:
-    - docker build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest -f deploy/web/Dockerfile .
-    - docker push ${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest
+    - docker buildx create --name gin-vue-admin-web-build || true
+    - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:latest --push -f deploy/web/Dockerfile .
 
-deploy_tag:
+deploy-tag:
   stage: deploy
   only:
     - /^\d+(.\d+)*$/
   script:
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:${CI_BUILD_TAG} gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:${CI_BUILD_TAG}"
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment gin-vue-admin"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST}
+      "kubectl set image -n gin-vue deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:${CI_BUILD_TAG} gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:${CI_BUILD_TAG};
+      && kubectl rollout restart -n gin-vue deployment gin-vue-admin;"
 
-deploy_main:
+deploy-main:
   stage: deploy
   only:
     - main
   script:
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl set image -n my deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_server:latest gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin_vue_admin_web:latest"
-    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} "kubectl rollout restart -n my deployment gin-vue-admin"
+    - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST}
+      "kubectl set image -n gin-vue deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:latest gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:latest
+      && kubectl rollout restart -n gin-vue deployment gin-vue-admin"
