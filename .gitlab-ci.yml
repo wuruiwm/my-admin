@@ -63,6 +63,6 @@ deploy-main:
       && kubectl rollout restart -n my deployment my-admin
       EOF"
     - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST} << EOF
-      echo 1\n
-      echo 2
+      echo 1
+      && echo 2
       EOF
