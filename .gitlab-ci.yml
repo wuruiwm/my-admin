@@ -17,7 +17,7 @@ server-build-tag:
     - /^\d+(.\d+)*$/
   script:
     - docker buildx create --name my-admin-server-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-server-build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:latest --push -f deploy/server/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-server-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:latest --push -f deploy/server/Dockerfile .
 
 web-build-tag:
   stage: build
@@ -25,7 +25,7 @@ web-build-tag:
     - /^\d+(.\d+)*$/
   script:
     - docker buildx create --name my-admin-web-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
 
 server-build-main:
   stage: build
@@ -33,7 +33,7 @@ server-build-main:
     - main
   script:
     - docker buildx create --name my-admin-server-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-server-build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:latest --push -f deploy/server/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-server-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:latest --push -f deploy/server/Dockerfile .
 
 web-build-main:
   stage: build
@@ -41,7 +41,7 @@ web-build-main:
     - main
   script:
     - docker buildx create --name my-admin-web-build || true
-    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
+    - DOCKER_BUILDKIT=1 docker buildx build --builder my-admin-web-build --platform linux/amd64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:latest --push -f deploy/web/Dockerfile .
 
 deploy-tag:
   stage: deploy
