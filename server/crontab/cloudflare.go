@@ -3,6 +3,7 @@ package crontab
 import (
 	"app/global"
 	"app/util"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/bytedance/sonic"
@@ -11,15 +12,7 @@ import (
 	"time"
 )
 
-var data = []Dns{{
-	DomainName: "video.nikm.cn",
-	InteriorIp: "1.117.115.94",
-	ExternalIp: "13.224.249.121",
-}, {
-	DomainName: "cdn.nikm.cn",
-	InteriorIp: "1.117.115.94",
-	ExternalIp: "13.227.254.84",
-}}
+var data []Dns
 
 type Dns struct {
 	DomainName string
@@ -43,6 +36,15 @@ type CloudflareDnsRequest struct {
 }
 
 func Cloudflare() {
+	data = make([]Dns, 0)
+	//初始化后台dns配置到data
+	err := json.Unmarshal([]byte(global.Config.AdminConfig.Script.CloudflareDns), &data)
+	if err != nil {
+		util.Logger.Error("Cloudflare", util.Map{
+			"msg": "初始化后台dns配置失败 error:" + err.Error() + " config:" + global.Config.AdminConfig.Script.CloudflareDns,
+		})
+		return
+	}
 	response, err := CloudflareList()
 	if err != nil {
 		util.Logger.Error("Cloudflare", util.Map{

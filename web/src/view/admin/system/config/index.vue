@@ -88,6 +88,9 @@
           <el-form-item label="CloudflareZoneId">
               <el-input v-model="script.cloudflare_zone_id"></el-input>
           </el-form-item>
+            <el-form-item label="Cloudflare修改域名">
+                <el-input v-model="script.cloudflare_dns" type="textarea" placeholder="请输入需要修改域名的json" autosize></el-input>
+            </el-form-item>
         </el-form>
       </el-tab-pane>
     </el-tabs>
@@ -133,6 +136,7 @@ export default {
         cloudflare_email:"",
         cloudflare_key:"",
         cloudflare_zone_id:"",
+        cloudflare_dns:"",
       },
     }
   },

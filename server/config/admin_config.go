@@ -38,4 +38,5 @@ type Script struct {
 	CloudflareZoneId string `json:"cloudflare_zone_id"`
 	CloudflareKey    string `json:"cloudflare_key"`
 	CloudflareEmail  string `json:"cloudflare_email"`
+	CloudflareDns    string `json:"cloudflare_dns"`
 }
