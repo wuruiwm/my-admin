@@ -15,9 +15,9 @@ import (
 var data []Dns
 
 type Dns struct {
-	DomainName string
-	InteriorIp string
-	ExternalIp string
+	DomainName string `json:"domain_name"`
+	InteriorIp string `json:"interior_ip"`
+	ExternalIp string `json:"external_ip"`
 }
 
 type CloudflareListResponse struct {
