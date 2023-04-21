@@ -38,10 +38,10 @@ type CloudflareDnsRequest struct {
 func Cloudflare() {
 	data = make([]Dns, 0)
 	//初始化后台dns配置到data
-	err := json.Unmarshal([]byte(global.Config.AdminConfig.Script.CloudflareDns), &data)
+	err := json.Unmarshal([]byte(global.Config.AdminConfig.Cloudflare.Dns), &data)
 	if err != nil {
 		util.Logger.Error("Cloudflare", util.Map{
-			"msg": "初始化后台dns配置失败 error:" + err.Error() + " config:" + global.Config.AdminConfig.Script.CloudflareDns,
+			"msg": "初始化后台dns配置失败 error:" + err.Error() + " config:" + global.Config.AdminConfig.Cloudflare.Dns,
 		})
 		return
 	}
@@ -123,13 +123,13 @@ func (d *Dns) CloudflareUpdate(id string) error {
 func CloudflareHeader() map[string]interface{} {
 	return map[string]interface{}{
 		"Content-Type": "application/json",
-		"X-Auth-Key":   global.Config.AdminConfig.Script.CloudflareKey,
-		"X-Auth-Email": global.Config.AdminConfig.Script.CloudflareEmail,
+		"X-Auth-Key":   global.Config.AdminConfig.Cloudflare.Key,
+		"X-Auth-Email": global.Config.AdminConfig.Cloudflare.Email,
 	}
 }
 
 func CloudflareZoneId() string {
-	return global.Config.AdminConfig.Script.CloudflareZoneId
+	return global.Config.AdminConfig.Cloudflare.ZoneId
 }
 
 func (d *Dns) CloudflareIp() string {

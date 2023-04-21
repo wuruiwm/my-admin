@@ -1,10 +1,11 @@
 package config
 
 type AdminConfig struct {
-	Notice Notice `json:"notice"`
-	Ssl    Ssl    `json:"ssl"`
-	K8s    K8s    `json:"k8s"`
-	Script Script `json:"script"`
+	Notice     Notice     `json:"notice"`
+	Ssl        Ssl        `json:"ssl"`
+	K8s        K8s        `json:"k8s"`
+	Script     Script     `json:"script"`
+	Cloudflare Cloudflare `json:"cloudflare"`
 }
 
 type Notice struct {
@@ -33,10 +34,13 @@ type K8s struct {
 }
 
 type Script struct {
-	TwLolLuckDrawSk  string `json:"tw_lol_luck_draw_sk"`
-	HoneygainToken   string `json:"honeygain_token"`
-	CloudflareZoneId string `json:"cloudflare_zone_id"`
-	CloudflareKey    string `json:"cloudflare_key"`
-	CloudflareEmail  string `json:"cloudflare_email"`
-	CloudflareDns    string `json:"cloudflare_dns"`
+	TwLolLuckDrawSk string `json:"tw_lol_luck_draw_sk"`
+	HoneygainToken  string `json:"honeygain_token"`
+}
+
+type Cloudflare struct {
+	ZoneId string `json:"zone_id"`
+	Key    string `json:"key"`
+	Email  string `json:"email"`
+	Dns    string `json:"dns"`
 }
