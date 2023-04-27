@@ -61,9 +61,9 @@ func handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 				"url":  youtube.Url,
 				"msg":  "db error:" + err.Error(),
 			})
-			_ = delivery.Ack(true)
-			return
 		}
+		_ = delivery.Ack(true)
+		return
 	}
 	//将文件上传到nas
 	err = upload(youtube)
