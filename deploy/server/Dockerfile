@@ -15,14 +15,21 @@ RUN go mod tidy \
 
 FROM alpine:3.17
 
-#更改时区为东八区
+#更改时区为东八区 并安装ffmpeg
 RUN apk update \
-    && apk add --no-cache tzdata \
+    && apk add --no-cache tzdata ffmpeg \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone
 
 #拷贝builder阶段编译好的二进制文件
 COPY --from=builder /app/main /app/main
+
+#下载yt-dlp二进制文件
+RUN if [ $(uname -m) == "aarch64" ]; \
+    then wget --no-check-certificate -O /bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64;  \
+    else wget --no-check-certificate -O /bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux;  \
+    fi \
+    && chmod +x /bin/yt-dlp
 
 # 设置工作目录为/app
 WORKDIR /app
