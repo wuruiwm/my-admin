@@ -6,6 +6,7 @@ type AdminConfig struct {
 	K8s        K8s        `json:"k8s"`
 	Script     Script     `json:"script"`
 	Cloudflare Cloudflare `json:"cloudflare"`
+	Youtube    Youtube    `json:"youtube"`
 }
 
 type Notice struct {
@@ -43,4 +44,12 @@ type Cloudflare struct {
 	Key    string `json:"key"`
 	Email  string `json:"email"`
 	Dns    string `json:"dns"`
+}
+
+type Youtube struct {
+	Host     string `json:"host"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	MountDir string `json:"mount_dir"`
+	MusicDir string `json:"music_dir"`
 }

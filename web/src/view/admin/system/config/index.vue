@@ -98,6 +98,25 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
+            <el-tab-pane label="youtube配置" name="youtube">
+                <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
+                    <el-form-item label="host">
+                        <el-input v-model="youtube.host"></el-input>
+                    </el-form-item>
+                    <el-form-item label="username">
+                        <el-input v-model="youtube.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="password">
+                        <el-input v-model="youtube.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="挂载目录">
+                        <el-input v-model="youtube.mount_dir"></el-input>
+                    </el-form-item>
+                    <el-form-item label="音乐目录">
+                        <el-input v-model="youtube.music_dir"></el-input>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
         </el-tabs>
         <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
     </div>
@@ -144,7 +163,14 @@ export default {
                 key: "",
                 zone_id: "",
                 dns: "",
-            }
+            },
+            youtube:{
+                host: "",
+                username: "",
+                password: "",
+                mount_dir: "",
+                music_dir: "",
+            },
         }
     },
     methods: {

@@ -14,15 +14,15 @@ func PasswordList(param *request.PasswordList) (*response.Page, error) {
 		offset = (param.Page - 1) * param.PageSize
 	)
 	passwordList := make([]*model.Password, 0)
-	global.Db.Table("password p").
-		Where(param.GetKeywordWhere("p.name", "p.username", "p.remark")).
-		Where(param.GetTimeWhere("p.create_time")).
+	global.Db.Table("password").
+		Where(param.GetKeywordWhere("name", "username", "remark")).
+		Where(param.GetTimeWhere("create_time")).
 		Count(&count)
 	if count != 0 {
-		global.Db.Table("password p").
-			Where(param.GetKeywordWhere("p.name", "p.username", "p.remark")).
-			Where(param.GetTimeWhere("p.create_time")).
-			Order("p.create_time desc").
+		global.Db.Table("password").
+			Where(param.GetKeywordWhere("name", "username", "remark")).
+			Where(param.GetTimeWhere("create_time")).
+			Order("create_time desc").
 			Offset(offset).
 			Limit(param.PageSize).
 			Find(&passwordList)

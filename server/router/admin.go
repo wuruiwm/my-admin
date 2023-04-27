@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//后台路由
+// 后台路由
 func adminRouter(r *gin.Engine) *gin.Engine {
 	//路由组
 	adminGroup := r.Group("/admin")
@@ -70,6 +70,11 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 			passwordGroup.POST("/create", admin.PasswordCreate)
 			passwordGroup.PUT("/update", admin.PasswordUpdate)
 			passwordGroup.DELETE("/delete", admin.PasswordDelete)
+		}
+		//youtube管理
+		youtubeGroup := adminGroup.Group("/youtube")
+		{
+			youtubeGroup.POST("/create", admin.YoutubeCreate)
 		}
 	}
 	return r

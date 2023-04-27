@@ -6,4 +6,5 @@ import (
 
 func Task() {
 	task.AdminConfig()
+	go task.Youtube()
 }
