@@ -98,7 +98,7 @@ func download(youtube *model.Youtube) (err error, cmd string, content string) {
 		}
 	}
 	buf := bytes.NewBuffer([]byte{})
-	cmd = fmt.Sprintf("yt-dlp -x --audio-format mp3 -o %s %s", tmpFileName, youtube.Url)
+	cmd = fmt.Sprintf(`yt-dlp -x --audio-format mp3 -o %s "%s"`, tmpFileName, youtube.Url)
 	err = util.Command(cmd, buf)
 	bufByt, _ := io.ReadAll(buf)
 	content = string(bufByt)

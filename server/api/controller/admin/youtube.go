@@ -35,3 +35,31 @@ func YoutubeList(c *gin.Context) {
 		response.Error(c, err.Error())
 	}
 }
+
+func YoutubeRetry(c *gin.Context) {
+	param := &request.YoutubeRetry{}
+	if err := c.ShouldBindJSON(param); err != nil {
+		response.Error(c, util.ValidatorError(err))
+		return
+	}
+
+	if err := logic.YoutubeRetry(param); err == nil {
+		response.Success(c, "success", nil)
+	} else {
+		response.Error(c, err.Error())
+	}
+}
+
+func YoutubeDelete(c *gin.Context) {
+	param := &request.YoutubeDelete{}
+	if err := c.ShouldBindJSON(param); err != nil {
+		response.Error(c, util.ValidatorError(err))
+		return
+	}
+
+	if err := logic.YoutubeDelete(param); err == nil {
+		response.Success(c, "success", nil)
+	} else {
+		response.Error(c, err.Error())
+	}
+}

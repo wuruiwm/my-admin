@@ -11,6 +11,10 @@ type YoutubeCreate struct {
 	Url  string `json:"url"`
 }
 
+type PasswordDelete struct {
+	RequiredId
+}
+
 func (param *YoutubeCreate) Check() error {
 	if param.Name == "" {
 		return errors.New("请输入音乐名")

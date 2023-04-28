@@ -21,20 +21,7 @@ func YoutubeCreate(param *request.YoutubeCreate) error {
 	if err := global.Db.Create(youtube).Error; err != nil {
 		return errors.New("youtube下载创建失败 error: " + err.Error())
 	}
-
-	json, err := sonic.Marshal(youtube)
-	if err != nil {
-		return errors.New("json error: " + err.Error())
-	}
-	mq, err := util.NewRabbitmq()
-	if err != nil {
-		return errors.New("队列连接失败 error: " + err.Error())
-	}
-	err = mq.Publish("youtube", "direct", json, 0)
-	if err != nil {
-		return errors.New("队列插入失败 error: " + err.Error())
-	}
-	return nil
+	return youtubePublish(youtube)
 }
 
 func YoutubeList(param *request.YoutubeList) (*response.Page, error) {
@@ -62,4 +49,45 @@ func YoutubeList(param *request.YoutubeList) (*response.Page, error) {
 		Total:    count,
 		List:     youtubeList,
 	}, nil
+}
+
+func YoutubeRetry(param *request.YoutubeRetry) error {
+	youtube := &model.Youtube{
+		Status:  0,
+		Command: "",
+		Content: "",
+	}
+	if err := global.Db.Where("id", param.Id).
+		Select("status", "command", "content").
+		Updates(youtube).Error; err != nil {
+		return errors.New("修改失败 error: " + err.Error())
+	}
+	if err := global.Db.Where("id", param.Id).Find(youtube).Error; err != nil {
+		return errors.New("数据异常 error: " + err.Error())
+	}
+	return youtubePublish(youtube)
+}
+
+func YoutubeDelete(param *request.YoutubeDelete) error {
+	if err := global.Db.Where("id", param.Id).
+		Delete(&model.Youtube{}).Error; err != nil {
+		return errors.New("删除失败 error: " + err.Error())
+	}
+	return nil
+}
+
+func youtubePublish(youtube *model.Youtube) error {
+	json, err := sonic.Marshal(youtube)
+	if err != nil {
+		return errors.New("json error: " + err.Error())
+	}
+	mq, err := util.NewRabbitmq()
+	if err != nil {
+		return errors.New("队列连接失败 error: " + err.Error())
+	}
+	err = mq.Publish("youtube", "direct", json, 0)
+	if err != nil {
+		return errors.New("队列插入失败 error: " + err.Error())
+	}
+	return nil
 }

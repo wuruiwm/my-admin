@@ -75,6 +75,9 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 		youtubeGroup := adminGroup.Group("/youtube")
 		{
 			youtubeGroup.POST("/create", admin.YoutubeCreate)
+			youtubeGroup.GET("/list", admin.YoutubeList)
+			youtubeGroup.DELETE("/delete", admin.YoutubeDelete)
+			youtubeGroup.PUT("/retry", admin.YoutubeRetry)
 		}
 	}
 	return r

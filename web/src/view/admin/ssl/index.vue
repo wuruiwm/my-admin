@@ -115,4 +115,7 @@ export default {
 .my-editor textarea:focus {
   outline: none;
 }
+.my-editor textarea::selection {
+    background-color: yellow;
+}
 </style>
