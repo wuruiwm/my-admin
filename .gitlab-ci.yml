@@ -49,8 +49,8 @@ deploy-tag:
     - tags
   script:
     - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST}
-        "kubectl set image -n my deployment my-admin my-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:${CI_BUILD_TAG} my-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG};
-        && kubectl rollout restart -n my deployment my-admin;"
+        "kubectl set image -n my deployment my-admin my-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-server:${CI_BUILD_TAG} my-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/my-admin-web:${CI_BUILD_TAG}
+        && kubectl rollout restart -n my deployment my-admin"
 
 deploy-main:
   stage: deploy
