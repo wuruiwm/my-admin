@@ -72,7 +72,7 @@
                     min-width="290">
                 <template v-slot="scope">
                     <el-button v-if="scope.row.status !== 0" icon="el-icon-document" size="small" type="info" @click="log(scope.row)">执行日志</el-button>
-                    <el-button icon="el-icon-refresh" size="small" type="primary" @click="retry(scope.row)">重试</el-button>
+                    <el-button v-if="scope.row.status !== 0" icon="el-icon-refresh" size="small" type="primary" @click="retry(scope.row)">重试</el-button>
                     <el-button icon="el-icon-delete" size="small" type="danger" @click="del(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
