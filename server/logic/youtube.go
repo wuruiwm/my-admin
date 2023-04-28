@@ -8,15 +8,18 @@ import (
 	"app/util"
 	"errors"
 	"github.com/bytedance/sonic"
+	"strings"
 )
 
 func YoutubeCreate(param *request.YoutubeCreate) error {
 	if err := param.Check(); err != nil {
 		return err
 	}
+	array := strings.Split(param.Url, "&")
+
 	youtube := &model.Youtube{
 		Name: param.Name,
-		Url:  param.Url,
+		Url:  array[0],
 	}
 	if err := global.Db.Create(youtube).Error; err != nil {
 		return errors.New("youtube下载创建失败 error: " + err.Error())
