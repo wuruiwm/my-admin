@@ -67,6 +67,7 @@ func GracefulExit(server *http.Server) {
 	exit := make(chan os.Signal)
 	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	<-exit
+	time.Sleep(time.Second * 5)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
