@@ -7,17 +7,17 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"io/ioutil"
+	"os"
 )
 
 func Ssl() (*response.Ssl, error) {
 	keyPath := global.Config.AdminConfig.Ssl.Key
 	pemPath := global.Config.AdminConfig.Ssl.Pem
-	keyByte, err := ioutil.ReadFile(keyPath)
+	keyByte, err := os.ReadFile(keyPath)
 	if err != nil {
 		return nil, errors.New("读取证书私钥失败 error:" + err.Error())
 	}
-	pemByte, err := ioutil.ReadFile(pemPath)
+	pemByte, err := os.ReadFile(pemPath)
 	if err != nil {
 		return nil, errors.New("读取证书公钥失败 error:" + err.Error())
 	}

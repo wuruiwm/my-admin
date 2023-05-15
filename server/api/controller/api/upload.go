@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//UploadImage 图片压缩上传
+// UploadImage 图片压缩上传
 func UploadImage(c *gin.Context) {
 	if result, err := logic.UploadImage(c, "file"); err == nil {
 		response.Success(c, "success", result)
@@ -15,7 +15,7 @@ func UploadImage(c *gin.Context) {
 	}
 }
 
-//UploadFile 文件上传
+// UploadFile 文件上传
 func UploadFile(c *gin.Context) {
 	if result, err := logic.UploadFile(c, "file"); err == nil {
 		response.Success(c, "success", result)
