@@ -67,7 +67,8 @@ func GracefulExit(server *http.Server) {
 	exit := make(chan os.Signal)
 	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	<-exit
-	time.Sleep(time.Second * 5)
+	//防止程序关闭太快 k8s service 还没有将pod从负载中拿掉 导致有请求过来 却没有处理
+	time.Sleep(time.Second * 1)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
