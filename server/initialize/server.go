@@ -5,11 +5,17 @@ import (
 	"app/api/response"
 	"app/global"
 	"app/router"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
-//Server 初始化gin的http服务
+// Server 初始化gin的http服务
 func Server() {
 	//是否开启debug
 	if global.Config.Debug {
@@ -30,10 +36,37 @@ func Server() {
 	r.NoRoute(ErrRoute)
 	//路由设置
 	r = router.Router(r)
+	//实例化server
+	server := &http.Server{
+		Addr:    fmt.Sprintf("0.0.0.0:%d", global.Config.ServerPort),
+		Handler: r,
+	}
 	//启动服务
-	_ = r.Run(fmt.Sprintf("0.0.0.0:%d", global.Config.ServerPort))
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Printf("http server exit error:%s\n", err.Error())
+		}
+	}()
+	//优雅退出
+	GracefulExit(server)
 }
 
 func ErrRoute(c *gin.Context) {
 	response.Error(c, fmt.Sprintf("api不存在 path:%s method:%s", c.Request.URL, c.Request.Method))
+}
+
+func GracefulExit(server *http.Server) {
+	exit := make(chan os.Signal)
+	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	<-exit
+	//生产环境下 防止程序关闭太快 k8s service 还没有将pod从负载中拿掉 请求过来没有处理 导致服务间断
+	if !global.Config.Debug {
+		time.Sleep(time.Second * 5)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		fmt.Printf("Server Shutdown error:%s\n", err.Error())
+	}
+	fmt.Println("http server exit")
 }
