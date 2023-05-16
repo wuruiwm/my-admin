@@ -66,7 +66,7 @@ func GracefulExit(server *http.Server) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		fmt.Printf("Server Shutdown error:%s\n", err.Error())
+		fmt.Printf("http server shutdown exit error:%s\n", err.Error())
 	}
 	fmt.Println("http server exit")
 }
