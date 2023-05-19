@@ -6,7 +6,7 @@ stages:
 login:
   stage: login
   only:
-    - /^\d+(.\d+)*$/
+    - tags
     - main
   script:
     - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
@@ -14,7 +14,7 @@ login:
 server-build-tag:
   stage: build
   only:
-    - /^\d+(.\d+)*$/
+    - tags
   script:
     - docker buildx create --name gin-vue-admin-server-build || true
     - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-server-build --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:latest --push -f deploy/server/Dockerfile .
@@ -22,7 +22,7 @@ server-build-tag:
 web-build-tag:
   stage: build
   only:
-    - /^\d+(.\d+)*$/
+    - tags
   script:
     - docker buildx create --name gin-vue-admin-web-build || true
     - DOCKER_BUILDKIT=1 docker buildx build --builder gin-vue-admin-web-build --build-arg VUE_APP_PROD_API_URL=$VUE_APP_PROD_API_URL  --platform linux/amd64,linux/arm64 -t ${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:${CI_BUILD_TAG},${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:latest --push -f deploy/web/Dockerfile .
@@ -46,7 +46,7 @@ web-build-main:
 deploy-tag:
   stage: deploy
   only:
-    - /^\d+(.\d+)*$/
+    - tags
   script:
     - sshpass -p ${K8S_MASTER_PASSWORD} ssh -p ${K8S_MASTER_PORT} -o StrictHostKeyChecking=no ${K8S_MASTER_USERNAME}@${K8S_MASTER_HOST}
       "kubectl set image -n gin-vue deployment gin-vue-admin gin-vue-admin-server=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-server:${CI_BUILD_TAG} gin-vue-admin-web=${DOCKER_REGISTER_HOST}/wuruiwm/gin-vue-admin-web:${CI_BUILD_TAG};
