@@ -6,7 +6,7 @@ stages:
 login:
   stage: login
   only:
-    - /^\d+(.\d+)*$/
+    - tags
     - main
   script:
     - docker login ${DOCKER_REGISTER_HOST} -u ${DOCKER_REGISTER_USERNAME} -p ${DOCKER_REGISTER_PASSWORD}
