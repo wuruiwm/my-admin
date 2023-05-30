@@ -56,6 +56,15 @@ const baseRouters = [
         children: [],
     },
     {
+        path: "/pay",
+        name: "pay",
+        component: () => import("@/view/pay/index.vue"),
+        meta: {
+            title: "Pay"
+        },
+        children: [],
+    },
+    {
         path: "*",
         name: "404",
         meta: {
@@ -74,7 +83,7 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-const whiteList = ["adminLogin", "k8sLogin"]
+const whiteList = ["adminLogin", "k8sLogin","pay"]
 
 router.beforeEach(async (to, from, next) => {
     let isWhite = false
