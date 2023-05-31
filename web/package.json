@@ -10,6 +10,7 @@
     "axios": "^1.3.3",
     "clipboard": "^2.0.11",
     "element-ui": "2.15.7",
+    "jr-qrcode": "^1.1.4",
     "path": "^0.12.7",
     "prismjs": "^1.29.0",
     "sass": "^1.34.1",
