@@ -1,7 +1,7 @@
 <template>
   <div>
     <a :href="v.qrcode" v-for="v in data">
-      <img :src="v.image">
+      <img :src="v.image" alt="">
       <br>
       <div style="color: black;text-align: center">{{v.title}}</div>
     </a>
@@ -54,11 +54,6 @@ export default {
       }
       console.log(data)
       return data
-    }
-  },
-  methods:{
-    t(){
-      qrcode.jrQrcode.getQrBase64()
     }
   }
 }
