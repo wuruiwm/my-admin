@@ -1,6 +1,10 @@
 <template>
   <div>
-    <img src:="qrcode.getQrBase64(v)" v-for="v in list">
+    <a :href="v.qrcode" v-for="v in data">
+      <img :src="v.image">
+      <br>
+      <div style="color: black;text-align: center">{{v.title}}</div>
+    </a>
   </div>
 
 </template>
@@ -38,6 +42,20 @@ export default {
       ]
     }
   },
+  computed:{
+    data(){
+      let data = []
+      for (const k in this.list) {
+        data[k] = {
+          title:this.list[k].title,
+          qrcode:this.list[k].qrcode,
+          image:qrcode.getQrBase64(this.list[k].qrcode)
+        }
+      }
+      console.log(data)
+      return data
+    }
+  },
   methods:{
     t(){
       qrcode.jrQrcode.getQrBase64()
@@ -49,5 +67,10 @@ export default {
 <style scoped>
 div > img{
   width: 340px;
+}
+a {
+  display: block;
+  width: 256px;
+  float: left;
 }
 </style>
