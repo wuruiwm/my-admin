@@ -7,6 +7,7 @@ type AdminConfig struct {
 	Script     Script     `json:"script"`
 	Cloudflare Cloudflare `json:"cloudflare"`
 	Youtube    Youtube    `json:"youtube"`
+	Pay        Pay        `json:"pay"`
 }
 
 type Notice struct {
@@ -52,4 +53,8 @@ type Youtube struct {
 	Password string `json:"password"`
 	MountDir string `json:"mount_dir"`
 	MusicDir string `json:"music_dir"`
+}
+
+type Pay struct {
+	Config string `json:"config"`
 }

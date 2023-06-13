@@ -22,6 +22,8 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 		apiGroup.GET("/ssl", api.Ssl)
 		//一言
 		apiGroup.GET("/yiyan", api.Yiyan)
+		//收款码
+		apiGroup.GET("/pay", api.Pay)
 		//websocket
 		apiGroup.GET("/websocket", api.Websocket)
 		apiGroup.POST("/sendMsg", api.SendMsg)

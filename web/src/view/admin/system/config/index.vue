@@ -93,8 +93,7 @@
                         <el-input v-model="cloudflare.zone_id"></el-input>
                     </el-form-item>
                     <el-form-item label="Cloudflare修改域名">
-                        <el-input v-model="cloudflare.dns" type="textarea" placeholder="请输入需要修改域名的json"
-                                  autosize></el-input>
+                        <el-input v-model="cloudflare.dns" type="textarea" placeholder="请输入需要修改域名的json" autosize></el-input>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
@@ -116,6 +115,13 @@
                         <el-input v-model="youtube.music_dir"></el-input>
                     </el-form-item>
                 </el-form>
+            </el-tab-pane>
+            <el-tab-pane label="收款码配置" name="pay">
+              <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
+                <el-form-item label="收款码配置">
+                  <el-input v-model="pay.config" type="textarea" placeholder="请输入需要收款码配置json" autosize></el-input>
+                </el-form-item>
+              </el-form>
             </el-tab-pane>
         </el-tabs>
         <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
@@ -171,6 +177,9 @@ export default {
                 mount_dir: "",
                 music_dir: "",
             },
+            pay:{
+                config:"",
+            }
         }
     },
     methods: {
