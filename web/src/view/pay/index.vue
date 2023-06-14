@@ -69,6 +69,7 @@ export default {
   height: 350px;
   width: 300px;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .pay .qrcode {
