@@ -3,7 +3,7 @@ module app
 go 1.16
 
 require (
-	github.com/bytedance/sonic v1.8.3
+	github.com/bytedance/sonic v1.9.2
 	github.com/eddieivan01/nic v0.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/locales v0.14.0
