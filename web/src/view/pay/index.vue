@@ -10,6 +10,7 @@
         <span v-if="v.type === 'alipay'">支付宝</span>
         <span v-if="v.type === 'yunsf'">云闪付</span>
         <span v-if="v.type === 'yinsheng'">银盛支付</span>
+        <span v-if="v.type === 'pptong'">碰碰通</span>
       </div>
     </div>
   </div>
@@ -48,7 +49,8 @@ export default {
           wxpay: "#07c060",
           alipay: "#1577fe",
           yinsheng: "#c0a21e",
-          yunsf: "#d4514f"
+          yunsf: "#d4514f",
+          pptong: "#3b82de"
         }
         data[k].background = background[this.list[k].type]
       }
