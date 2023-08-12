@@ -17,7 +17,7 @@ RUN npm install
 # 拷贝代码 并编译
 COPY ./web .
 
-RUN  npm run build
+RUN npm run build
 
 FROM docker.nikm.cn/wuruiwm/nginx:1.23
 
