@@ -1,18 +1,15 @@
 <template>
   <div class="container">
-    <div class="pay" v-for="v in data" :style="{background:v.background}">
+    <div class="pay" v-for="v in data" :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
       <div class="qrcode">
-        <img :src="v.image" alt="">
+        <img :src="qrcode.getQrBase64(v.qrcode,{
+          correctLevel:0,
+          padding:0
+        })" alt="">
         <div class="username">{{ v.title }}</div>
       </div>
       <div class="title">
-        <span v-if="v.type === 'wxpay'">微信支付</span>
-        <span v-if="v.type === 'alipay'">支付宝</span>
-        <span v-if="v.type === 'yunsf'">云闪付</span>
-        <span v-if="v.type === 'yinsheng'">银盛支付</span>
-        <span v-if="v.type === 'pptong'">碰碰通</span>
-        <span v-if="v.type === 'lakala'">拉卡拉</span>
-        <span v-if="v.type === 'miyishou'">米易收</span>
+            <span>{{ config[v.type] && config[v.type].name ? config[v.type].name : '收款码' }}</span>
       </div>
     </div>
   </div>
@@ -25,7 +22,42 @@ import service from "@/core/request";
 export default {
   data() {
     return {
-      list: []
+      list: [],
+      config:{
+        wxpay:{
+          name:"微信支付",
+          background:"#07c060",
+        },
+        alipay:{
+          name:"支付宝",
+          background:"#1577fe",
+        },
+        yinsheng:{
+          name:"银盛支付",
+          background:"#c0a21e",
+        },
+        yunshanfishouyintai:{
+          name:"云闪付",
+          background:"#d4514f",
+        },
+        pengpengtong:{
+          name:"碰碰通",
+          background:"#3b82de",
+        },
+        lakala:{
+          name:"拉卡拉",
+          background:"#0989f7",
+        },
+        miyishou:{
+          name:"米易收",
+          background:"#d02422",
+        },
+        duxiaoman:{
+          name:"度小满",
+          background:"#d73c38",
+        },
+      },
+      qrcode:qrcode,
     }
   },
   async created() {
@@ -42,21 +74,10 @@ export default {
       let data = []
       for (const k in this.list) {
         data[k] = {
-          title: this.list[k].title,
-          qrcode: this.list[k].qrcode,
-          type: this.list[k].type,
-          image: qrcode.getQrBase64(this.list[k].qrcode)
+          title: this.list[k].title || "",
+          qrcode: this.list[k].qrcode || "",
+          type: this.list[k].type || "",
         }
-        let background = {
-          wxpay: "#07c060",
-          alipay: "#1577fe",
-          yinsheng: "#c0a21e",
-          yunsf: "#d4514f",
-          pptong: "#3b82de",
-          lakala: "#0989f7",
-          miyishou: "#d02422"
-        }
-        data[k].background = background[this.list[k].type]
       }
       return data
     }
