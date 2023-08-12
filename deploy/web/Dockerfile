@@ -1,7 +1,4 @@
 FROM node:16.20.0-alpine3.17 AS builder
-# 从构建参数里拿到宿主机的环境变量
-ARG VUE_APP_PROD_API_URL
-ENV VUE_APP_PROD_API_URL $VUE_APP_PROD_API_URL
 
 # 设置镜像
 RUN npm config set registry https://registry.npm.taobao.org
@@ -13,6 +10,10 @@ WORKDIR /build
 COPY ./web/package.json ./web/package-lock.json ./
 
 RUN npm install
+
+# 从构建参数里拿到宿主机的环境变量
+ARG VUE_APP_PROD_API_URL
+ENV VUE_APP_PROD_API_URL $VUE_APP_PROD_API_URL
 
 # 拷贝代码 并编译
 COPY ./web .
