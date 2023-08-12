@@ -12,6 +12,7 @@
         <span v-if="v.type === 'yinsheng'">银盛支付</span>
         <span v-if="v.type === 'pptong'">碰碰通</span>
         <span v-if="v.type === 'lakala'">拉卡拉</span>
+        <span v-if="v.type === 'miyishou'">米易收</span>
       </div>
     </div>
   </div>
@@ -52,7 +53,8 @@ export default {
           yinsheng: "#c0a21e",
           yunsf: "#d4514f",
           pptong: "#3b82de",
-          lakala: "#0989f7"
+          lakala: "#0989f7",
+          miyishou: "#d02422"
         }
         data[k].background = background[this.list[k].type]
       }
