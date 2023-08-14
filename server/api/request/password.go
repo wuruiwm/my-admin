@@ -18,11 +18,7 @@ type PasswordUpdate struct {
 	PasswordCreate
 }
 
-type YoutubeRetry struct {
-	RequiredId
-}
-
-type YoutubeDelete struct {
+type PasswordDelete struct {
 	RequiredId
 }
 

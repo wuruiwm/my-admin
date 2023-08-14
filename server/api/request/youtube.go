@@ -11,7 +11,11 @@ type YoutubeCreate struct {
 	Url  string `json:"url"`
 }
 
-type PasswordDelete struct {
+type YoutubeRetry struct {
+	RequiredId
+}
+
+type YoutubeDelete struct {
 	RequiredId
 }
 
