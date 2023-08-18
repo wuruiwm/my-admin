@@ -56,6 +56,14 @@ export default {
           name:"度小满",
           background:"#d73c38",
         },
+        shuzirenminbi:{
+          name:"shuzirenminbi",
+          background:"#ec0424",
+        },
+        haoshengyi:{
+          name:"haoshengyi",
+          background:"#af6131",
+        },
       },
       qrcode:qrcode,
     }
