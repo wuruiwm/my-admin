@@ -57,11 +57,11 @@ export default {
           background:"#d73c38",
         },
         shuzirenminbi:{
-          name:"shuzirenminbi",
+          name:"数字人民币",
           background:"#ec0424",
         },
         haoshengyi:{
-          name:"haoshengyi",
+          name:"好生意",
           background:"#af6131",
         },
       },
