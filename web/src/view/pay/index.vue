@@ -36,7 +36,7 @@ export default {
           name:"银盛支付",
           background:"#c0a21e",
         },
-        yunshanfishouyintai:{
+        yunshanfushouyintai:{
           name:"云闪付",
           background:"#d4514f",
         },
