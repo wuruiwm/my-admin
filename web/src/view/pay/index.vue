@@ -36,7 +36,7 @@ export default {
           name:"银盛支付",
           background:"#c0a21e",
         },
-        yunshanfishouyintai:{
+        yunshanfushouyintai:{
           name:"云闪付",
           background:"#d4514f",
         },
@@ -55,6 +55,14 @@ export default {
         duxiaoman:{
           name:"度小满",
           background:"#d73c38",
+        },
+        shuzirenminbi:{
+          name:"数字人民币",
+          background:"#ec0424",
+        },
+        haoshengyi:{
+          name:"好生意",
+          background:"#af6131",
         },
         alipayRedPacket:{
           name:"支付宝红包码",

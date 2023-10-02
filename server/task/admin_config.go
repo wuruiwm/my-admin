@@ -10,7 +10,7 @@ import (
 )
 
 func AdminConfig() {
-	adminConfigInit()
+	AdminConfigInit()
 	go adminConfigWatch()
 }
 
@@ -20,11 +20,11 @@ func adminConfigWatch() {
 		panic(err)
 	}
 	mq.Consume("admin_config", "fanout", func(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
-		adminConfigInit()
+		AdminConfigInit()
 	})
 }
 
-func adminConfigInit() {
+func AdminConfigInit() {
 	configList := make([]*model.AdminConfig, 0)
 	global.Db.Table("admin_config").
 		Select("group", "key", "value").

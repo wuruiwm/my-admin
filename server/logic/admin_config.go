@@ -3,10 +3,13 @@ package logic
 import (
 	"app/api/request"
 	"app/api/response"
+	"app/crontab"
 	"app/global"
 	"app/model"
+	"app/task"
 	"app/util"
 	"errors"
+	"time"
 )
 
 func AdminConfigList(param *request.AdminConfigList) []*response.AdminConfig {
@@ -57,5 +60,24 @@ func AdminConfigUpdate(param *request.AdminConfigUpdate) error {
 	if err = mq.Publish("admin_config", "fanout", []byte(""), 0); err != nil {
 		return errors.New("删除配置缓存失败 error:" + err.Error())
 	}
+
+	//该节点再触发一次配置更新 确保handle执行时拿到最新配置
+	task.AdminConfigInit()
+	for _, v := range configList {
+		AdminConfigUpdateHandle(v.Group)
+	}
+
 	return nil
+}
+
+func AdminConfigUpdateHandle(group string) {
+	handelMap := map[string]func(){
+		"cloudflare": func() {
+			time.Sleep(time.Second * 2)
+			crontab.Cloudflare()
+		},
+	}
+	if val, ok := handelMap[group]; ok {
+		val()
+	}
 }
