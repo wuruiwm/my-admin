@@ -65,8 +65,8 @@ export default {
           background:"#af6131",
         },
         alipayRedPacket:{
-          name:"支付宝红包码",
-          background:"#dc565b",
+          name:"支付宝红包",
+          background:"#c94b4e",
         },
       },
       qrcode:qrcode,
