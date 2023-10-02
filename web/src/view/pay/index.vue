@@ -56,6 +56,10 @@ export default {
           name:"度小满",
           background:"#d73c38",
         },
+        alipayRedPacket:{
+          name:"支付宝红包码",
+          background:"#dc565b",
+        },
       },
       qrcode:qrcode,
     }
