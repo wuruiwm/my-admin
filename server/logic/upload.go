@@ -12,6 +12,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -21,7 +22,7 @@ func UploadImage(c *gin.Context, fileField string) (*response.Upload, error) {
 		return nil, errors.New("请上传文件")
 	}
 	ext := util.FileExt(fileHeader.Filename)
-	if !util.InArray(ext, []string{".jpg", ".jpeg", ".png", ".gif"}) {
+	if !slices.Contains([]string{".jpg", ".jpeg", ".png", ".gif"}, ext) {
 		return nil, errors.New("请上传正确的图片类型 jpg,jpeg,png,gif,bmp")
 	}
 
@@ -34,7 +35,7 @@ func UploadImage(c *gin.Context, fileField string) (*response.Upload, error) {
 
 	//读取图片
 	var img image.Image
-	if util.InArray(ext, []string{".jpeg", ".jpg"}) {
+	if slices.Contains([]string{".jpeg", ".jpg"}, ext) {
 		img, err = jpeg.Decode(file)
 	} else if ext == ".png" {
 		img, err = png.Decode(file)
@@ -55,7 +56,7 @@ func UploadImage(c *gin.Context, fileField string) (*response.Upload, error) {
 	defer out.Close()
 
 	//保存图片
-	if util.InArray(ext, []string{".jpeg", ".jpg"}) {
+	if slices.Contains([]string{".jpeg", ".jpg"}, ext) {
 		err = jpeg.Encode(out, m, nil)
 	} else if ext == ".png" {
 		err = png.Encode(out, m)

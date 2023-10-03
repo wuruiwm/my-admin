@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/rabbitmq/amqp091-go"
+	"slices"
 	"time"
 )
 
@@ -49,7 +50,7 @@ func (r *Rabbitmq) InitConn() (err error) {
 }
 
 func (r *Rabbitmq) CheckMode(mode string) (err error) {
-	if !InArray(mode, []string{"direct", "fanout", "delay"}) {
+	if !slices.Contains([]string{"direct", "fanout", "delay"}, mode) {
 		return errors.New("rabbitmq mode error: " + mode)
 	}
 	return nil
