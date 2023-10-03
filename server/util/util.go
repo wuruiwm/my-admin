@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"math/rand"
 	"path"
 	"strings"
@@ -38,7 +38,7 @@ func RandString(num int) string {
 
 // Uuid 生成一个uuid
 func Uuid() string {
-	return uuid.NewV4().String()
+	return uuid.New().String()
 }
 
 // FileExt 获取文件或者带文件的路径中的后缀名 并转小写
