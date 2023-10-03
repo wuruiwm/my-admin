@@ -4,9 +4,9 @@ import (
 	"app/api/request"
 	"app/global"
 	"app/model"
-	"app/util"
 	"errors"
 	"fmt"
+	"slices"
 )
 
 func AdminMenuList() []*model.AdminMenu {
@@ -108,7 +108,7 @@ func AdminMenuDelete(param *request.AdminMenuDelete) error {
 }
 
 func AdminMenuSort(param *request.AdminMenuSort) error {
-	if !util.InArray(param.Type, []int{0, 1}) {
+	if !slices.Contains([]int{0, 1}, param.Type) {
 		return errors.New("type不正确")
 	}
 	oldMenu := &model.AdminMenu{}

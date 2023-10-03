@@ -46,33 +46,6 @@ func FileExt(filePath string) string {
 	return strings.ToLower(path.Ext(filePath))
 }
 
-// InArray 判断传入的值 是否存在一个切片里
-func InArray(needle interface{}, slice interface{}) bool {
-	switch key := needle.(type) {
-	case string:
-		for _, item := range slice.([]string) {
-			if key == item {
-				return true
-			}
-		}
-	case int:
-		for _, item := range slice.([]int) {
-			if key == item {
-				return true
-			}
-		}
-	case int64:
-		for _, item := range slice.([]int64) {
-			if key == item {
-				return true
-			}
-		}
-	default:
-		return false
-	}
-	return false
-}
-
 // TimeSince 获取经过的时间
 func TimeSince(t time.Time) string {
 	costMicrosecond := time.Since(t).Microseconds()

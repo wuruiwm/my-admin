@@ -6,13 +6,14 @@ import (
 	"app/websocket"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"slices"
 	"strings"
 )
 
 func Websocket(c *gin.Context) {
 	userId := c.Query("user_id")
 	group := c.Query("group")
-	if !util.InArray(group, []string{"api", "admin", "mini", "test"}) {
+	if !slices.Contains([]string{"api", "admin", "mini", "test"}, group) {
 		response.Error(c, "group参数不正确")
 		return
 	}
@@ -39,7 +40,7 @@ func SendMsg(c *gin.Context) {
 	id := c.Query("id")
 	group := c.Query("group")
 	msgType := c.Query("type") //group user client
-	if !util.InArray(group, []string{"api", "admin", "mini", "test"}) {
+	if !slices.Contains([]string{"api", "admin", "mini", "test"}, group) {
 		response.Error(c, "group参数不正确")
 		return
 	}

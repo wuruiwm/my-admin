@@ -1,8 +1,8 @@
 package request
 
 import (
-	"app/util"
 	"errors"
+	"slices"
 )
 
 type AdminApiList struct {
@@ -47,7 +47,7 @@ func (param *AdminApiCreate) Check() error {
 	if param.Method == "" {
 		return errors.New("请选择请求方式")
 	}
-	if !util.InArray(param.Method, requestMethod) {
+	if !slices.Contains(requestMethod, param.Method) {
 		return errors.New("请选择正确的请求方式")
 	}
 	return nil
