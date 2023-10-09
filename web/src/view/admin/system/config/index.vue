@@ -76,9 +76,12 @@
                     <el-form-item label="台服lol幸运抽奖sk">
                         <el-input v-model="script.tw_lol_luck_draw_sk"></el-input>
                     </el-form-item>
-                    <el-form-item label="honeygain开罐token">
-                        <el-input v-model="script.honeygain_token"></el-input>
+                    <el-form-item label="youtube音乐保存目录">
+                        <el-input v-model="script.youtube_save_dir"></el-input>
                     </el-form-item>
+                  <el-form-item label="m3u8视频保存目录">
+                    <el-input v-model="script.m3u8_save_dir"></el-input>
+                  </el-form-item>
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="cloudflare配置" name="cloudflare">
@@ -97,22 +100,16 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
-            <el-tab-pane label="youtube配置" name="youtube">
+            <el-tab-pane label="nas配置" name="nas">
                 <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
                     <el-form-item label="host">
-                        <el-input v-model="youtube.host"></el-input>
+                        <el-input v-model="nas.host"></el-input>
                     </el-form-item>
                     <el-form-item label="username">
-                        <el-input v-model="youtube.username"></el-input>
+                        <el-input v-model="nas.username"></el-input>
                     </el-form-item>
                     <el-form-item label="password">
-                        <el-input v-model="youtube.password"></el-input>
-                    </el-form-item>
-                    <el-form-item label="挂载目录">
-                        <el-input v-model="youtube.mount_dir"></el-input>
-                    </el-form-item>
-                    <el-form-item label="音乐目录">
-                        <el-input v-model="youtube.music_dir"></el-input>
+                        <el-input v-model="nas.password"></el-input>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
@@ -162,7 +159,8 @@ export default {
             },
             script: {
                 tw_lol_luck_draw_sk: "",
-                honeygain_token: "",
+                youtube_save_dir: "",
+                m3u8_save_dir: "",
             },
             cloudflare:{
                 email: "",
@@ -170,12 +168,10 @@ export default {
                 zone_id: "",
                 dns: "",
             },
-            youtube:{
+            nas:{
                 host: "",
                 username: "",
                 password: "",
-                mount_dir: "",
-                music_dir: "",
             },
             pay:{
                 config:"",

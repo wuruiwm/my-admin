@@ -6,7 +6,7 @@ type AdminConfig struct {
 	K8s        K8s        `json:"k8s"`
 	Script     Script     `json:"script"`
 	Cloudflare Cloudflare `json:"cloudflare"`
-	Youtube    Youtube    `json:"youtube"`
+	Nas        Nas        `json:"nas"`
 	Pay        Pay        `json:"pay"`
 }
 
@@ -37,7 +37,8 @@ type K8s struct {
 
 type Script struct {
 	TwLolLuckDrawSk string `json:"tw_lol_luck_draw_sk"`
-	HoneygainToken  string `json:"honeygain_token"`
+	YoutubeSaveDir  string `json:"youtube_save_dir"`
+	M3u8SaveDir     string `json:"m3u8_save_dir"`
 }
 
 type Cloudflare struct {
@@ -47,12 +48,10 @@ type Cloudflare struct {
 	Dns    string `json:"dns"`
 }
 
-type Youtube struct {
+type Nas struct {
 	Host     string `json:"host"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-	MountDir string `json:"mount_dir"`
-	MusicDir string `json:"music_dir"`
 }
 
 type Pay struct {

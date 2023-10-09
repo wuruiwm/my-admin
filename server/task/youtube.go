@@ -7,26 +7,27 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/bytedance/sonic"
-	"github.com/hirochachacha/go-smb2"
 	"github.com/rabbitmq/amqp091-go"
 	"io"
-	"net"
 	"os"
 	"sync"
 )
 
 var lock sync.Mutex
-var tmpFileName = "tmp.mp3"
+
+type youtubeTasK struct{}
 
 func Youtube() {
 	mq, err := util.NewRabbitmq()
 	if err != nil {
 		panic(err)
 	}
-	mq.Consume("youtube", "direct", handle)
+
+	y := &youtubeTasK{}
+	mq.Consume("youtube", "direct", y.handle)
 }
 
-func handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
+func (y *youtubeTasK) handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 	lock.Lock()
 	defer lock.Unlock()
 	//将消息反序列化
@@ -41,8 +42,27 @@ func handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		_ = delivery.Ack(true)
 		return
 	}
+	if err := global.Db.Where("id", youtube.Id).Take(youtube).Error; err != nil {
+		util.Logger.Error("youtube", util.Map{
+			"name": youtube.Name,
+			"url":  youtube.Url,
+			"msg":  "query error: " + err.Error(),
+		})
+		_ = delivery.Ack(true)
+		return
+	}
+	if youtube.Status != 0 {
+		util.Logger.Error("youtube", util.Map{
+			"name": youtube.Name,
+			"url":  youtube.Url,
+			"msg":  "该任务已执行完成",
+		})
+		_ = delivery.Ack(true)
+		return
+	}
 	//调用yt-dlp下载视频 并将结果写入到db
-	err, cmd, content := download(youtube)
+	savePath := "tmp.mp3"
+	err, cmd, content := y.download(youtube.Url, savePath)
 	youtube.Command = cmd
 	youtube.Content = content
 	if err != nil {
@@ -66,7 +86,8 @@ func handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 		return
 	}
 	//将文件上传到nas
-	err = upload(youtube)
+	uploadPath := fmt.Sprintf("%s/%s.mp3", global.Config.AdminConfig.Script.YoutubeSaveDir, youtube.Name)
+	err = util.SmbUpload(savePath, uploadPath)
 	if err != nil {
 		util.Logger.Error("youtube", util.Map{
 			"name": youtube.Name,
@@ -91,67 +112,22 @@ func handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 	_ = delivery.Ack(true)
 }
 
-func download(youtube *model.Youtube) (err error, cmd string, content string) {
-	if _, err = os.Stat(tmpFileName); err == nil {
-		if err = os.Remove(tmpFileName); err != nil {
+func (y *youtubeTasK) download(youtubeUrl string, savePath string) (err error, cmd string, content string) {
+	if _, err = os.Stat(savePath); err == nil {
+		if err = os.Remove(savePath); err != nil {
 			return err, cmd, content
 		}
 	}
 	buf := bytes.NewBuffer([]byte{})
-	cmd = fmt.Sprintf(`yt-dlp -x --audio-format mp3 -o %s %s`, tmpFileName, youtube.Url)
+	cmd = fmt.Sprintf(`yt-dlp -x --audio-format mp3 -o %s %s`, savePath, youtubeUrl)
 	err = util.Command(cmd, buf)
-	bufByt, _ := io.ReadAll(buf)
+	bufByt, err := io.ReadAll(buf)
+	if err != nil {
+		return err, cmd, content
+	}
 	content = string(bufByt)
 	if err != nil {
 		return err, cmd, content
 	}
 	return nil, cmd, content
-}
-
-func upload(youtube *model.Youtube) error {
-	//连接smb
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:445", global.Config.AdminConfig.Youtube.Host))
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	d := &smb2.Dialer{
-		Initiator: &smb2.NTLMInitiator{
-			User:     global.Config.AdminConfig.Youtube.Username,
-			Password: global.Config.AdminConfig.Youtube.Password,
-		},
-	}
-	s, err := d.Dial(conn)
-	if err != nil {
-		return err
-	}
-	defer s.Logoff()
-	fs, err := s.Mount(global.Config.AdminConfig.Youtube.MountDir)
-	if err != nil {
-		return err
-	}
-	defer fs.Umount()
-	//读取本地文件
-	fileByt, err := os.ReadFile(tmpFileName)
-	if err != nil {
-		return err
-	}
-	//远程文件如果存在 则删除
-	filename := fmt.Sprintf("%s\\%s.mp3", global.Config.AdminConfig.Youtube.MusicDir, youtube.Name)
-	if _, err = fs.Stat(filename); err == nil {
-		if err = fs.Remove(filename); err != nil {
-			return err
-		}
-	}
-	//创建远程文件 并写入
-	f, err := fs.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	_, err = f.Write(fileByt)
-	if err != nil {
-		return err
-	}
-	return nil
 }
