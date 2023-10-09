@@ -79,6 +79,14 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 			youtubeGroup.DELETE("/delete", admin.YoutubeDelete)
 			youtubeGroup.PUT("/retry", admin.YoutubeRetry)
 		}
+		//m3u8管理
+		m3u8Group := adminGroup.Group("/m3u8")
+		{
+			m3u8Group.POST("/create", admin.M3u8Create)
+			m3u8Group.GET("/list", admin.M3u8List)
+			m3u8Group.DELETE("/delete", admin.M3u8Delete)
+			m3u8Group.PUT("/retry", admin.M3u8Retry)
+		}
 	}
 	return r
 }

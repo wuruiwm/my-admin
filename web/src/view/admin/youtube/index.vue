@@ -21,6 +21,9 @@
             <el-form-item>
                 <el-button icon="el-icon-plus" size="small" type="primary" @click="create">创建视频下载</el-button>
             </el-form-item>
+          <el-form-item style="float: right">
+            <el-button size="small" type="primary" @click="m3u8" style="background-color:#ffffff;border-color:#ffffff;">m3u8</el-button>
+          </el-form-item>
         </el-form>
         <el-table :data="list.data" :header-cell-style="{backgroundColor:'#fafafa'}" border
                   style="width: 100%">
@@ -149,6 +152,7 @@ export default {
                 name: "",
                 url: "",
             },
+            m3u8Click:0,
         }
     },
     async created() {
@@ -214,6 +218,16 @@ export default {
                 })
                 .catch(() => {
                 })
+        },
+        m3u8(){
+          console.log(this.m3u8Click)
+          this.m3u8Click++
+          if(this.m3u8Click === 4){
+            this.$router.push({name: 'm3u8'})
+          }
+          setTimeout( ()=>{
+            this.m3u8Click--
+          },1000)
         },
         dialogClosed() {
             this.$refs.form.resetFields()

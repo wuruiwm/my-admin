@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-var lock sync.Mutex
+var youtubeLock sync.Mutex
 
 type youtubeTasK struct{}
 
@@ -28,8 +28,8 @@ func Youtube() {
 }
 
 func (y *youtubeTasK) handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
-	lock.Lock()
-	defer lock.Unlock()
+	youtubeLock.Lock()
+	defer youtubeLock.Unlock()
 	//将消息反序列化
 	youtube := &model.Youtube{}
 	err := sonic.Unmarshal(delivery.Body, youtube)
