@@ -3,16 +3,20 @@ package logic
 import (
 	"app/api/request"
 	"app/api/response"
+	"app/global"
 	"app/util"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"os"
+	"strings"
 )
 
 func Ssl(param *request.Ssl) (*response.Ssl, error) {
-	keyPath := param.Domain + ".key"
-	pemPath := param.Domain + ".pem"
+	sslPath := strings.TrimRight(global.Config.AdminConfig.Ssl.Path, "/")
+	keyPath := fmt.Sprintf("%s/%s.key", sslPath, param.Domain)
+	pemPath := fmt.Sprintf("%s/%s.pem", sslPath, param.Domain)
 	keyByte, err := os.ReadFile(keyPath)
 	if err != nil {
 		return nil, errors.New("读取证书私钥失败 error:" + err.Error())

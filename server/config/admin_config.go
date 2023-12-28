@@ -23,8 +23,7 @@ type Notice struct {
 }
 
 type Ssl struct {
-	Key string `json:"key"`
-	Pem string `json:"pem"`
+	Path string `json:"path"`
 }
 
 type K8s struct {
