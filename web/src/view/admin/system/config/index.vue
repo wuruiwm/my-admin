@@ -44,11 +44,8 @@
             </el-tab-pane>
             <el-tab-pane label="ssl证书配置" name="ssl">
                 <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
-                    <el-form-item label="KEY(私钥)">
-                        <el-input v-model="ssl.key"></el-input>
-                    </el-form-item>
-                    <el-form-item label="PEM(公钥)">
-                        <el-input v-model="ssl.pem"></el-input>
+                    <el-form-item label="域名配置">
+                      <el-input v-model="ssl.domain" type="textarea" placeholder="请填写域名配置" autosize></el-input>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
@@ -147,8 +144,7 @@ export default {
                 gotify_server_token: "",
             },
             ssl: {
-                key: "",
-                pem: "",
+                domain: "",
             },
             k8s: {
                 admin_username: "",
