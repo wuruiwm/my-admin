@@ -23,7 +23,7 @@ type Notice struct {
 }
 
 type Ssl struct {
-	Path string `json:"path"`
+	Domain string `json:"domain"`
 }
 
 type K8s struct {

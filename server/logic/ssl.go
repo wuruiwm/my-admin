@@ -8,20 +8,34 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"fmt"
+	"github.com/bytedance/sonic"
 	"os"
-	"strings"
 )
 
+type Domain struct {
+	Domain string `json:"domain"`
+	Key    string `json:"key"`
+	Pem    string `json:"pem"`
+}
+
 func Ssl(param *request.Ssl) (*response.Ssl, error) {
-	sslPath := strings.TrimRight(global.Config.AdminConfig.Ssl.Path, "/")
-	keyPath := fmt.Sprintf("%s/%s.key", sslPath, param.Domain)
-	pemPath := fmt.Sprintf("%s/%s.pem", sslPath, param.Domain)
-	keyByte, err := os.ReadFile(keyPath)
+	data := make([]*Domain, 0)
+	//初始化后台dns配置到data
+	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Ssl.Domain), &data)
+	var domain *Domain
+	for _, v := range data {
+		if v.Domain == param.Domain {
+			domain = v
+		}
+	}
+	if domain == nil {
+		return nil, errors.New("域名不存在 error:" + err.Error())
+	}
+	keyByte, err := os.ReadFile(domain.Key)
 	if err != nil {
 		return nil, errors.New("读取证书私钥失败 error:" + err.Error())
 	}
-	pemByte, err := os.ReadFile(pemPath)
+	pemByte, err := os.ReadFile(domain.Pem)
 	if err != nil {
 		return nil, errors.New("读取证书公钥失败 error:" + err.Error())
 	}

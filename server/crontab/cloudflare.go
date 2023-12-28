@@ -3,7 +3,6 @@ package crontab
 import (
 	"app/global"
 	"app/util"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/bytedance/sonic"
@@ -38,7 +37,7 @@ type CloudflareDnsRequest struct {
 func Cloudflare() {
 	data = make([]Dns, 0)
 	//初始化后台dns配置到data
-	err := json.Unmarshal([]byte(global.Config.AdminConfig.Cloudflare.Dns), &data)
+	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Cloudflare.Dns), &data)
 	if err != nil {
 		util.Logger.Error("Cloudflare", util.Map{
 			"msg": "初始化后台dns配置失败 error:" + err.Error() + " config:" + global.Config.AdminConfig.Cloudflare.Dns,
