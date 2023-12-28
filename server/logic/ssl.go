@@ -1,8 +1,8 @@
 package logic
 
 import (
+	"app/api/request"
 	"app/api/response"
-	"app/global"
 	"app/util"
 	"crypto/x509"
 	"encoding/pem"
@@ -10,9 +10,9 @@ import (
 	"os"
 )
 
-func Ssl() (*response.Ssl, error) {
-	keyPath := global.Config.AdminConfig.Ssl.Key
-	pemPath := global.Config.AdminConfig.Ssl.Pem
+func Ssl(param *request.Ssl) (*response.Ssl, error) {
+	keyPath := param.Domain + ".key"
+	pemPath := param.Domain + ".pem"
 	keyByte, err := os.ReadFile(keyPath)
 	if err != nil {
 		return nil, errors.New("读取证书私钥失败 error:" + err.Error())
@@ -32,6 +32,7 @@ func Ssl() (*response.Ssl, error) {
 	return &response.Ssl{
 		Key:        string(keyByte),
 		Pem:        string(pemByte),
+		Domain:     x509Cert.DNSNames,
 		ExpireTime: util.TimeToDate(x509Cert.NotAfter),
 	}, nil
 }
