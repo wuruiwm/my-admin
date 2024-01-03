@@ -1,34 +1,40 @@
 <template>
   <div>
-    <el-form :inline="true">
-      <el-form-item>
-        <el-button :data-clipboard-text="ssl.key" :disabled="!ssl.key" class="copy" icon="el-icon-document-copy"
-                   size="small"
-                   type="primary" @click="copy">复制私钥
-        </el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button :data-clipboard-text="ssl.pem" :disabled="!ssl.pem" class="copy" icon="el-icon-document-copy"
-                   size="small"
-                   type="primary" @click="copy">复制公钥
-        </el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button :disabled="!ssl.key" icon="el-icon-download" size="small" @click="download('key')">下载私钥
-        </el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button :disabled="!ssl.pem" icon="el-icon-download" size="small" @click="download('pem')">下载公钥
-        </el-button>
-      </el-form-item>
-      <el-form-item v-if="ssl.expire_time">
-        <span style="color: #3d763e;">证书到期时间: {{ ssl.expire_time }}</span>
-      </el-form-item>
-    </el-form>
-    <prism-editor v-if="ssl.key" :highlight="highlighter" :value="ssl.key" class="my-editor" line-numbers readonly
-                  style="width: 48%;float: left;"></prism-editor>
-    <prism-editor v-if="ssl.pem" :highlight="highlighter" :value="ssl.pem" class="my-editor" line-numbers readonly
-                  style="width: 48%;float: right;"></prism-editor>
+    <el-tabs v-model="domain">
+      <template v-for="v in this.list">
+      <el-tab-pane :label="v.domain" :name="v.domain">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button :data-clipboard-text="v.key" :disabled="!v.key" class="copy" icon="el-icon-document-copy"
+                       size="small"
+                       type="primary" @click="copy">复制私钥
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button :data-clipboard-text="v.pem" :disabled="!v.pem" class="copy" icon="el-icon-document-copy"
+                       size="small"
+                       type="primary" @click="copy">复制公钥
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button :disabled="!v.key" icon="el-icon-download" size="small" @click="download(v.key)">下载私钥
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button :disabled="!v.pem" icon="el-icon-download" size="small" @click="download(v.pem)">下载公钥
+            </el-button>
+          </el-form-item>
+          <el-form-item v-if="v.expire_time">
+            <span style="color: #3d763e;">证书到期时间: {{ v.expire_time }}</span>
+          </el-form-item>
+        </el-form>
+        <prism-editor v-if="v.key" :highlight="highlighter" :value="v.key" class="my-editor" line-numbers readonly
+                      style="width: 48%;float: left;"></prism-editor>
+        <prism-editor v-if="v.pem" :highlight="highlighter" :value="v.pem" class="my-editor" line-numbers readonly
+                      style="width: 48%;float: right;"></prism-editor>
+      </el-tab-pane>
+      </template>
+    </el-tabs>
   </div>
 </template>
 
@@ -49,11 +55,8 @@ export default {
   },
   data() {
     return {
-      ssl: {
-        key: "",
-        pem: "",
-        expire_time: "",
-      },
+      domain:"",
+      list:[],
     }
   },
   async created() {
@@ -62,14 +65,15 @@ export default {
       method: "get",
     })
     if (res.code === 0) {
-      this.ssl.key = res.data.key
-      this.ssl.pem = res.data.pem
-      this.ssl.expire_time = res.data.expire_time
+      this.list = res.data
+      if(this.list.length > 0){
+        this.domain = this.list[0].domain
+      }
     }
   },
   methods: {
-    download(type) {
-      let export_blob = new Blob([this.ssl[type]])
+    download(content) {
+      let export_blob = new Blob([content])
       let save_link = document.createElement("a")
       save_link.href = window.URL.createObjectURL(export_blob)
       save_link.download = type + ".txt"

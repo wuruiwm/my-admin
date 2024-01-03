@@ -19,9 +19,10 @@ type Domain struct {
 }
 
 func Ssl(param *request.Ssl) (*response.Ssl, error) {
-	data := make([]*Domain, 0)
-	//初始化后台dns配置到data
-	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Ssl.Domain), &data)
+	data, err := SslConfig()
+	if err != nil {
+		return nil, errors.New("读取配置失败 error:" + err.Error())
+	}
 	var domain *Domain
 	for _, v := range data {
 		if v.Domain == param.Domain {
@@ -50,7 +51,33 @@ func Ssl(param *request.Ssl) (*response.Ssl, error) {
 	return &response.Ssl{
 		Key:        string(keyByte),
 		Pem:        string(pemByte),
-		Domain:     x509Cert.DNSNames,
+		Domain:     domain.Domain,
+		List:       x509Cert.DNSNames,
 		ExpireTime: util.TimeToDate(x509Cert.NotAfter),
 	}, nil
+}
+
+func SslConfig() ([]*Domain, error) {
+	data := make([]*Domain, 0)
+	//初始化后台dns配置到data
+	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Ssl.Domain), &data)
+	return data, err
+}
+
+func SslList() ([]*response.Ssl, error) {
+	data, err := SslConfig()
+	if err != nil {
+		return nil, errors.New("读取配置失败 error:" + err.Error())
+	}
+	list := make([]*response.Ssl, 0)
+	for _, v := range data {
+		ssl, err := Ssl(&request.Ssl{
+			Domain: v.Domain,
+		})
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, ssl)
+	}
+	return list, nil
 }
