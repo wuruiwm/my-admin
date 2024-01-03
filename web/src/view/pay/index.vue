@@ -68,6 +68,10 @@ export default {
           name:"支付宝红包",
           background:"#c94b4e",
         },
+        zhuanqianba:{
+          name:"赚钱吧",
+          background:"#0184f6",
+        },
       },
       qrcode:qrcode,
     }
