@@ -32,6 +32,14 @@ export default {
           name:"支付宝",
           background:"#1577fe",
         },
+        alipayRedPacket:{
+          name:"支付宝红包",
+          background:"#c94b4e",
+        },
+        shuzirenminbi:{
+          name:"数字人民币",
+          background:"#ec0424",
+        },
         yinsheng:{
           name:"银盛支付",
           background:"#c0a21e",
@@ -56,17 +64,9 @@ export default {
           name:"度小满",
           background:"#d73c38",
         },
-        shuzirenminbi:{
-          name:"数字人民币",
-          background:"#ec0424",
-        },
         haoshengyi:{
           name:"好生意",
           background:"#af6131",
-        },
-        alipayRedPacket:{
-          name:"支付宝红包",
-          background:"#c94b4e",
         },
         zhuanqianba:{
           name:"赚钱吧",
