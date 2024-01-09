@@ -72,6 +72,10 @@ export default {
           name:"赚钱吧",
           background:"#0184f6",
         },
+        dianshi:{
+          name:"点石",
+          background:"#195683",
+        },
       },
       qrcode:qrcode,
     }
