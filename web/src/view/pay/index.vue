@@ -1,17 +1,43 @@
 <template>
   <div class="container">
-    <div class="pay" v-for="v in data" :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
-      <div class="qrcode">
-        <img :src="qrcode.getQrBase64(v.qrcode,{
+    <div v-if="isCheck">
+      <div class="doc-container" @click="dialogOpen">
+        <i class="el-icon-bank-card"></i>
+      </div>
+      <el-dialog
+          title="银行卡备注"
+          class="doc-dialog"
+          :width="dialogWidth"
+          :visible.sync="dialogVisible"
+          :lock-scroll="false"
+          :close-on-click-modal="true"
+          :show-close="false">
+        <div v-html="dialogContent"></div>
+      </el-dialog>
+      <div class="pay" v-for="v in data"
+           :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
+        <div class="qrcode">
+          <img :src="qrcode.getQrBase64(v.qrcode,{
           correctLevel:0,
           padding:0
         })" alt="">
-        <div class="username">{{ v.title }}</div>
-      </div>
-      <div class="title">
-            <span>{{ config[v.type] && config[v.type].name ? config[v.type].name : '收款码' }}</span>
+          <div class="username">{{ v.title }}</div>
+        </div>
+        <div class="title">
+          <span>{{ config[v.type] && config[v.type].name ? config[v.type].name : '收款码' }}</span>
+        </div>
       </div>
     </div>
+    <el-dialog title="请输入密码" :visible.sync="isPasswordOpen" :width="dialogWidth">
+      <el-form>
+        <el-form-item>
+          <el-input v-model="password" placeholder="请输入密码"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="getList" style="width: 100%">提交</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -22,75 +48,118 @@ import service from "@/core/request";
 export default {
   data() {
     return {
+      isCheck:false,
+      isPasswordOpen:false,
+      password:"",
+      dialogVisible: false,
+      dialogWidth: "90%",
+      dialogContent: "",
       list: [],
-      config:{
-        wxpay:{
-          name:"微信支付",
-          background:"#07c060",
+      config: {
+        wxpay: {
+          name: "微信支付",
+          background: "#07c060",
         },
-        alipay:{
-          name:"支付宝",
-          background:"#1577fe",
+        alipay: {
+          name: "支付宝",
+          background: "#1577fe",
         },
-        alipayRedPacket:{
-          name:"支付宝红包",
-          background:"#c94b4e",
+        alipayRedPacket: {
+          name: "支付宝红包",
+          background: "#c94b4e",
         },
-        shuzirenminbi:{
-          name:"数字人民币",
-          background:"#ec0424",
+        shuzirenminbi: {
+          name: "数字人民币",
+          background: "#ec0424",
         },
-        yinsheng:{
-          name:"银盛支付",
-          background:"#c0a21e",
+        yinsheng: {
+          name: "银盛支付",
+          background: "#c0a21e",
         },
-        yunshanfushouyintai:{
-          name:"云闪付",
-          background:"#d4514f",
+        yunshanfushouyintai: {
+          name: "云闪付",
+          background: "#d4514f",
         },
-        pengpengtong:{
-          name:"碰碰通",
-          background:"#3b82de",
+        pengpengtong: {
+          name: "碰碰通",
+          background: "#3b82de",
         },
-        lakala:{
-          name:"拉卡拉",
-          background:"#0989f7",
+        lakala: {
+          name: "拉卡拉",
+          background: "#0989f7",
         },
-        miyishou:{
-          name:"米易收",
-          background:"#d02422",
+        miyishou: {
+          name: "米易收",
+          background: "#d02422",
         },
-        duxiaoman:{
-          name:"度小满",
-          background:"#d73c38",
+        duxiaoman: {
+          name: "度小满",
+          background: "#d73c38",
         },
-        haoshengyi:{
-          name:"好生意",
-          background:"#af6131",
+        haoshengyi: {
+          name: "好生意",
+          background: "#af6131",
         },
-        zhuanqianba:{
-          name:"赚钱吧",
-          background:"#0184f6",
+        zhuanqianba: {
+          name: "赚钱吧",
+          background: "#0184f6",
         },
-        dianshi:{
-          name:"点石",
-          background:"#195683",
+        dianshi: {
+          name: "点石",
+          background: "#195683",
         },
-        jinduoduo:{
-          name:"金多多",
-          background:"#d41419",
+        jinduoduo: {
+          name: "金多多",
+          background: "#d41419",
         },
       },
-      qrcode:qrcode,
+      qrcode: qrcode,
     }
   },
   async created() {
-    let listRes = await service({
-      url: "/api/pay",
-      method: "get",
-    })
-    if (listRes.code === 0) {
-      this.list = listRes.data
+    if(this.isDesktop()){
+      this.dialogWidth = "30%"
+    }else{
+      this.dialogWidth = "80%"
+    }
+    this.password = localStorage.getItem('pay_password')
+    if(this.password == null){
+      this.password = ""
+    }
+    if(this.password !== ""){
+      this.getList()
+    }else{
+      this.isCheck = false
+      this.isPasswordOpen = true
+    }
+  },
+  methods: {
+    dialogOpen() {
+      this.dialogVisible = true
+    },
+    isDesktop() {
+      return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    },
+    async getList() {
+      let listRes = await service({
+        url: "/api/pay?password=" + this.password.trim(),
+        method: "get",
+      })
+      if (listRes.code === 0) {
+        this.list = listRes.data.list
+        this.dialogContent = listRes.data.card.replace(/\n/g, "<br>")
+        this.isCheck = true
+        this.isPasswordOpen = false
+      }else{
+        this.isCheck = false
+        this.isPasswordOpen = true
+        this.password = ""
+      }
+    }
+  },
+  watch:{
+    password(val){
+      localStorage.setItem('pay_password', val)
     }
   },
   computed: {
@@ -166,4 +235,16 @@ export default {
   top: 30px;
   transform: translateX(-50%);
 }
+
+.doc-container {
+  position: fixed;
+  bottom: 5rem;
+  right: 3rem;
+  z-index: 1;
+  font-size: 5rem;
+  color: #606266;
+  background: #e7f8ff;
+  border-radius: 1rem;
+}
+
 </style>

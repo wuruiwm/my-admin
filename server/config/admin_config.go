@@ -54,5 +54,7 @@ type Nas struct {
 }
 
 type Pay struct {
-	Config string `json:"config"`
+	Config   string `json:"config"`
+	Card     string `json:"card"`
+	Password string `json:"password"`
 }

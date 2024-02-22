@@ -99,19 +99,25 @@
             </el-tab-pane>
             <el-tab-pane label="nas配置" name="nas">
                 <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
-                    <el-form-item label="host">
+                    <el-form-item label="主机">
                         <el-input v-model="nas.host"></el-input>
                     </el-form-item>
-                    <el-form-item label="username">
+                    <el-form-item label="用户名">
                         <el-input v-model="nas.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="password">
+                    <el-form-item label="密码">
                         <el-input v-model="nas.password"></el-input>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="收款码配置" name="pay">
               <el-form label-width="150px" style="width: 50%" @submit.native.prevent @keyup.enter.native="submit">
+                <el-form-item label="银行卡">
+                  <el-input v-model="pay.card" type="textarea" placeholder="请输入银行卡备注" autosize></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                  <el-input v-model="pay.password"></el-input>
+                </el-form-item>
                 <el-form-item label="收款码配置">
                   <el-input v-model="pay.config" type="textarea" placeholder="请输入需要收款码配置json" autosize></el-input>
                 </el-form-item>
@@ -171,6 +177,8 @@ export default {
             },
             pay:{
                 config:"",
+                card:"",
+                password:"",
             }
         }
     },
