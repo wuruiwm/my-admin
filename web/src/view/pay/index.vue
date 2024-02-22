@@ -76,6 +76,10 @@ export default {
           name:"点石",
           background:"#195683",
         },
+        jinduoduo:{
+          name:"金多多",
+          background:"#d41419",
+        },
       },
       qrcode:qrcode,
     }
