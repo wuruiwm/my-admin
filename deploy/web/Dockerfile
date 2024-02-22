@@ -1,7 +1,7 @@
 FROM node:16.20.0-alpine3.17 AS builder
 
 # 设置镜像
-RUN npm config set registry https://registry.npm.taobao.org
+RUN npm config set registry https://registry.npmmirror.com
 
 # 设置工作目录为/build
 WORKDIR /build
