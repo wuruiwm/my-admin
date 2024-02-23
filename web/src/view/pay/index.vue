@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div v-if="isCheck">
       <div class="doc-container" @click="dialogOpen">
         <i class="el-icon-bank-card"></i>
@@ -14,17 +14,19 @@
           :show-close="false">
         <div v-html="dialogContent"></div>
       </el-dialog>
-      <div class="pay" v-for="v in data"
-           :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
-        <div class="qrcode">
-          <img :src="qrcode.getQrBase64(v.qrcode,{
+      <div class="container">
+        <div class="pay" v-for="v in data"
+             :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
+          <div class="qrcode">
+            <img :src="qrcode.getQrBase64(v.qrcode,{
           correctLevel:0,
           padding:0
         })" alt="">
-          <div class="username">{{ v.title }}</div>
-        </div>
-        <div class="title">
-          <span>{{ config[v.type] && config[v.type].name ? config[v.type].name : '收款码' }}</span>
+            <div class="username">{{ v.title }}</div>
+          </div>
+          <div class="title">
+            <span>{{ config[v.type] && config[v.type].name ? config[v.type].name : '收款码' }}</span>
+          </div>
         </div>
       </div>
     </div>
