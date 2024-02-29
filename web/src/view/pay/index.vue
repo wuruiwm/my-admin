@@ -12,7 +12,7 @@
           :lock-scroll="false"
           :close-on-click-modal="true"
           :show-close="false">
-        <div v-html="dialogContent"></div>
+        <div v-html="dialogContent" style="max-height: 60vh;overflow-y: auto"></div>
       </el-dialog>
       <div class="container">
         <div class="pay" v-for="v in data"
@@ -54,7 +54,7 @@ export default {
       isPasswordOpen:false,
       password:"",
       dialogVisible: false,
-      dialogWidth: "90%",
+      dialogWidth: "50vw",
       dialogContent: "",
       list: [],
       config: {
@@ -120,9 +120,9 @@ export default {
   },
   async created() {
     if(this.isDesktop()){
-      this.dialogWidth = "30%"
+      this.dialogWidth = "18vw"
     }else{
-      this.dialogWidth = "80%"
+      this.dialogWidth = "60vw"
     }
     this.password = localStorage.getItem('pay_password')
     if(this.password == null){
