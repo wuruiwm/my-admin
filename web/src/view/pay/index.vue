@@ -114,6 +114,10 @@ export default {
           name: "金多多",
           background: "#d41419",
         },
+        fuhuiba: {
+          name: "付惠吧",
+          background: "#d6151a",
+        },
       },
       qrcode: qrcode,
     }
