@@ -118,6 +118,10 @@ export default {
           name: "付惠吧",
           background: "#d6151a",
         },
+        shouqianba: {
+          name: "收钱吧",
+          background: "#d4bb21",
+        },
       },
       qrcode: qrcode,
     }
