@@ -122,6 +122,10 @@ export default {
           name: "收钱吧",
           background: "#d4bb21",
         },
+        saobei: {
+          name: "扫呗",
+          background: "#40acec",
+        },
       },
       qrcode: qrcode,
     }
