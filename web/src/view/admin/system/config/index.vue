@@ -123,6 +123,28 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
+            <el-tab-pane label="openwrt配置" name="openwrt">
+              <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
+                <el-form-item label="主机">
+                  <el-input v-model="openwrt.host"></el-input>
+                </el-form-item>
+                <el-form-item label="端口">
+                  <el-input v-model="openwrt.port"></el-input>
+                </el-form-item>
+                <el-form-item label="账号">
+                  <el-input v-model="openwrt.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                  <el-input v-model="openwrt.password"></el-input>
+                </el-form-item>
+                <el-form-item label="验证域名">
+                  <el-input v-model="openwrt.domain"></el-input>
+                </el-form-item>
+                <el-form-item label="验证域名ip">
+                  <el-input v-model="openwrt.domain_ip"></el-input>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
         </el-tabs>
         <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
     </div>
@@ -179,7 +201,15 @@ export default {
                 config:"",
                 card:"",
                 password:"",
-            }
+            },
+            openwrt:{
+              host:"",
+              port:"",
+              username:"",
+              password:"",
+              domain:"",
+              domain_ip:""
+            },
         }
     },
     methods: {
