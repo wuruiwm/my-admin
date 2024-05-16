@@ -15,6 +15,7 @@ func Crontab() {
 	cronTabList := []*CronTabTask{
 		NewCrontab("yiyan", "0 0 * * 1", crontab.Yiyan, 3600*8),
 		NewCrontab("cloudflare", "1,5,10,15,20,30 8,18 * * *", crontab.Cloudflare, 60*10),
+		NewCrontab("openwrt", "* * * * *", crontab.Openwrt, 6),
 	}
 	for _, v := range cronTabList {
 		_, err := c.AddFunc(v.spec, v.run)

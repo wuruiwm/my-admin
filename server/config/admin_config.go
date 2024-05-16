@@ -8,6 +8,7 @@ type AdminConfig struct {
 	Cloudflare Cloudflare `json:"cloudflare"`
 	Nas        Nas        `json:"nas"`
 	Pay        Pay        `json:"pay"`
+	Openwrt    Openwrt    `json:"openwrt"`
 }
 
 type Notice struct {
@@ -57,4 +58,13 @@ type Pay struct {
 	Config   string `json:"config"`
 	Card     string `json:"card"`
 	Password string `json:"password"`
+}
+
+type Openwrt struct {
+	Host     string `json:"host"`
+	Port     int    `json:"port,string"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Domain   string `json:"domain"`
+	DomainIp string `json:"domain_ip"`
 }

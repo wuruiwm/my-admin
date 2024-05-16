@@ -3,7 +3,6 @@ package logic
 import (
 	"app/api/request"
 	"app/api/response"
-	"app/crontab"
 	"app/global"
 	"app/model"
 	"app/task"
@@ -74,7 +73,7 @@ func AdminConfigUpdateHandle(group string) {
 	handelMap := map[string]func(){
 		"cloudflare": func() {
 			time.Sleep(time.Second * 2)
-			crontab.Cloudflare()
+			Cloudflare()
 		},
 	}
 	if val, ok := handelMap[group]; ok {
