@@ -126,6 +126,10 @@ export default {
           name: "扫呗",
           background: "#40acec",
         },
+        huifu: {
+          name: "汇付",
+          background: "#017fe1",
+        },
       },
       qrcode: qrcode,
     }
