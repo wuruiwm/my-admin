@@ -17,11 +17,11 @@
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button :disabled="!v.key" icon="el-icon-download" size="small" @click="download(v.key)">下载私钥
+            <el-button :disabled="!v.key" icon="el-icon-download" size="small" @click="download(v.key,'key')">下载私钥
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button :disabled="!v.pem" icon="el-icon-download" size="small" @click="download(v.pem)">下载公钥
+            <el-button :disabled="!v.pem" icon="el-icon-download" size="small" @click="download(v.pem,'pem')">下载公钥
             </el-button>
           </el-form-item>
           <el-form-item v-if="v.expire_time">
@@ -72,7 +72,7 @@ export default {
     }
   },
   methods: {
-    download(content) {
+    download(content,type) {
       let export_blob = new Blob([content])
       let save_link = document.createElement("a")
       save_link.href = window.URL.createObjectURL(export_blob)
