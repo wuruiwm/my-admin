@@ -16,7 +16,7 @@
       </el-dialog>
       <div class="container">
         <div class="pay" v-for="v in data"
-             :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#e7f8ff' }">
+             :style="{background: config[v.type] && config[v.type].background ? config[v.type].background : '#da21ac' }">
           <div class="qrcode">
             <img :src="qrcode.getQrBase64(v.qrcode,{
           correctLevel:0,
@@ -132,7 +132,7 @@ export default {
         },
         wxpayjingying: {
           name: "微信经营码",
-          background: "#09c668",
+          background: "#1aad19",
         },
       },
       qrcode: qrcode,
