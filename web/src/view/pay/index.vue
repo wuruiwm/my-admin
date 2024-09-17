@@ -66,7 +66,7 @@ export default {
           name: "支付宝",
           background: "#1577fe",
         },
-        alipayRedPacket: {
+        alipayhongbao: {
           name: "支付宝红包",
           background: "#c94b4e",
         },
@@ -129,6 +129,10 @@ export default {
         huifu: {
           name: "汇付",
           background: "#017fe1",
+        },
+        wxpayjingying: {
+          name: "微信经营码",
+          background: "#09c668",
         },
       },
       qrcode: qrcode,
