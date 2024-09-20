@@ -156,8 +156,8 @@
               <el-form-item label="区域">
                 <el-input v-model="aliyun.region_id"></el-input>
               </el-form-item>
-              <el-form-item label="实例id">
-                <el-input v-model="aliyun.instance_id"></el-input>
+              <el-form-item label="安全组ID">
+                <el-input v-model="aliyun.security_group_id"></el-input>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -230,7 +230,7 @@ export default {
               access_key_id:"",
               access_key_secret:"",
               region_id:"",
-              instance_id:"",
+              security_group_id:"",
             },
         }
     },
