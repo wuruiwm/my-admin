@@ -159,6 +159,9 @@
               <el-form-item label="安全组ID">
                 <el-input v-model="aliyun.security_group_id"></el-input>
               </el-form-item>
+              <el-form-item label="限制流量(G)">
+                <el-input v-model="aliyun.limit">19.5</el-input>
+              </el-form-item>
             </el-form>
           </el-tab-pane>
         </el-tabs>
@@ -231,6 +234,7 @@ export default {
               access_key_secret:"",
               region_id:"",
               security_group_id:"",
+              limit:0,
             },
         }
     },
