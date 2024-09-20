@@ -145,6 +145,22 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
+          <el-tab-pane label="阿里云配置" name="aliyun">
+            <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
+              <el-form-item label="AccessKeyId">
+                <el-input v-model="aliyun.access_key_id"></el-input>
+              </el-form-item>
+              <el-form-item label="AccessKeySecret">
+                <el-input v-model="aliyun.access_key_secret"></el-input>
+              </el-form-item>
+              <el-form-item label="区域">
+                <el-input v-model="aliyun.region_id"></el-input>
+              </el-form-item>
+              <el-form-item label="实例id">
+                <el-input v-model="aliyun.instance_id"></el-input>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
         </el-tabs>
         <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
     </div>
@@ -209,6 +225,12 @@ export default {
               password:"",
               domain:"",
               domain_ip:""
+            },
+            aliyun:{
+              access_key_id:"",
+              access_key_secret:"",
+              region_id:"",
+              instance_id:"",
             },
         }
     },
