@@ -9,6 +9,7 @@ type AdminConfig struct {
 	Nas        Nas        `json:"nas"`
 	Pay        Pay        `json:"pay"`
 	Openwrt    Openwrt    `json:"openwrt"`
+	Aliyun     Aliyun     `json:"aliyun"`
 }
 
 type Notice struct {
@@ -67,4 +68,12 @@ type Openwrt struct {
 	Password string `json:"password"`
 	Domain   string `json:"domain"`
 	DomainIp string `json:"domain_ip"`
+}
+
+type Aliyun struct {
+	AccessKeyId     string  `json:"access_key_id"`
+	AccessKeySecret string  `json:"access_key_secret"`
+	RegionId        string  `json:"region_id"`
+	SecurityGroupId string  `json:"security_group_id"`
+	Limit           float64 `json:"limit,string"`
 }
