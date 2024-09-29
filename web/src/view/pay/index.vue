@@ -21,7 +21,8 @@
             <img :src="qrcode.getQrBase64(v.qrcode,{
           correctLevel:0,
           padding:0
-        })" alt="">
+        })" alt="" v-if="v.type != 'wxpayjingyingshoukuandan'">
+            <img :src="v.qrcode" alt="" v-if="v.type == 'wxpayjingyingshoukuandan'">
             <div class="username">{{ v.title }}</div>
           </div>
           <div class="title">
@@ -133,6 +134,10 @@ export default {
         wxpayjingying: {
           name: "微信经营码",
           background: "#1aad19",
+        },
+        wxpayjingyingshoukuandan: {
+          name: "微信收款单",
+          background: "#2bac69",
         },
       },
       qrcode: qrcode,
