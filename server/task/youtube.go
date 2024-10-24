@@ -119,7 +119,7 @@ func (y *youtubeTasK) download(youtubeUrl string, savePath string) (err error, c
 		}
 	}
 	buf := bytes.NewBuffer([]byte{})
-	cmd = fmt.Sprintf(`yt-dlp --username=oauth --password="" --cache-dir="/app/cache" -x --audio-format mp3 -o %s %s`, savePath, youtubeUrl)
+	cmd = fmt.Sprintf(`yt-dlp --username=oauth --password= --cache-dir=/app/cache -x --audio-format mp3 -o %s %s`, savePath, youtubeUrl)
 	err = util.Command(cmd, buf)
 	bufByt, err := io.ReadAll(buf)
 	if err != nil {
