@@ -1,4 +1,4 @@
-FROM golang:1.18.10-alpine3.17 AS builder
+FROM golang:1.21.1-alpine3.18 AS builder
 
 # 禁用CGO 设置镜像
 ENV CGO_ENABLED 0
