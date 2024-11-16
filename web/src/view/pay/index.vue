@@ -139,6 +139,10 @@ export default {
           name: "微信收款单",
           background: "#2bac69",
         },
+        fuzhanggui: {
+          name: "富掌柜",
+          background: "#1360a4",
+        },
       },
       qrcode: qrcode,
     }
