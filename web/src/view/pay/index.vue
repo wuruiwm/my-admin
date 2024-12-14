@@ -77,7 +77,7 @@ export default {
         },
         yinsheng: {
           name: "银盛支付",
-          background: "#c0a21e",
+          background: "#037afc",
         },
         yunshanfushouyintai: {
           name: "云闪付",
