@@ -40,6 +40,7 @@ type Script struct {
 	TwLolLuckDrawSk string `json:"tw_lol_luck_draw_sk"`
 	YoutubeSaveDir  string `json:"youtube_save_dir"`
 	M3u8SaveDir     string `json:"m3u8_save_dir"`
+	YoutubeCookie   string `json:"youtube_cookie"`
 }
 
 type Cloudflare struct {

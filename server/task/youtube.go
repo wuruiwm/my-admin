@@ -113,13 +113,16 @@ func (y *youtubeTasK) handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq)
 }
 
 func (y *youtubeTasK) download(youtubeUrl string, savePath string) (err error, cmd string, content string) {
+	if err := y.saveCookie(); err != nil {
+		return err, "", ""
+	}
 	if _, err = os.Stat(savePath); err == nil {
 		if err = os.Remove(savePath); err != nil {
 			return err, cmd, content
 		}
 	}
 	buf := bytes.NewBuffer([]byte{})
-	cmd = fmt.Sprintf(`yt-dlp --username=oauth --password= --cache-dir=/app/cache -x --audio-format mp3 -o %s %s`, savePath, youtubeUrl)
+	cmd = fmt.Sprintf(`yt-dlp -x --cookies /app/cookie.txt --audio-format mp3 -o %s %s`, savePath, youtubeUrl)
 	err = util.Command(cmd, buf)
 	bufByt, err := io.ReadAll(buf)
 	if err != nil {
@@ -130,4 +133,18 @@ func (y *youtubeTasK) download(youtubeUrl string, savePath string) (err error, c
 		return err, cmd, content
 	}
 	return nil, cmd, content
+}
+func (y *youtubeTasK) saveCookie() error {
+	file := "/app/cookie.txt"
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write([]byte(global.Config.AdminConfig.Script.YoutubeCookie))
+	if err != nil {
+		return err
+	}
+	return nil
 }
