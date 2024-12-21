@@ -143,13 +143,9 @@ func (y *youtubeTasK) saveCookie() error {
 	}
 	defer f.Close()
 
-	b, err := f.Write([]byte(global.Config.AdminConfig.Script.YoutubeCookie))
+	_, err = f.Write([]byte(global.Config.AdminConfig.Script.YoutubeCookie))
 	if err != nil {
 		return err
 	}
-	util.Logger.Info("saveCookie", util.Map{
-		"b":       b,
-		"content": global.Config.AdminConfig.Script.YoutubeCookie,
-	})
 	return nil
 }
