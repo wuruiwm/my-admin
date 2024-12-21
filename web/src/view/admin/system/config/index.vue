@@ -79,6 +79,9 @@
                   <el-form-item label="m3u8视频保存目录">
                     <el-input v-model="script.m3u8_save_dir"></el-input>
                   </el-form-item>
+                  <el-form-item label="youtube cookie">
+                    <el-input v-model="script.youtube_cookie" type="textarea" placeholder="请输入youtube cookie" autosize></el-input>
+                  </el-form-item>
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="cloudflare配置" name="cloudflare">
@@ -204,6 +207,7 @@ export default {
                 tw_lol_luck_draw_sk: "",
                 youtube_save_dir: "",
                 m3u8_save_dir: "",
+                youtube_cookie: "",
             },
             cloudflare:{
                 email: "",
