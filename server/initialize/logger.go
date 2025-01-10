@@ -2,9 +2,12 @@ package initialize
 
 import (
 	"app/util"
+	"github.com/spf13/cast"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"runtime"
+	"strings"
 )
 
 // Logger 初始化Log
@@ -27,7 +30,7 @@ func loggerEncoder() zapcore.Encoder {
 	encoderConfig.CallerKey = "line"
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	encoderConfig.EncodeDuration = zapcore.SecondsDurationEncoder
-	encoderConfig.EncodeCaller = zapcore.ShortCallerEncoder
+	encoderConfig.EncodeCaller = shortCallerEncoder
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
 
@@ -41,4 +44,22 @@ func loggerLogWriter() zapcore.WriteSyncer {
 		LocalTime:  true,               // 采用本地时区
 	}
 	return zapcore.AddSync(lumberJackLogger)
+}
+
+func shortCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+	_, logFile, _, ok := runtime.Caller(0)
+	if !ok {
+		enc.AppendString("")
+		return
+	}
+	baseDir := strings.Replace(logFile, "initialize/logger.go", "", 1)
+	for i := 2; i < 999; i++ {
+		_, file, line, ok := runtime.Caller(i)
+		if ok && strings.HasPrefix(file, baseDir) && !strings.HasSuffix(file, "/util/logger.go") && !strings.HasSuffix(file, "/initialize/db.go") {
+			f := strings.Replace(file, baseDir, "", 1)
+			enc.AppendString(f + ":" + cast.ToString(line))
+			return
+		}
+	}
+	enc.AppendString("")
 }
