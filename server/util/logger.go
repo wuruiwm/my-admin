@@ -1,15 +1,11 @@
 package util
 
 import (
-	"github.com/bytedance/sonic"
+	"encoding/json"
 	"go.uber.org/zap"
 )
 
 var Logger *logger
-
-var json = sonic.Config{
-	SortMapKeys: true,
-}.Froze()
 
 type logger struct {
 	drive *zap.Logger

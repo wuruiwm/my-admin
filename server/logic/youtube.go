@@ -6,8 +6,8 @@ import (
 	"app/global"
 	"app/model"
 	"app/util"
+	"encoding/json"
 	"errors"
-	"github.com/bytedance/sonic"
 	"strings"
 )
 
@@ -80,7 +80,7 @@ func YoutubeDelete(param *request.YoutubeDelete) error {
 }
 
 func youtubePublish(youtube *model.Youtube) error {
-	json, err := sonic.Marshal(youtube)
+	json, err := json.Marshal(youtube)
 	if err != nil {
 		return errors.New("json error: " + err.Error())
 	}

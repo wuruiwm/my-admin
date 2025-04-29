@@ -5,7 +5,7 @@ import (
 	"app/global"
 	"app/model"
 	"app/util"
-	"github.com/bytedance/sonic"
+	"encoding/json"
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -36,7 +36,7 @@ func AdminConfigInit() {
 		}
 		data[v.Group][v.Key] = v.Value
 	}
-	jsonByte, err := sonic.Marshal(data)
+	jsonByte, err := json.Marshal(data)
 	if err != nil {
 		util.Logger.Error("admin_config", util.Map{
 			"configList": configList,
@@ -46,7 +46,7 @@ func AdminConfigInit() {
 		return
 	}
 	adminConfig := &config.AdminConfig{}
-	if err = sonic.Unmarshal(jsonByte, adminConfig); err != nil {
+	if err = json.Unmarshal(jsonByte, adminConfig); err != nil {
 		util.Logger.Error("admin_config", util.Map{
 			"jsonByte": string(jsonByte),
 			"error":    err.Error(),

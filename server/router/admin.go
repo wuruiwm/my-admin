@@ -87,6 +87,11 @@ func adminRouter(r *gin.Engine) *gin.Engine {
 			m3u8Group.DELETE("/delete", admin.M3u8Delete)
 			m3u8Group.PUT("/retry", admin.M3u8Retry)
 		}
+		//aliyun cdt
+		aliyunCdtGroup := adminGroup.Group("/aliyunCdt")
+		{
+			aliyunCdtGroup.GET("/flow", admin.AliyunCdtFlow)
+		}
 	}
 	return r
 }

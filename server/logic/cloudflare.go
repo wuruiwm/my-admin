@@ -3,9 +3,9 @@ package logic
 import (
 	"app/global"
 	"app/util"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/bytedance/sonic"
 	"github.com/eddieivan01/nic"
 	"strconv"
 	"time"
@@ -35,7 +35,7 @@ type CloudflareDnsRequest struct {
 func Cloudflare() {
 	data := make([]CloudflareDns, 0)
 	//初始化后台dns配置到data
-	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Cloudflare.Dns), &data)
+	err := json.Unmarshal([]byte(global.Config.AdminConfig.Cloudflare.Dns), &data)
 	if err != nil {
 		util.Logger.Error("Cloudflare", util.Map{
 			"msg": "初始化后台dns配置失败 error:" + err.Error() + " config:" + global.Config.AdminConfig.Cloudflare.Dns,
@@ -78,7 +78,7 @@ func CloudflareList() (*CloudflareListResponse, error) {
 		return nil, errors.New("请求列表失败 error:" + err.Error())
 	}
 	response := &CloudflareListResponse{}
-	err = sonic.Unmarshal(result.Bytes, response)
+	err = json.Unmarshal(result.Bytes, response)
 	if err != nil {
 		util.Logger.Error("Cloudflare", util.Map{
 			"url":    url,
@@ -100,7 +100,7 @@ func (d *CloudflareDns) CloudflareUpdate(id string) error {
 		Type:    "A",
 		Ttl:     60,
 	}
-	body, _ := sonic.Marshal(cloudflareDnsRequest)
+	body, _ := json.Marshal(cloudflareDnsRequest)
 	_, err := nic.Put(url, nic.H{
 		Headers: header,
 		Raw:     string(body),

@@ -6,8 +6,8 @@ import (
 	"app/global"
 	"app/model"
 	"app/util"
+	"encoding/json"
 	"errors"
-	"github.com/bytedance/sonic"
 	"strings"
 )
 
@@ -80,7 +80,7 @@ func M3u8Delete(param *request.M3u8Delete) error {
 }
 
 func m3u8Publish(m3u8 *model.M3u8) error {
-	json, err := sonic.Marshal(m3u8)
+	json, err := json.Marshal(m3u8)
 	if err != nil {
 		return errors.New("json error: " + err.Error())
 	}

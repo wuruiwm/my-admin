@@ -5,8 +5,8 @@ import (
 	"app/model"
 	"app/util"
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/bytedance/sonic"
 	"github.com/rabbitmq/amqp091-go"
 	"io"
 	"os"
@@ -32,7 +32,7 @@ func (m *m3u8TasK) handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq) {
 	defer m3u8Lock.Unlock()
 	//将消息反序列化
 	m3u8 := &model.M3u8{}
-	err := sonic.Unmarshal(delivery.Body, m3u8)
+	err := json.Unmarshal(delivery.Body, m3u8)
 	if err != nil {
 		util.Logger.Error("m3u8", util.Map{
 			"name": m3u8.Name,

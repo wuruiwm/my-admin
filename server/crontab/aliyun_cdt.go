@@ -13,6 +13,9 @@ func AliyunCdt() {
 		util.Notice(title, "获取流量失败 error:"+err.Error())
 		return
 	}
+	util.CacheSet("AliyunCdtFlow", util.Map{
+		"flow": flow,
+	}, 86400)
 	isEnable, err := logic.AliyunDescribeSecurityGroupAttribute()
 	if err != nil {
 		util.Notice(title, "获取安全组规则状态失败 error:"+err.Error())

@@ -163,7 +163,10 @@
                 <el-input v-model="aliyun.security_group_id"></el-input>
               </el-form-item>
               <el-form-item label="限制流量(G)">
-                <el-input v-model="aliyun.limit">19.5</el-input>
+                <el-input v-model="aliyun.limit"></el-input>
+              </el-form-item>
+              <el-form-item label="已用流量(G)">
+                <el-input v-model="aliyunCdtFlow" disabled="disabled"></el-input>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -240,7 +243,11 @@ export default {
               security_group_id:"",
               limit:0,
             },
+            aliyunCdtFlow:"",
         }
+    },
+    created() {
+      this.GetAliyunCdtFlow()
     },
     methods: {
         async submit() {
@@ -269,6 +276,15 @@ export default {
                 })
             }
             return arr
+        },
+        async GetAliyunCdtFlow() {
+          let res = await service({
+            url: "/admin/aliyunCdt/flow",
+            method: "get"
+          })
+          if (res.code === 0) {
+            this.aliyunCdtFlow = res.data.flow
+          }
         }
     },
     watch: {

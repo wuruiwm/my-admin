@@ -6,9 +6,9 @@ import (
 	"app/global"
 	"app/util"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
-	"github.com/bytedance/sonic"
 	"os"
 )
 
@@ -60,7 +60,7 @@ func Ssl(param *request.Ssl) (*response.Ssl, error) {
 func SslConfig() ([]*Domain, error) {
 	data := make([]*Domain, 0)
 	//初始化后台dns配置到data
-	err := sonic.Unmarshal([]byte(global.Config.AdminConfig.Ssl.Domain), &data)
+	err := json.Unmarshal([]byte(global.Config.AdminConfig.Ssl.Domain), &data)
 	return data, err
 }
 

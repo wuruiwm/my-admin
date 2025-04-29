@@ -3,11 +3,7 @@ module app
 go 1.21
 
 require (
-	github.com/alibabacloud-go/cdt-20210813 v1.0.0
-	github.com/alibabacloud-go/tea-rpc v1.3.3
-	github.com/alibabacloud-go/tea-utils v1.3.9
-	github.com/aliyun/credentials-go v1.1.2
-	github.com/bytedance/sonic v1.10.1
+	github.com/aliyun/alibaba-cloud-sdk-go v1.63.17
 	github.com/eddieivan01/nic v0.3.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/locales v0.14.1
@@ -20,6 +16,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/spf13/cast v1.5.1
 	github.com/spf13/viper v1.16.0
 	github.com/xuri/excelize/v2 v2.8.0
 	go.uber.org/zap v1.26.0
@@ -32,14 +29,8 @@ require (
 )
 
 require (
-	github.com/alibabacloud-go/darabonba-openapi v0.1.6 // indirect
-	github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68 // indirect
-	github.com/alibabacloud-go/endpoint-util v1.1.0 // indirect
-	github.com/alibabacloud-go/openapi-util v0.0.7 // indirect
-	github.com/alibabacloud-go/tea v1.1.17 // indirect
-	github.com/alibabacloud-go/tea-rpc-utils v1.1.2 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.63.17 // indirect
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
+	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
@@ -73,11 +64,9 @@ require (
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
-	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/tjfoc/gmsm v1.3.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca // indirect

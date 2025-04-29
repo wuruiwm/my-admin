@@ -5,8 +5,8 @@ import (
 	"app/model"
 	"app/util"
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/bytedance/sonic"
 	"github.com/rabbitmq/amqp091-go"
 	"io"
 	"os"
@@ -33,7 +33,7 @@ func (y *youtubeTasK) handle(delivery amqp091.Delivery, rabbitmq *util.Rabbitmq)
 	defer youtubeLock.Unlock()
 	//将消息反序列化
 	youtube := &model.Youtube{}
-	err := sonic.Unmarshal(delivery.Body, youtube)
+	err := json.Unmarshal(delivery.Body, youtube)
 	if err != nil {
 		util.Logger.Error("youtube", util.Map{
 			"name": youtube.Name,

@@ -3,9 +3,9 @@ package util
 import (
 	"app/global"
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/bytedance/sonic"
 	"github.com/eddieivan01/nic"
 	"gopkg.in/gomail.v2"
 )
@@ -72,7 +72,7 @@ func NoticeGotify(title, content string) error {
 		return errors.New("发送消息,请求失败 error:" + err.Error())
 	}
 	noticeGotifyError := &NoticeGotifyError{}
-	if err = sonic.Unmarshal(resp.Bytes, noticeGotifyError); err != nil {
+	if err = json.Unmarshal(resp.Bytes, noticeGotifyError); err != nil {
 		return errors.New("json反序列化 error:" + err.Error())
 	}
 	if noticeGotifyError.ErrorCode != 0 {

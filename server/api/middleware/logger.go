@@ -3,7 +3,7 @@ package middleware
 import (
 	"app/util"
 	"bytes"
-	"github.com/bytedance/sonic"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"io"
 	"time"
@@ -16,7 +16,7 @@ func Logger(c *gin.Context) {
 	bodyByt, _ := c.GetRawData()
 	c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyByt))
 	body := make(map[string]interface{}, 0)
-	_ = sonic.Unmarshal(bodyByt, &body)
+	_ = json.Unmarshal(bodyByt, &body)
 
 	c.Next()
 
