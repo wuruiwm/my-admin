@@ -10,6 +10,7 @@ type AdminConfig struct {
 	Pay        Pay        `json:"pay"`
 	Openwrt    Openwrt    `json:"openwrt"`
 	Aliyun     Aliyun     `json:"aliyun"`
+	Douyin     Douyin     `json:"douyin"`
 }
 
 type Notice struct {
@@ -77,4 +78,8 @@ type Aliyun struct {
 	RegionId        string  `json:"region_id"`
 	SecurityGroupId string  `json:"security_group_id"`
 	Limit           float64 `json:"limit,string"`
+}
+
+type Douyin struct {
+	Cookie string `json:"cookie"`
 }

@@ -170,6 +170,13 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
+          <el-tab-pane label="抖音配置" name="douyin">
+            <el-form label-width="150px" style="width: 50%" @keyup.enter.native="submit">
+              <el-form-item label="Cookie">
+                <el-input v-model="douyin.cookie" type="textarea" placeholder="请输入Cookie" autosize></el-input>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
         </el-tabs>
         <el-button style="margin-left: 150px" type="primary" @click="submit">保存修改</el-button>
     </div>
@@ -242,6 +249,9 @@ export default {
               region_id:"",
               security_group_id:"",
               limit:0,
+            },
+            douyin:{
+              cookie:"",
             },
             aliyunCdtFlow:"",
         }

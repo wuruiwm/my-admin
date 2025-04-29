@@ -27,6 +27,7 @@ func apiRouter(r *gin.Engine) *gin.Engine {
 		//websocket
 		apiGroup.GET("/websocket", api.Websocket)
 		apiGroup.POST("/sendMsg", api.SendMsg)
+		apiGroup.GET("/douyin/cookie", api.DouyinCookie)
 	}
 	return r
 }
