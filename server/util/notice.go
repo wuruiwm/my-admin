@@ -11,6 +11,10 @@ import (
 )
 
 func Notice(title, content string) error {
+	Logger.Info("Notice", Map{
+		"title":   title,
+		"content": content,
+	})
 	var err error
 	noticeType := global.Config.AdminConfig.Notice.Type
 	if noticeType == "email" {

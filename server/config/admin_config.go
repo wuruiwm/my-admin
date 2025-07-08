@@ -81,5 +81,7 @@ type Aliyun struct {
 }
 
 type Douyin struct {
+	Url    string `json:"url"`
+	UserId string `json:"user_id"`
 	Cookie string `json:"cookie"`
 }
